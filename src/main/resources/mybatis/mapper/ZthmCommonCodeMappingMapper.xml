@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.eun.tutorial.mapper.ZthmCommonCodeMappingMapper">
+
+  <select id="findAll" resultType="com.eun.tutorial.dto.ZthmCommonCodeMappingDTO">
+  	SELECT code_mapping_id, code_mapping_name, code_mapping_description, from_code_id, to_code_id,  
+ 		   enable, create_id, create_time, update_id, update_time
+    FROM zthm_common_code_mapping
+  </select>
+  
+  <select id="findByCodeMappingName" parameterType="String" resultType="com.eun.tutorial.dto.ZthmCommonCodeMappingDTO">
+  	SELECT code_mapping_id, code_mapping_name, code_mapping_description, from_code_id, to_code_id,  
+ 		   enable, create_id, create_time, update_id, update_time
+  	FROM zthm_common_code_mapping 
+  	WHERE code_mapping_name = #{codeMappingName, jdbcType=VARCHAR, javaType=string}
+  	AND ENABLE=1
+  </select>
+  
+  <insert id="save" parameterType="com.eun.tutorial.dto.ZthmCommonCodeMappingDTO"> 
+		MERGE INTO zthm_common_code_mapping 
+		USING DUAL 
+			ON ( code_mapping_id = #{codeMappingId, jdbcType=NUMERIC, javaType=long}) 
+		WHEN MATCHED THEN /* ON 조건에 해당되는 것이 있으면 아래 실행(UPDATE) */
+			UPDATE SET    
+				update_id = #{updateId, jdbcType=VARCHAR, javaType=string}
+				,update_time = CURRENT_DATE   
+				,code_mapping_name = #{codeMappingName, jdbcType=VARCHAR, javaType=string}
+				,code_mapping_description = #{codeMappingDescription, jdbcType=VARCHAR, javaType=string}
+				,from_code_id = #{fromCodeId, jdbcType=VARCHAR, javaType=string}
+				,to_code_id = #{toCodeId, jdbcType=VARCHAR, javaType=string}
+				,enable=#{isEnable}
+		WHEN NOT MATCHED THEN /* ON 조건에 매칭되지 않으면 아래 실행(Insert)*/
+		    INSERT (code_mapping_id, code_mapping_name, code_mapping_description, from_code_id, to_code_id, 
+ 					enable, create_id, create_time, update_id, update_time)
+		   		VALUES (code_seq.NEXTVAL,
+		   				#{codeMappingName, jdbcType=VARCHAR, javaType=string},
+		   		        #{codeMappingDescription, jdbcType=VARCHAR, javaType=string},
+		   		        #{fromCodeId, jdbcType=VARCHAR, javaType=string},
+		   		        #{toCodeId, jdbcType=VARCHAR, javaType=string},
+				   		#{isEnable},				   		
+				   		#{createId, jdbcType=VARCHAR, javaType=string},
+				   		CURRENT_DATE, 
+				   		#{updateId, jdbcType=VARCHAR, javaType=string},
+				   		CURRENT_DATE)
+  </insert>  
+  
+  <delete id="delete" parameterType="com.eun.tutorial.dto.ZthmCommonCodeMappingDTO"> 
+  		DELETE FROM zthm_common_code_mapping 
+  		WHERE code_mapping_id = #{codeMappingId, jdbcType=NUMERIC, javaType=long}
+  </delete>    
+
+</mapper>

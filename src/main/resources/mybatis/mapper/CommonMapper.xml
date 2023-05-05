@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.eun.tutorial.mapper.CommonMapper">
+
+  <select id="findAll" resultType="com.eun.tutorial.dto.ZthhErrorDTO">
+  	SELECT id, error_message,
+  	       create_id, create_time, update_id, update_time
+    FROM zthh_error
+  </select>
+  
+  <select id="getError" parameterType="hashMap" resultType="com.eun.tutorial.dto.ZthhErrorDTO">
+  	SELECT id, error_message,
+  	       create_id, create_time, update_id, update_time
+  	FROM zthh_error 
+  	WHERE id = #{id, jdbcType=VARCHAR}
+  </select>
+  
+  <insert id="save" parameterType="com.eun.tutorial.dto.ZthhErrorDTO"> 
+    INSERT 
+    	INTO zthh_error (id, error_message,
+    	create_id, create_time, update_id, update_time)
+   		VALUES (error_seq.NEXTVAL,
+   		#{errorMessage, jdbcType=VARCHAR}, 
+   		#{createId, jdbcType=VARCHAR}, 
+   		CURRENT_DATE, 
+   		#{updateId, jdbcType=VARCHAR}, 
+   		CURRENT_DATE) 
+  </insert>  
+  
+  <delete id="delete" parameterType="int"> 
+  	<![CDATA[
+    	DELETE FROM zthh_error where CREATE_TIME < CURRENT_DATE - #{deleteDay, jdbcType=INTEGER, javaType=int}
+    ]]>
+  </delete>    
+
+</mapper>

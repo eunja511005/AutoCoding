@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.7.5</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+	<groupId>com.example</groupId>
+	<artifactId>demo</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>war</packaging>
+	<name>demo</name>
+	<description>Demo project for Spring Boot</description>
+	<properties>
+		<java.version>1.8</java.version>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		
+		<!-- JSP 페이지를 컴파일하고 렌더링할 수 있도록 tomcat-embed-jasper 종속성 포함 -->
+		<dependency>
+		    <groupId>org.apache.tomcat.embed</groupId>
+		    <artifactId>tomcat-embed-jasper</artifactId>
+		    <scope>provided</scope>
+		</dependency>		
+		
+		<!-- JSP 페이지에 필요한 JSTL 태그 지원을 위해 종속성 포함 -->
+        <dependency> 
+           <groupId>javax.servlet</groupId> 
+           <artifactId>jstl</artifactId>         
+        </dependency>
+        
+        <!-- lombok 사용 위해 종속성 포함 -->
+	    <dependency>
+	      <groupId>org.projectlombok</groupId>
+	      <artifactId>lombok</artifactId>
+	      <optional>true</optional>
+	    </dependency>    
+	    
+	    <!-- mybatis 사용 위해 종속성 포함 -->
+	    <dependency>
+	      <groupId>org.mybatis.spring.boot</groupId>
+	      <artifactId>mybatis-spring-boot-starter</artifactId>
+	      <version>2.2.2</version>
+	    </dependency>
+	    
+	    <!-- mySql 사용 위해 종속성 포함 -->
+		<dependency>
+			<groupId>com.mysql</groupId>
+			<artifactId>mysql-connector-j</artifactId>
+			<scope>runtime</scope>
+		</dependency>	
+		
+		<!-- security 사용 위해 종속성 포함 -->
+	    <dependency>
+	      <groupId>org.springframework.boot</groupId>
+	      <artifactId>spring-boot-starter-security</artifactId>
+	    </dependency>
+	    		
+	    <!-- security test 사용 위해 종속성 포함 -->		
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
+			<scope>test</scope>
+		</dependency>	
+				
+        <!-- oracle 라이브러리 -->
+		<dependency>
+			<groupId>com.oracle.database.jdbc</groupId>
+			<artifactId>ojdbc8</artifactId>
+			<version>21.9.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.oracle.database.security</groupId>
+			<artifactId>oraclepki</artifactId>
+			<version>21.9.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.oracle.database.security</groupId>
+			<artifactId>osdt_cert</artifactId>
+			<version>21.9.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.oracle.database.security</groupId>
+			<artifactId>osdt_core</artifactId>
+			<version>21.9.0.0</version>
+		</dependency>	
+        
+        <!--
+        <dependency>
+		    <groupId>com.oracle.database.jdbc</groupId>
+		    <artifactId>ojdbc8</artifactId>
+            <scope>system</scope>
+            <systemPath>D:/Users/ywbes/git/Tutorial/src/main/webapp/WEB-INF/lib/ojdbc8-21.9.0.0.jar</systemPath>
+        </dependency>	
+		<dependency>
+			<groupId>com.oracle.database.security</groupId>
+			<artifactId>oraclepki</artifactId>
+            <scope>system</scope>
+            <systemPath>D:/Users/ywbes/git/Tutorial/src/main/webapp/WEB-INF/lib/oraclepki-21.9.0.0.jar</systemPath>			
+		</dependency>
+		<dependency>
+			<groupId>com.oracle.database.security</groupId>
+			<artifactId>osdt_cert</artifactId>
+            <scope>system</scope>
+            <systemPath>D:/Users/ywbes/git/Tutorial/src/main/webapp/WEB-INF/lib/osdt_cert-21.9.0.0.jar</systemPath>			
+		</dependency>
+		<dependency>
+			<groupId>com.oracle.database.security</groupId>
+			<artifactId>osdt_core</artifactId>
+            <scope>system</scope>
+            <systemPath>D:/Users/ywbes/git/Tutorial/src/main/webapp/WEB-INF/lib/osdt_core-21.9.0.0.jar</systemPath>			
+		</dependency>	        	
+        -->
+        
+		<!-- json 처리 -->
+		<dependency>
+		    <groupId>org.json</groupId>
+		    <artifactId>json</artifactId>
+		    <version>20230227</version>
+		</dependency>
+		
+		<!-- for Mime type check by tika-core -->
+		<dependency>
+		    <groupId>org.apache.tika</groupId>
+		    <artifactId>tika-core</artifactId>
+		    <version>2.7.0</version>
+		</dependency>
+		
+		<!-- security 사용 위해 종속성 포함 -->
+	    <dependency>
+	      <groupId>org.springframework.boot</groupId>
+	      <artifactId>spring-boot-starter-batch</artifactId>
+	    </dependency>
+	    <dependency>
+	      <groupId>org.springframework.batch</groupId>
+	      <artifactId>spring-batch-test</artifactId>
+	    </dependency>
+	    
+	    <!-- XSS 방지를 위한 OWASP antisamy 라이브러리 사용 -->
+		<dependency>
+		    <groupId>org.owasp.antisamy</groupId>
+		    <artifactId>antisamy</artifactId>
+		    <version>1.7.3</version>
+		</dependency>
+
+    
+			
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+						</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

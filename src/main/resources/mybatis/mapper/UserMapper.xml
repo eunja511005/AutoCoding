@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.eun.tutorial.mapper.UserMapper">
+
+  <select id="getBookLists" resultType="com.eun.tutorial.dto.UserInfoDTO">
+  	SELECT username, password, email, role, picture, enable,
+  	       create_id, create_time, update_id, update_time
+    FROM zthm_user
+  </select>
+  
+  <select id="getUser" parameterType="hashMap" resultType="com.eun.tutorial.dto.UserInfoDTO">
+  	SELECT username, password, email, role, picture, enable,
+  	       create_id, create_time, update_id, update_time
+  	FROM zthm_user 
+  	WHERE username = #{username}
+  </select>
+  
+  <insert id="addUser" parameterType="com.eun.tutorial.dto.UserInfoDTO"> 
+		MERGE INTO zthm_user 
+		USING DUAL 
+			ON ( username = #{username, jdbcType=VARCHAR} ) 
+		WHEN MATCHED THEN /* ON 조건에 해당되는 것이 있으면 아래 실행(UPDATE) */
+			UPDATE SET       
+				password = #{password, jdbcType=VARCHAR}
+				,email = #{email, jdbcType=VARCHAR}
+				,role = #{role, jdbcType=VARCHAR}
+				,picture = #{picture, jdbcType=VARCHAR}
+		WHEN NOT MATCHED THEN /* ON 조건에 매칭되지 않으면 아래 실행(Insert)*/
+		    INSERT (username, password, email, role, picture, enable,
+		    		create_id, create_time, update_id, update_time)
+		   		VALUES (#{username, jdbcType=VARCHAR}, 
+				   		#{password, jdbcType=VARCHAR}, 
+				   		#{email, jdbcType=VARCHAR}, 
+				   		#{role, jdbcType=VARCHAR}, 
+				   		#{picture, jdbcType=VARCHAR},
+				   		#{isEnable},
+				   		#{createId, jdbcType=VARCHAR}, 
+				   		to_char(CURRENT_DATE,'yyyymmddhh24miss'), 
+				   		#{updateId, jdbcType=VARCHAR}, 
+				   		to_char(CURRENT_DATE,'yyyymmddhh24miss'))
+  </insert>  
+
+</mapper>

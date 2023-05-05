@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.eun.tutorial.mapper.ZthmCommonCodeMapper">
+
+  <select id="findAll" resultType="com.eun.tutorial.dto.ZthmCommonCodeDTO">
+  	SELECT id, code_group_id, code_group_name, code_group_description, code_id, code_level, code_sequence, code_name, code_description, 
+ 		    enable, create_id, create_time, update_id, update_time
+    FROM zthm_common_code
+  </select>
+  
+  <select id="findOne" parameterType="hashMap" resultType="com.eun.tutorial.dto.ZthmCommonCodeDTO">
+  	SELECT id, code_group_id, code_group_name, code_group_description, code_id, code_level, code_sequence, code_name, code_description, 
+ 		    enable, create_id, create_time, update_id, update_time
+  	FROM zthm_common_code 
+  	WHERE id = #{id, jdbcType=VARCHAR, javaType=string}
+  </select>
+  
+  <select id="findByGroupId" parameterType="hashMap" resultType="com.eun.tutorial.dto.ZthmCommonCodeDTO">
+	<![CDATA[
+	  	SELECT id, code_group_id, code_group_name, code_group_description, code_id, code_level, code_sequence, code_name, code_description, 
+	 		    enable, create_id, create_time, update_id, update_time
+	  	FROM zthm_common_code code_level
+	  	WHERE code_group_id = #{codeGroupId, jdbcType=VARCHAR, javaType=string}
+	  	AND code_level <> 0
+	  	AND enable=1
+  	]]>
+  </select>  
+  
+  <insert id="save" parameterType="com.eun.tutorial.dto.ZthmCommonCodeDTO"> 
+		MERGE INTO zthm_common_code 
+		USING DUAL 
+			ON ( id = #{id, jdbcType=VARCHAR, javaType=string}) 
+		WHEN MATCHED THEN /* ON 조건에 해당되는 것이 있으면 아래 실행(UPDATE) */
+			UPDATE SET       
+				update_id = #{updateId, jdbcType=VARCHAR}
+				,update_time = CURRENT_DATE
+				,code_group_name = #{codeGroupName, jdbcType=VARCHAR, javaType=string}
+				,code_group_description = #{codeGroupDescription, jdbcType=VARCHAR, javaType=string}
+				,code_level = #{codeLevel, jdbcType=INTEGER, javaType=INTEGER}
+				,code_sequence = #{codeSequence, jdbcType=INTEGER, javaType=INTEGER}
+				,code_name = #{codeName, jdbcType=VARCHAR, javaType=string}
+				,code_description = #{codeDescription, jdbcType=VARCHAR, javaType=string}
+				,enable=#{isEnable}
+				,code_id=#{codeId, jdbcType=VARCHAR, javaType=string} 
+				,code_group_id=#{codeGroupId, jdbcType=VARCHAR, javaType=string} 
+		WHEN NOT MATCHED THEN /* ON 조건에 매칭되지 않으면 아래 실행(Insert)*/
+		    INSERT (id, code_group_id, code_group_name, code_group_description, code_id, code_level, code_sequence, code_name, code_description, 
+ 					enable, create_id, create_time, update_id, update_time)
+		   		VALUES (code_seq.NEXTVAL,
+		   				#{codeGroupId, jdbcType=VARCHAR, javaType=string},
+		   		        #{codeGroupName, jdbcType=VARCHAR, javaType=string},
+		   		        #{codeGroupDescription, jdbcType=VARCHAR, javaType=string},
+		   		        #{codeId, jdbcType=VARCHAR, javaType=string},
+		   		        #{codeLevel, jdbcType=INTEGER, javaType=INTEGER},
+		   		        #{codeSequence, jdbcType=INTEGER, javaType=INTEGER},
+		   		        #{codeName, jdbcType=VARCHAR, javaType=string},
+				   		#{codeDescription, jdbcType=VARCHAR, javaType=string},
+				   		#{isEnable},				   		
+				   		#{createId, jdbcType=VARCHAR}, 
+				   		CURRENT_DATE, 
+				   		#{updateId, jdbcType=VARCHAR}, 
+				   		CURRENT_DATE)
+  </insert>  
+  
+  <delete id="delete" parameterType="com.eun.tutorial.dto.ZthmCommonCodeDTO"> 
+  		DELETE FROM zthm_common_code 
+  		WHERE id = #{id, jdbcType=VARCHAR, javaType=string}
+  </delete>    
+
+</mapper>

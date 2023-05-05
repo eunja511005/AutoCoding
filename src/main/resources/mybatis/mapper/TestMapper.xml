@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.eun.tutorial.mapper.TestMapper">
+
+  <select id="getBookLists" resultType="com.eun.tutorial.dto.Book">
+  	SELECT ISBN, NAME, AUTHOR FROM book
+  </select>
+  
+  <select id="getUser" parameterType="hashMap" resultType="com.eun.tutorial.dto.UserInfoDTO">
+  	SELECT username, password, email, role, picture, enable,
+  	       create_id, create_time, update_id, update_time
+  	FROM zthm_user 
+  	WHERE username = #{username}
+  </select>
+
+</mapper>

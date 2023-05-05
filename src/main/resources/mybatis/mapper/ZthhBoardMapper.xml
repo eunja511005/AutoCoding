@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.eun.tutorial.mapper.ZthhBoardMapper">
+
+
+<resultMap type="com.eun.tutorial.dto.ZthhBoardDTO" id="boradResult">
+    <result property="board_id" column="boardId" />
+    <result property="title" column="title" />
+    <result property="content" column="content" jdbcType="CLOB" javaType="java.lang.String"/>
+    <result property="create_id" column="createId" />
+    <result property="create_time" column="createTime" />
+    <result property="update_id" column="updateId" />
+    <result property="update_time" column="updateTime" />
+</resultMap>
+
+  <select id="findAll" resultType="com.eun.tutorial.dto.ZthhBoardDTO">
+  	SELECT board_id, title, secret,
+  	       create_id, create_time, 
+  	       update_id, update_time
+    FROM zthh_board
+    WHERE del_yn=0
+  </select>
+  
+  <select id="findById" resultType="com.eun.tutorial.dto.ZthhBoardDTO">
+  	SELECT board_id, title, content, secret,
+  	       create_id, create_time, 
+  	       update_id, update_time
+    FROM zthh_board
+    WHERE board_id = #{boardId, jdbcType=VARCHAR, javaType=string}
+    AND del_yn=0
+  </select>
+  
+  <select id="getError" parameterType="hashMap" resultType="com.eun.tutorial.dto.ZthhBoardDTO">
+  	SELECT board_id, title, content, secret,
+  	       create_id, create_time, update_id, update_time
+  	FROM zthh_board 
+  	WHERE id = #{id, jdbcType=VARCHAR}
+  	AND del_yn=0
+  </select>
+  
+  <insert id="save" parameterType="com.eun.tutorial.dto.ZthhBoardDTO"> 
+		MERGE INTO zthh_board 
+		USING DUAL 
+			ON ( board_id = #{boardId, jdbcType=VARCHAR, javaType=string} ) 
+		WHEN MATCHED THEN /* ON 조건에 해당되는 것이 있으면 아래 실행(UPDATE) */
+			UPDATE SET       
+				update_id = #{updateId, jdbcType=VARCHAR}
+				,update_time = CURRENT_DATE
+				,content = #{content, mode=IN, jdbcType=CLOB, javaType=string}
+				,secret= #{isSecret, jdbcType=BIT, javaType=boolean}
+		WHEN NOT MATCHED THEN /* ON 조건에 매칭되지 않으면 아래 실행(Insert)*/
+		    INSERT (BOARD_ID, TITLE, SECRET,
+		    		create_id, create_time, update_id, update_time, CONTENT)
+		   		VALUES (#{boardId, jdbcType=VARCHAR, javaType=string},
+				   		#{title, jdbcType=VARCHAR}, 
+				   		#{isSecret, jdbcType=BIT, javaType=boolean},				   		
+				   		#{createId, jdbcType=VARCHAR}, 
+				   		CURRENT_DATE, 
+				   		#{updateId, jdbcType=VARCHAR}, 
+				   		CURRENT_DATE,
+				   		EMPTY_CLOB())
+  </insert>  
+  
+  <delete id="delete" parameterType="com.eun.tutorial.dto.ZthhBoardDTO"> 
+  		UPDATE zthh_board SET del_yn=1 WHERE board_id = #{id, jdbcType=VARCHAR, javaType=string}
+  </delete>  
+  
+  <update id="update" parameterType="com.eun.tutorial.dto.ZthhBoardDTO"> 
+  		UPDATE zthh_board SET title=#{title, jdbcType=VARCHAR},
+  		secret=#{isSecret, jdbcType=BIT, javaType=boolean}
+        WHERE board_id = #{boardId, jdbcType=VARCHAR, javaType=string}
+  </update>     
+
+</mapper>

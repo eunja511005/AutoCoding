@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.eun.tutorial.mapper.project.ProjectMapper">
+
+	<!-- 프로젝트 조회 -->
+	<select id="selectProjects"
+		resultType="com.eun.tutorial.dto.project.ProjectDTO">
+		SELECT id, name, description, start_date, end_date, status, manager
+		FROM zthh_project
+		WHERE del_yn=0
+		ORDER BY CREATED_AT DESC
+		OFFSET #{offset} ROWS FETCH NEXT #{limit} ROWS ONLY
+	</select>
+
+	<!-- 참가자 조회 -->
+	<select id="selectParticipantsByProjectId" parameterType="java.lang.String"
+		resultType="java.lang.String">
+		SELECT participant
+		FROM zthh_project_participant
+		WHERE project_id = #{projectId}
+	</select>
+
+	<select id="selectTotalProjects" resultType="java.lang.Long">
+		SELECT COUNT(*) FROM
+		zthh_project
+		WHERE del_yn=0
+	</select>
+	
+	<select id="selectProjectById" resultType="com.eun.tutorial.dto.project.ProjectDTO">
+		SELECT id, name, description, start_date, end_date, status, manager
+		FROM zthh_project
+		WHERE id = #{id} 
+		AND del_yn=0
+	</select>
+
+	<insert id="insertProject" parameterType="com.eun.tutorial.dto.project.ProjectDTO">
+		MERGE INTO zthh_project 
+		USING DUAL 
+			ON ( id = #{id} ) 
+		WHEN MATCHED THEN /* ON 조건에 해당되는 것이 있으면 아래 실행(UPDATE) */
+			UPDATE SET       
+				name = #{name}
+				,description = #{description}
+				,start_date = #{startDate}
+				,end_date= #{endDate}
+				,status= #{status}
+				,manager= #{manager}
+		WHEN NOT MATCHED THEN /* ON 조건에 매칭되지 않으면 아래 실행(Insert)*/
+		    INSERT (id, name, description,
+					start_date, end_date,
+					status, manager)
+		   		VALUES (#{id}, #{name},
+						#{description}, #{startDate},
+						#{endDate}, #{status}, #{manager})		
+	</insert>
+
+	<insert id="insertProjectParticipants"
+		parameterType="java.util.List">
+		<foreach collection="participants" item="participant"
+			index="index" separator=" " open="INSERT ALL"
+			close="SELECT * FROM DUAL">
+			INTO zthh_project_participant (
+			project_id
+			, participant
+			) VALUES(
+			#{projectId}
+			, #{participant}
+			)
+		</foreach>
+	</insert>
+
+	<delete id="deleteProjectParticipantsByProjectId" parameterType="java.lang.String">
+		delete from zthh_project_participant 
+		WHERE project_id = #{project_id, jdbcType=VARCHAR, javaType=string}
+	</delete>  	
+	
+  <delete id="delete" parameterType="com.eun.tutorial.dto.ZthhBoardDTO"> 
+  		UPDATE zthh_project SET del_yn=1 WHERE id = #{id, jdbcType=VARCHAR, javaType=string}
+  </delete>  	
+
+</mapper>
