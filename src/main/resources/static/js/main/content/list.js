@@ -4,6 +4,7 @@ var table;
 $(document).ready(function() {
 	debugger;
     table = $('#example').DataTable({
+    	scrollX: true,
         "serverSide": true,
         "processing": true,
         "searching": false, // 검색 기능 비활성화
