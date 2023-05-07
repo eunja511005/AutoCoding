@@ -51,7 +51,7 @@
 				<i class="fas fa-table me-1"></i> DataTable Example
 			</div>
 			<div class="card-body">
-			    <table id="example" class="display" stype="width: 100%">
+			    <table id="example">
 			        <thead>			        
 			            <tr>
 			                <th>ID</th>
