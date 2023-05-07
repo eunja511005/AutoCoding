@@ -15,7 +15,10 @@
         <title>Auto Coding Main</title>
         <link href="/css/main/common/styles.css" rel="stylesheet" />
         <link href="/css/main/common/datatables.min.css" rel="stylesheet" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.20/summernote-bs5.min.css">
+        
+        <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.20/summernote-bs5.min.css">-->
+        <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
+    
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
     </head>
 	<body class="sb-nav-fixed">
