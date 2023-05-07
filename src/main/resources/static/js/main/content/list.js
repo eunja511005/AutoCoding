@@ -7,6 +7,7 @@ $(document).ready(function() {
         "serverSide": true,
         "processing": true,
         "searching": false, // 검색 기능 비활성화
+        scrollX: true,
         "ajax": {
             "url": "/posts/list",
             "type": "POST",
@@ -66,7 +67,7 @@ $(document).ready(function() {
     });
     
 	$('#modalContent').summernote({
-  	    placeholder: 'Hello Bootstrap 5',
+  	    placeholder: 'Hello Summernote lite',
   	    tabsize: 2,
         height: 300,                 // set editor height
         minHeight: null,             // set minimum height of editor
