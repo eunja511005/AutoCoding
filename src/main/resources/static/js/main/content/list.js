@@ -33,7 +33,6 @@ $(document).ready(function() {
             }
         },
         "columns": [
-            {"data": "id", "visible": false},
             {"data": "title"},
             {"data": "secret"},
             {"data": "created_at",

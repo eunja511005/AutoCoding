@@ -54,7 +54,6 @@
 			    <table id="example">
 			        <thead>			        
 			            <tr>
-			                <th>ID</th>
 			                <th>Title</th>
 			                <th>Category</th>
 			                <th>Date</th>
