@@ -33,6 +33,6 @@ build/
 .vscode/
 
 /bin/
-*.properties
+#*.properties
 /user-photos/
 /hs_err_pid39776.log
