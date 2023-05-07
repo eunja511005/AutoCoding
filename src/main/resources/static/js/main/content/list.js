@@ -40,7 +40,7 @@ $(document).ready(function() {
 	            	return moment(data, "YYYY-MM-DDTHH:mm:ss").format("YYYY년 MM월 DD일 HH:mm");
 	            }
             },
-            {"data": "",
+            {"data": "id",
          	   "render": function(data, type, row, meta){
          		   //return '<button type="button" class="btn btn-primary">View Content</button>';
          		   return '<i class="fa-solid fa-magnifying-glass-chart"></i>';
