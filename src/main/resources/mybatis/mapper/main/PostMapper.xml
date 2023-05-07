@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eun.tutorial.mapper.main.PostMapper">
+    
+    <resultMap id="postResultMap" type="com.eun.tutorial.dto.main.PostDTO">
+        <id property="id" column="id" />
+        <result property="title" column="title" />
+        <result property="content" column="content" />
+        <result property="isSecret" column="is_secret" />
+        <result property="created_at" column="created_at" />
+    </resultMap>
+
+	<select id="selectPosts" parameterType="java.util.HashMap" resultMap="postResultMap">
+	    SELECT
+	        id,
+	        title,
+	        content,
+	        secret,
+	        created_at
+	    FROM
+	        posts
+	    WHERE del_yn=0
+	        <if test="search.title != null and search.title.value != ''">
+	            AND LOWER(title) LIKE '%'||LOWER(#{search.title.value})||'%'
+	        </if>
+	        <if test="search.isSecret != null and search.isSecret.value != ''">
+	            AND secret = #{search.isSecret.value}
+	        </if>
+		    <if test="search.startDate != null and search.startDate.value != ''">
+		      	AND TO_CHAR(created_at, 'YYYY-MM-DD') &gt;= #{search.startDate.value}
+		    </if>
+		    <if test="search.endDate != null and search.endDate.value != ''">
+		      	AND TO_CHAR(created_at, 'YYYY-MM-DD') &lt;= #{search.endDate.value}
+		    </if>	        
+	    ORDER BY ${orderColumnName} ${orderDirection}
+	    OFFSET #{offset} ROWS FETCH NEXT #{limit} ROWS ONLY
+	</select>
+	
+    <update id="mergePost" parameterType="com.eun.tutorial.dto.main.PostDTO">
+        MERGE INTO posts
+        USING DUAL 
+        	ON ( id = #{id} ) 
+        WHEN MATCHED THEN
+            UPDATE SET
+                title = #{title},
+                content = #{content},
+                secret = #{isSecret}
+        WHEN NOT MATCHED THEN
+            INSERT (id, title, content, secret)
+            VALUES (#{id}, #{title}, EMPTY_CLOB(), #{isSecret})
+    </update>	
+    
+	<update id="update"> 
+		UPDATE posts SET title=#{title},
+						 secret=#{isSecret}
+		WHERE id = #{id}
+	</update>    
+
+    <select id="getTotalCount" parameterType="java.util.HashMap" resultType="int">
+        SELECT
+            COUNT(*)
+        FROM
+            posts
+        WHERE del_yn=0
+	        <if test="search.title != null and search.title.value != ''">
+	            AND LOWER(title) LIKE '%'||LOWER(#{search.title.value})||'%'
+	        </if>
+	        <if test="search.isSecret != null and search.isSecret.value != ''">
+	            AND secret = #{search.isSecret.value}
+	        </if>
+		    <if test="search.startDate != null and search.startDate.value != ''">
+		      	AND TO_CHAR(created_at, 'YYYY-MM-DD') &gt;= #{search.startDate.value}
+		    </if>
+		    <if test="search.endDate != null and search.endDate.value != ''">
+		      	AND TO_CHAR(created_at, 'YYYY-MM-DD') &lt;= #{search.endDate.value}
+		    </if>	
+    </select>
+    
+	<delete id="delete"> 
+		UPDATE posts SET del_yn=1 WHERE id = #{id}
+	</delete>  
+	
+	<select id="findById" resultType="com.eun.tutorial.dto.main.PostDTO">
+		SELECT
+	        id,
+	        title,
+	        content,
+	        secret,
+	        created_at
+	    FROM
+	        posts
+	    WHERE id = #{id}
+	    AND del_yn=0
+	</select>	    
+
+</mapper>
+

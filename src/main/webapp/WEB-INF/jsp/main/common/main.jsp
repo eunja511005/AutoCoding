@@ -4,13 +4,18 @@
 <html>
     <head>
         <meta charset="utf-8" />
+        <meta name="_csrf" content="${_csrf.token}"/>
+	    <meta name="_csrf_header" content="${_csrf.headerName}"/>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
+        <!-- Favicon-->
+    	<link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
         <title>Auto Coding Main</title>
-        <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
         <link href="/css/main/common/styles.css" rel="stylesheet" />
+        <link href="/css/main/common/datatables.min.css" rel="stylesheet" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.20/summernote-bs5.min.css">
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
     </head>
 	<body class="sb-nav-fixed">
@@ -28,14 +33,7 @@
         </div>	
     </div>	
     
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-    <script src="/js/main/common/scripts.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
-    <script src="/assets/main/common/chart-area-demo.js"></script>
-    <script src="/assets/main/common/chart-bar-demo.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
-    
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <%@ include file="/WEB-INF/jsp/main/common/script.jsp" %>
     <script src="/js/main/common/main.js"></script>    
     
 	</body>

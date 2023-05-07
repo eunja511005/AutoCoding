@@ -213,4 +213,23 @@ CREATE TABLE zthh_project_participant (
   CONSTRAINT fk_project_participant_project FOREIGN KEY (project_id) REFERENCES zthh_project(id)
 );
 
+drop table posts;
+CREATE TABLE posts (
+  id VARCHAR2(200) PRIMARY KEY,
+  del_yn  CHAR(1) DEFAULT 0,
+  title VARCHAR2(255) NOT NULL,
+  content CLOB NOT NULL,
+  secret  CHAR(1) DEFAULT 0 NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
+drop table comments;
+CREATE TABLE comments (
+  id NUMBER(11) PRIMARY KEY,
+  post_id NUMBER(11) NOT NULL,
+  del_yn  CHAR(1) DEFAULT 0,
+  content CLOB NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+
 */
