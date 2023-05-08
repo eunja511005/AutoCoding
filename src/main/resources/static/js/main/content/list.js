@@ -2,7 +2,6 @@ var csrfheader = $("meta[name='_csrf_header']").attr("content");
 var csrftoken = $("meta[name='_csrf']").attr("content");	
 var table;
 $(document).ready(function() {
-	debugger;
     table = $('#example').DataTable({
         "serverSide": true,
         "processing": true,
@@ -132,7 +131,6 @@ $(document).ready(function() {
   				xhr.setRequestHeader(csrfheader, csrftoken);
               },
               success: function(response) {
-              	debugger;
               	if(response.postList != undefined && response.postList != ""){
               		$('#modalId').val(response.postList.id);
               		$('#modalContent').summernote('code', response.postList.content);
@@ -170,7 +168,6 @@ $(document).ready(function() {
     		  if (willDelete) {
     			var data = table.row($(this).parents('tr')).data();
 	                var id = data.id;
-	                debugger;
 	                $.ajax({
 	                    url: '/posts/delete/'+ id,
 	                    type: 'DELETE',
@@ -203,7 +200,6 @@ $(document).ready(function() {
 });
 
 function save(form){
-	debugger;
 	// Get form data
 	var formData = new FormData(form);
 
@@ -270,7 +266,6 @@ function save(form){
 
 // onImageUpload callback 함수 정의
 function onImageUpload(files) {
-	debugger;
     for (var i = 0; i < files.length; i++) {
     	
     	// 이미지 파일을 압축합니다. (압축률: 50%)

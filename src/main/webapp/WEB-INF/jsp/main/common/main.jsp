@@ -11,7 +11,7 @@
         <meta name="description" content="" />
         <meta name="author" content="" />
         <!-- Favicon-->
-    	<link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+    	<link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
         <title>Auto Coding Main</title>
         <link href="/css/main/common/styles.css" rel="stylesheet" />
         <link href="/css/main/common/datatables.min.css" rel="stylesheet" />
