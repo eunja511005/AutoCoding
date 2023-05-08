@@ -1,13 +1,19 @@
 $(document).ready(function(){
-	loadContent("/content1");
+	//첫번째 페이지
+	$('#dynamic-content').load("/content1");
 	
-	$('nav a').on('click', function(event) {
-        event.preventDefault();
-        var page = $(this).attr('href');
-        loadContent(page);
-    });
+    // 클릭 이벤트를 등록합니다.
+    $('nav a').on('click', handleClick);
 });
 
-function loadContent(page){
-	$('#dynamic-content').load(page);
+function handleClick(event) {
+    event.preventDefault();
+
+    // 페이지를 로드합니다.
+    var page = $(this).attr('href');
+    $('#dynamic-content').load(page);
+    
+    $('nav a').off('click');
+    $('nav a').on('click', handleClick);
 }
+
