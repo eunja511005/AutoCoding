@@ -118,6 +118,7 @@ $(document).ready(function() {
     	$(this).find('#postForm').trigger('reset');
     	$(this).find('#modalContent').summernote('reset');
     	$(this).find('#commentForm').trigger('reset');
+    	$(this).find('#comment-list').empty();
     });
     
     // Bind click event to content button
