@@ -6,7 +6,7 @@
                                         <form id="myForm">
                                             <div class="form-floating mb-3">
                                                 <input class="form-control" id="username" name="username" type="text" placeholder="name" />
-                                                <label for="username">Email address</label>
+                                                <label for="username">User Name</label>
                                             </div>
                                             <div class="form-floating mb-3">
                                                 <input class="form-control" id="password" name="password" type="password" placeholder="Password" />
