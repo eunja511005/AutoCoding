@@ -75,42 +75,66 @@
 	        <h5 class="modal-title" id="newPostModalLabel">New Post</h5>
 	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 	      </div>
-	      <div class="modal-body">
-			<div class="card mb-4">
-				<div class="card-body">
-					<form id="postForm">
-						  <input type="hidden" id="modalId" name="id" value=""/>
-						  <div class="row my-4">
-						    <div class="col-md-12">
-						      <div class="form-check">
-						        <label class="form-check-label" for="secret">Secret</label>
-						        <input type="checkbox" class="form-check-input" id="modaSecret" name="secret" >
-						      </div>
-						    </div>
-						  </div>	
-						  <div class="row my-4">
-						    <div class="col-md-12">
-						      <div>
-						        <label for="title" class="form-label">Title</label>
-						        <input type="text" class="form-control" id="modaTitle" name="title" placeholder="title" required>
-						      </div>
-						    </div>
-						  </div>
-						  <div class="row">
-						    <div class="col-md-12">
-						      <div>
-						        <label for="content" class="form-label">Content</label>
-						        <textarea class="form-control" id="modalContent" name="content" rows="10"></textarea>
-						      </div>  
-						    </div>
-						  </div>
-					</form>			
+			<div class="modal-body">
+				<div class="card mb-4">
+					<div class="card-body">
+						<form id="postForm">
+							<input type="hidden" id="modalId" name="id" value="" />
+							<div class="row my-4">
+								<div class="col-md-12">
+									<div class="form-check">
+										<label class="form-check-label" for="secret">Secret</label> <input
+											type="checkbox" class="form-check-input" id="modaSecret"
+											name="secret">
+									</div>
+								</div>
+							</div>
+							<div class="row my-4">
+								<div class="col-md-12">
+									<div>
+										<label for="title" class="form-label">Title</label> <input
+											type="text" class="form-control" id="modaTitle" name="title"
+											placeholder="title" required>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-12">
+									<div>
+										<label for="content" class="form-label">Content</label>
+										<textarea class="form-control" id="modalContent"
+											name="content" rows="10"></textarea>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
 				</div>
+
+
+				<!-- 댓글 입력창 -->
+				<div class="card mb-4" id="commentArea" style="display: none;">
+					<div class="card-body">
+						<form id="commentForm">
+							<div class="row">
+								<div class="col-md-12">
+									<div>
+										<label for="comment" class="form-label">Comment</label>
+										<textarea class="form-control" id="commentContent" name="content" rows="3"></textarea>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+
 			</div>
-	      </div>
-	      <div class="modal-footer">
-	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-	        <button type="button" class="btn btn-primary">Save changes</button>
+			<div class="modal-footer">
+		        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+		        <button type="button" class="btn btn-primary">Save changes</button>
+		        
+		        <!-- 댓글 달기 버튼 -->
+  				<button type="button" class="btn btn-outline-primary" id="commentButton" style="display: none;">Add Comment</button>
 	      </div>
 	    </div>
 	  </div>

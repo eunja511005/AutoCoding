@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -61,17 +64,28 @@ public class PostController {
         return result;
     }
     
+	@PostMapping("/list/{id}")
+	public @ResponseBody Map<String, Object> list(@PathVariable String id){
+		Map<String, Object> res = postService.findById(id);
+		res.put("login", checkLogin());
+    	
+		return res;
+	}
+
+	private boolean checkLogin() {
+		// 로그인 여부 체크
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
+		    return false;
+		} else {
+		    return true;
+		}
+	}
+	
+    
 	@PostMapping("/save")
 	public @ResponseBody Map<String, Object> getUserProfile(@RequestBody PostDTO postDTO){
 		return postService.save(postDTO);
-	}
-	
-	@PostMapping("/list/{id}")
-	public @ResponseBody Map<String, Object> list(@PathVariable String id){
-    	
-    	Map<String, Object> res = postService.findById(id);
-    	
-		return res;
 	}
 	
 	@DeleteMapping("/delete/{id}")

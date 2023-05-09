@@ -64,6 +64,10 @@ $(document).ready(function() {
     
     
     $('#newPostModalButton').click(function() {
+    	// 댓글 입력창 숨기기
+		$("#comment-form").hide(); 
+		$("#commentButton").hide();
+		// 모달 창 보이기
         $('#newPostModal').modal('show');
     });   
     
@@ -136,7 +140,17 @@ $(document).ready(function() {
               		$('#modalContent').summernote('code', response.postList.content);
 			       	$('#modaTitle').val(response.postList.title);
 			       	$('#modaSecret').prop('checked', response.postList.secret);
-              		
+			       	
+			       	if (response.login === true) {
+			       		// 댓글 입력창 보이기
+						$("#commentArea").show(); 
+						$("#commentButton").show();
+			       	}else{
+			       		// 댓글 입력창 숨기기
+						$("#comment-form").hide(); 
+						$("#commentButton").hide(); 
+			       	}
+			       	
 			       	$('#newPostModal').modal('show');
               	}else{
                   	swal({
