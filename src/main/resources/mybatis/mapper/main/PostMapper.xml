@@ -91,7 +91,32 @@
 	        posts
 	    WHERE id = #{id}
 	    AND del_yn=0
-	</select>	    
+	</select>	 
+	
+	<update id="mergeComment" parameterType="com.eun.tutorial.dto.main.CommentDTO">
+	  MERGE INTO comments c
+	  USING DUAL
+	  ON (c.id = #{id})
+	  WHEN MATCHED THEN
+	    UPDATE SET
+	      c.content = #{content}
+	  WHEN NOT MATCHED THEN
+	    INSERT (post_id, content, create_id)
+	    VALUES (#{postId}, #{content}, #{createId})
+	</update>
+
+	<select id="findCommentsById" resultType="com.eun.tutorial.dto.main.CommentDTO">
+	  SELECT id, post_id, content, created_at, del_yn, create_id
+	  FROM comments
+	  WHERE post_id = #{postId} 
+	  AND del_yn = 0
+	  ORDER BY created_at DESC
+	</select>
+	
+	<delete id="deleteComment"> 
+		UPDATE comments SET del_yn=1 WHERE id = #{id} and create_id = #{currentUserId}
+	</delete>	
+	   
 
 </mapper>
 

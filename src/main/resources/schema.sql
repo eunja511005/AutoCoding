@@ -225,11 +225,16 @@ CREATE TABLE posts (
 
 drop table comments;
 CREATE TABLE comments (
-  id NUMBER(11) PRIMARY KEY,
-  post_id NUMBER(11) NOT NULL,
+  id NUMBER(11) DEFAULT comments_seq.nextval PRIMARY KEY,
+  post_id VARCHAR2(200) NOT NULL,
   del_yn  CHAR(1) DEFAULT 0,
   content CLOB NOT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+  create_id     VARCHAR2(30),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  CONSTRAINT fk_comments_post_id FOREIGN KEY (post_id)
+    REFERENCES posts (id)
+    ON DELETE CASCADE
+    ENABLE
 );
-
+CREATE SEQUENCE comments_seq START WITH 1 INCREMENT BY 1 MAXVALUE 99999999 CYCLE NOCACHE;
 */

@@ -6,11 +6,14 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.apache.tika.utils.StringUtils;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import com.eun.tutorial.dto.main.CommentDTO;
 import com.eun.tutorial.dto.main.PostDTO;
 import com.eun.tutorial.dto.main.PostSearchDTO;
 import com.eun.tutorial.mapper.main.PostMapper;
+import com.eun.tutorial.service.user.UserDetailsImpl;
 
 @Service
 public class PostServiceImpl implements PostService {
@@ -85,6 +88,45 @@ public class PostServiceImpl implements PostService {
 		PostDTO postDTO = postMapper.findById(id);
 		res.put("result", "find forum success");
 		res.put("postList", postDTO);
+		return res;
+	}
+
+	@Override
+	public Map<String, Object> addComment(CommentDTO commentDTO) {
+		Map<String, Object> res = new HashMap<>();
+		postMapper.mergeComment(commentDTO);
+		res.put("result", "comment save success");
+		return res;
+	}
+
+	@Override
+	public Map<String, Object> findCommentsById(String id, Authentication authentication) {
+		Map<String, Object> res = new HashMap<>();
+		
+		String currentUserId = "";
+		if(authentication!=null) {
+			UserDetailsImpl userDetailsImpl = (UserDetailsImpl) authentication.getPrincipal();
+			currentUserId = userDetailsImpl.getUsername();
+		}
+		
+		List<CommentDTO> commentDTO = postMapper.findCommentsById(id);
+		res.put("currentUserId", currentUserId);
+		res.put("commentList", commentDTO);
+		return res;
+	}
+
+	@Override
+	public Map<String, Object> deleteComment(String id, Authentication authentication) {
+		Map<String, Object> res = new HashMap<>();
+		
+		String currentUserId = "";
+		if(authentication!=null) {
+			UserDetailsImpl userDetailsImpl = (UserDetailsImpl) authentication.getPrincipal();
+			currentUserId = userDetailsImpl.getUsername();
+		}
+		
+		postMapper.deleteComment(id, currentUserId);
+		res.put("result", "delete success");
 		return res;
 	}
 

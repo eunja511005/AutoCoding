@@ -67,6 +67,7 @@ $(document).ready(function() {
     	// 댓글 입력창 숨기기
 		$("#comment-form").hide(); 
 		$("#commentButton").hide();
+		
 		// 모달 창 보이기
         $('#newPostModal').modal('show');
     });   
@@ -116,6 +117,7 @@ $(document).ready(function() {
     	$(this).find('#postForm input[type=hidden]').val('');
     	$(this).find('#postForm').trigger('reset');
     	$(this).find('#modalContent').summernote('reset');
+    	$(this).find('#commentForm').trigger('reset');
     });
     
     // Bind click event to content button
@@ -140,6 +142,9 @@ $(document).ready(function() {
               		$('#modalContent').summernote('code', response.postList.content);
 			       	$('#modaTitle').val(response.postList.title);
 			       	$('#modaSecret').prop('checked', response.postList.secret);
+			       	
+					// 댓글 리스트 보여 주기
+					loadComments();
 			       	
 			       	if (response.login === true) {
 			       		// 댓글 입력창 보이기
@@ -211,6 +216,102 @@ $(document).ready(function() {
 
     });    
     
+    // 댓글 달기 버튼 클릭시
+    $("#commentButton").click(function() {
+    	  // 입력된 댓글 내용 가져오기
+    	  var commentContent = $("#commentContent").val();
+    	  
+    	  // 댓글 내용이 비어있으면 알림창 띄우기
+    	  if(commentContent == '') {
+  			swal({
+				title: "Registration failed",
+				text: "댓글을 입력해 주세요.",
+				icon: "warning",
+				button: "OK",
+			})
+    	    return false;
+    	  }
+    	  
+  		  var params = {
+  			 "postId": $("#modalId").val(),
+  			 "content": commentContent
+  		  };
+    	  
+    	  // 서버로 댓글 추가 요청 보내기
+    	  $.ajax({
+    	    type: "POST",
+    	    url: "/posts/comment",
+    	    contentType: 'application/json; charset=utf-8',
+    	    beforeSend : function(xhr){   
+				xhr.setRequestHeader(csrfheader, csrftoken);
+            },
+            data: JSON.stringify(params),
+    	    success: function(response) {
+    	      // 댓글 추가 후 입력 폼 내용 지우기
+    	      $("#commentContent").val("");
+    	        
+    	      // 댓글 목록을 다시 불러오기
+    	      loadComments();
+    	    },
+    	    error: function(error) {
+    	      // 서버에서 응답을 받지 못하면 에러 메시지 출력
+    	      console.error(error);
+    	    }
+    	  });
+    	});
+    
+    // 댓글 리스트 접기/펼치기
+    $('#comment-list-toggle').click(function() {
+      $('#comment-list').slideToggle();
+      $(this).find('i').toggleClass('fa-chevron-up fa-chevron-down');
+    });
+    
+    // 삭제 버튼 클릭 이벤트
+    $(document).on("click", ".delete-comment", function() {
+    	swal({
+  		  title: "Are you sure you want to delete it?",
+  		  text: "Your information is safely managed.",
+  		  icon: "warning",
+  		  buttons: true,
+  		  dangerMode: true,
+  		})
+  		.then((willDelete) => {
+  		  if (willDelete) {
+  			  var commentId = $(this).data("commentid");
+
+	  	      $.ajax({
+	  	    	  url: '/posts/comment/'+ commentId,
+	  	          type: 'DELETE',
+	  	          beforeSend : function(xhr){   
+	  					xhr.setRequestHeader(csrfheader, csrftoken);
+	  	          },
+	  	        success: function(response) {
+	  	        	if(response.result != undefined && response.result == "delete success"){
+	  	        		loadComments();
+	  	        	}else{
+	  	        		swal({
+	  	          		  title: "No Auth",
+	  	          		  text: "You are not authorized to delete this content.",
+	  	          		  icon: "warning",
+	  	          		  button: "OK",
+	  	          		})	
+	  	        	}
+	  	        },
+	  	        error: function (error) {
+	  	  	      console.log(error);	
+	  	  	      swal({
+	  	    		  title: "No Auth",
+	  	    		  text: "You are not authorized to delete this content.",
+	  	    		  icon: "warning",
+	  	    		  button: "OK",
+	  	    		})
+	  	  	    },
+	  	      });
+  		  }else{
+  			  
+  		  }
+    	});	
+    });
 });
 
 function save(form){
@@ -339,3 +440,43 @@ function compressImage(imageFile, maxSize, quality) {
     reader.onerror = reject;
   });
 }
+
+function loadComments() {
+	debugger;
+	  var postId = $("#modalId").val();
+	  $.ajax({
+	    type: "POST",
+	    url: "/posts/comment/" + postId,
+		beforeSend: function(xhr) {
+			xhr.setRequestHeader(csrfheader, csrftoken);
+		},
+	    success: function (response) {
+	      var currentUserId = response.currentUserId;
+	      var commentsHtml = "";
+	      if (response.commentList.length == 0) {
+	    	  commentsHtml += "<p>No comments</p>";
+	      } else {
+	    	  for (var i = 0; i < response.commentList.length; i++) {
+	    		    commentsHtml += "<div class='card mt-3'>";
+	    		    commentsHtml += "<div class='card-body'>";
+	    		    commentsHtml += "<h5 class='card-title'>" + response.commentList[i].createId + "</h5>";
+	    		    commentsHtml += "<h6 class='card-subtitle mb-2 text-muted'>" + moment(response.commentList[i].createdAt, "YYYY-MM-DDTHH:mm:ss").format("YYYY년 MM월 DD일 HH:mm") + "</h6>";
+	    		    commentsHtml += "<p class='card-text'>" + response.commentList[i].content + "</p>";
+
+	    		    // 삭제 아이콘 추가
+	    		    if (response.commentList[i].createId === currentUserId) {
+	    		        commentsHtml += "<i class='fas fa-trash-alt float-end delete-comment' data-commentid='" + response.commentList[i].id + "'></i>";
+	    		    }
+
+	    		    commentsHtml += "</div>";
+	    		    commentsHtml += "</div>";
+	    		}
+	      }
+
+	      $("#comment-list").html(commentsHtml);
+	    },
+	    error: function (error) {
+	      console.log(error);
+	    },
+	  });
+	}

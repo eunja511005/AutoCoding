@@ -14,13 +14,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.eun.tutorial.dto.main.CommentDTO;
 import com.eun.tutorial.dto.main.DataTableResult;
 import com.eun.tutorial.dto.main.PostDTO;
 import com.eun.tutorial.dto.main.PostSearchDTO;
 import com.eun.tutorial.service.main.PostService;
+import com.eun.tutorial.service.user.UserDetailsImpl;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -86,6 +89,23 @@ public class PostController {
 	@PostMapping("/save")
 	public @ResponseBody Map<String, Object> getUserProfile(@RequestBody PostDTO postDTO){
 		return postService.save(postDTO);
+	}
+	
+	@PostMapping("/comment")
+	public @ResponseBody Map<String, Object> addComment(Authentication authentication, @RequestBody CommentDTO commentDTO){
+		UserDetailsImpl userDetailsImpl = (UserDetailsImpl) authentication.getPrincipal();
+		commentDTO.setCreateId(userDetailsImpl.getUsername());
+		return postService.addComment(commentDTO);
+	}
+	
+	@PostMapping("/comment/{id}")
+	public @ResponseBody Map<String, Object> getComments(Authentication authentication, @PathVariable String id){
+		return postService.findCommentsById(id, authentication);
+	}
+	
+	@DeleteMapping("/comment/{id}")
+	public @ResponseBody Map<String, Object> deleteComment(Authentication authentication, @PathVariable String id){
+		return postService.deleteComment(id, authentication);
 	}
 	
 	@DeleteMapping("/delete/{id}")

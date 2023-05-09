@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.eun.tutorial.dto.main.CommentDTO;
 import com.eun.tutorial.dto.main.PostDTO;
 
 @Mapper
@@ -15,6 +16,9 @@ public interface PostMapper {
 	int delete(String id);
 	PostDTO findById(String id);
 	int update(PostDTO postDTO);
+	int mergeComment(CommentDTO commentDTO);
+	List<CommentDTO> findCommentsById(String id);
+	int deleteComment(String id, String currentUserId);
 }
 
 
