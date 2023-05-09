@@ -2,8 +2,6 @@ package com.eun.tutorial.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -73,9 +71,21 @@ public class MyWebInitController {
 		
         // 2. 로그인 페이지로 이동
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("signin");
+//        modelAndView.setViewName("signin");
+        modelAndView.setViewName("jsp/main/content/signin");
 
         return modelAndView;
+    }
+	
+    @GetMapping("/login-status")
+    public @ResponseBody Map<String, Object> getLoginStatus(Authentication authentication) {
+    	Map<String, Object> res = new HashMap<>();
+        if(authentication == null) {
+        	res.put("result", "not login");
+        } else {
+        	res.put("result", "login");
+        }
+        return res;
     }
 	
 	@GetMapping("/joinInit")

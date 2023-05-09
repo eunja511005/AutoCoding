@@ -1,5 +1,7 @@
 package com.eun.tutorial.config;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -103,7 +105,7 @@ public class MyWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter
         
         http
         .authorizeRequests() // 접근에 대한 인증 설정
-            .antMatchers("/signinInit", "/assets/**", 
+            .antMatchers("/signinInit", "/assets/**",
             		"/joinInit", "/join", "/js/**", "/img/**", "/css/**",
             		"/h2-console/**", "/error/**", "/favicon.ico", "/layout/test",
             		"/main/**", "/content1", "/content2", "/content3", "/posts/**").permitAll() // 누구나 접근 허용
@@ -120,14 +122,17 @@ public class MyWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter
          */
         http
                 .formLogin() // 로그인에 관한 설정
-                    .loginPage("/signinInit") // 로그인 페이지 URL 
-                    .loginProcessingUrl("/signin")
+                    .loginPage("/signinInit") // 로그인 페이지
+                    .loginProcessingUrl("/signin") // 로그인 버튼 클릭 시 호출 되는 URL로 호출시 스프링 시큐리티에서 제공하는 기능 호출
 //                	.usernameParameter("userId")
                     .successHandler((request, response, auth)->{
                         for (GrantedAuthority authority : auth.getAuthorities()){
                             log.info("Authority Information {} ", authority.getAuthority());
                         }
-                        log.info("getName {} ",auth.getName());
+                        
+                        Date date = new Date();
+                        SimpleDateFormat formatter = new SimpleDateFormat("yyyy년 MM월 dd일 HH시 mm분 ss초");
+                        log.info(" ### {}, Last login time : {} ", auth.getName(), formatter.format(date));
                         
                         Map<String, String> res = new HashMap<>();
                         res.put("result", "login success");
