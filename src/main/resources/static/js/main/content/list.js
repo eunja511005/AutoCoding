@@ -114,11 +114,11 @@ $(document).ready(function() {
     });
     
     $('#newPostModal').on('hidden.bs.modal', function () {
-    	$(this).find('#postForm input[type=hidden]').val('');
-    	$(this).find('#postForm').trigger('reset');
-    	$(this).find('#modalContent').summernote('reset');
-    	$(this).find('#commentForm').trigger('reset');
-    	$(this).find('#comment-list').empty();
+        $(this).find(':input').val('');
+        $(this).find('form').trigger('reset');
+        $(this).find('#modalContent').summernote('reset');
+        $(this).find('#comment-list').empty().hide();
+        $(this).find('#comment-count').text('0');
     });
     
     // Bind click event to content button
@@ -262,9 +262,12 @@ $(document).ready(function() {
     	});
     
     // 댓글 리스트 접기/펼치기
-    $('#comment-list-toggle').click(function() {
-      $('#comment-list').slideToggle();
-      $(this).find('i').toggleClass('fa-chevron-up fa-chevron-down');
+    // 댓글 목록 버튼 클릭 시
+    $("#comment-header").on("click", function() {
+      // 댓글 목록 보이기/숨기기
+      $("#comment-list").slideToggle();
+      // 버튼 아이콘 변경
+      $("#comment-header button i").toggleClass("fa-chevron-down fa-chevron-up");
     });
     
     // 삭제 버튼 클릭 이벤트
@@ -482,10 +485,14 @@ function loadComments() {
 
 	    		    commentsHtml += "</div>";
 	    		    commentsHtml += "</div>";
-	    		}
+	    	  }
 	      }
 
 	      $("#comment-list").html(commentsHtml);
+	      
+	      // 댓글 갯수를 업데이트
+    	  $("#comment-count").text(response.commentList.length);
+
 	    },
 	    error: function (error) {
 	      console.log(error);

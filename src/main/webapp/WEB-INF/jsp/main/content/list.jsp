@@ -132,10 +132,12 @@
         </div>
 
 		<!-- 댓글 리스트 펼치기/접기 -->
-		<div class="mb-3 d-flex justify-content-between align-items-center">
-		  <h5 class="mb-0">Comments</h5>
+		<!-- 댓글 헤더 -->
+		<div class="mb-3 d-flex justify-content-between align-items-center comment-header" id="comment-header">
+		  <h5 class="mb-0">Comments (<span id="comment-count">0</span>)</h5>
 		  <button class="btn btn-sm btn-link" id="comment-list-toggle"><i class="fas fa-chevron-down"></i></button>
 		</div>
+		<!-- 댓글 목록 -->
 		<div id="comment-list" style="display: none;"></div>    
 
       </div>
