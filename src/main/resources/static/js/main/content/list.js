@@ -313,6 +313,17 @@ $(document).ready(function() {
   		  }
     	});	
     });
+    
+    
+    // textarea 엘리먼트에서 엔터키 눌렀을 때
+    $('textarea').keydown(function(e) {
+      if (e.keyCode == 13 && !e.shiftKey) { // 엔터키이고 shift키가 눌리지 않았을 때
+        e.preventDefault(); // 기본 동작 취소
+        $('#commentButton').click(); // 댓글 추가 버튼 클릭
+      }
+    });
+    
+    
 });
 
 function save(form){
