@@ -122,7 +122,7 @@ public class MyWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter
          */
         http
                 .formLogin() // 로그인에 관한 설정
-                    .loginPage("/signinInit") // 로그인 페이지
+                    .loginPage("/main") // 로그인 했을때 이동하는 페이지
                     .loginProcessingUrl("/signin") // 로그인 버튼 클릭 시 호출 되는 URL로 호출시 스프링 시큐리티에서 제공하는 기능 호출
 //                	.usernameParameter("userId")
                     .successHandler((request, response, auth)->{
