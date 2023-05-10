@@ -248,15 +248,36 @@ $(document).ready(function() {
             },
             data: JSON.stringify(params),
     	    success: function(response) {
-    	      // 댓글 추가 후 입력 폼 내용 지우기
-    	      $("#commentContent").val("");
+    	      if(response.result != undefined && response.result != "comment save success"){
+      	  	      swal({
+      	    		  title: "Fail",
+      	    		  text: response.result,
+      	    		  icon: "warning",
+      	    		  button: "OK",
+      	    		})  
+    	      }else{
+      	  	      swal({
+      	    		  title: "Success",
+      	    		  text: response.result,
+      	    		  icon: "success",
+      	    		  button: "OK",
+      	    		})
+    	      }
+  	    		// 댓글 추가 후 입력 폼 내용 지우기
+  	    		$("#commentContent").val("");
     	        
-    	      // 댓글 목록을 다시 불러오기
-    	      loadComments();
+  	  	        // 댓글 목록을 다시 불러오기
+    	        loadComments();
     	    },
     	    error: function(error) {
     	      // 서버에서 응답을 받지 못하면 에러 메시지 출력
-    	      console.error(error);
+    	      console.log(error);
+  	  	      swal({
+  	    		  title: "Error",
+  	    		  text: "Please check browser console",
+  	    		  icon: "warning",
+  	    		  button: "OK",
+  	    		})
     	    }
     	  });
     	});
