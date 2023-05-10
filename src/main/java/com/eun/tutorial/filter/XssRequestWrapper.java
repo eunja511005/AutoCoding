@@ -1,13 +1,18 @@
 package com.eun.tutorial.filter;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.ReadListener;
+import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
+import org.apache.commons.io.IOUtils;
 import org.owasp.validator.html.AntiSamy;
 import org.owasp.validator.html.CleanResults;
 import org.owasp.validator.html.PolicyException;
@@ -15,7 +20,9 @@ import org.owasp.validator.html.ScanException;
 
 import com.eun.tutorial.dto.ZthhErrorDTO;
 import com.eun.tutorial.service.ZthhErrorService;
+import com.fasterxml.jackson.core.io.JsonStringEncoder;
 
+import io.micrometer.core.instrument.util.StringEscapeUtils;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -28,6 +35,41 @@ public class XssRequestWrapper extends HttpServletRequestWrapper {
         super(request);
         this.antiSamy = antiSamy;
         this.zthhErrorService = zthhErrorService;
+    }
+    
+    @Override
+    public ServletInputStream getInputStream() throws IOException {
+        InputStream inputStream = super.getInputStream();
+        String contentType = super.getContentType();
+        if (contentType != null && contentType.startsWith("application/json")) {
+            String json = IOUtils.toString(inputStream, "UTF-8");
+            String sanitizedJson = sanitize(json);
+            sanitizedJson = sanitizedJson.replaceAll("&quot;", "\"");
+            ByteArrayInputStream bis = new ByteArrayInputStream(sanitizedJson.getBytes("UTF-8"));
+            return new ServletInputStream() {
+                @Override
+                public boolean isFinished() {
+                    return false;
+                }
+
+                @Override
+                public boolean isReady() {
+                    return false;
+                }
+
+                @Override
+                public void setReadListener(ReadListener readListener) {
+
+                }
+
+                @Override
+                public int read() throws IOException {
+                    return bis.read();
+                }
+            };
+        } else {
+            return super.getInputStream();
+        }
     }
 
     @Override
@@ -74,6 +116,7 @@ public class XssRequestWrapper extends HttpServletRequestWrapper {
                 sb.append("The following XSS was founded: " + value+"\n");
                 for(String errorMessage : cleanResults.getErrorMessages()) {
                 	sb.append("The following ErrorMessage: " + errorMessage+"\n");
+                	log.error("The following ErrorMessage: " + errorMessage);
                 }
                 sb.append("The following XSS was changed: " + safeHtml+"\n");
                 

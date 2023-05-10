@@ -1,8 +1,10 @@
 package com.eun.tutorial.controller.main;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.tika.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -93,6 +95,17 @@ public class PostController {
 	
 	@PostMapping("/comment")
 	public @ResponseBody Map<String, Object> addComment(Authentication authentication, @RequestBody CommentDTO commentDTO){
+		Map<String, Object> res = new HashMap<>();
+		if(authentication==null) {
+			res.put("result", "Unauthorized. Please log in to leave a comment.");
+			return res;
+		}
+		
+		if(StringUtils.isBlank(commentDTO.getContent())) {
+			res.put("result", "Input contains potentially harmful content.");
+			return res;
+		}
+		
 		UserDetailsImpl userDetailsImpl = (UserDetailsImpl) authentication.getPrincipal();
 		commentDTO.setCreateId(userDetailsImpl.getUsername());
 		return postService.addComment(commentDTO);
