@@ -29,4 +29,14 @@
                             </div>
                         </div>
                         
+                        <!-- 카카오톡 버튼 -->
+					    <div class="row justify-content-center">
+					        <div class="col-lg-6 text-center mt-3">
+					            <a href="/oauth2/authorization/kakao">
+					                <img src="https://developers.kakao.com/tool/resource/static/img/button/login/full/ko/kakao_login_medium_narrow.png">
+					            </a>
+					        </div>
+					    </div>
+                     
+                        
 <script src="/js/main/content/signin.js"></script>                        

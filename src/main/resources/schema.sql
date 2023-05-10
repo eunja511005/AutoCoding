@@ -32,7 +32,7 @@ CREATE TABLE zthm_user
     password      VARCHAR2(100),
     email         VARCHAR2(100),
     role          VARCHAR2(200),
-    picture       VARCHAR2(50),
+    picture       VARCHAR2(500),
     enable        CHAR(1), 
     create_id     VARCHAR2(30),
     create_time   VARCHAR2(14),

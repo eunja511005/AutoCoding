@@ -1,10 +1,15 @@
 package com.eun.tutorial.config;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
 import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
@@ -15,10 +20,12 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
@@ -28,6 +35,7 @@ import com.eun.tutorial.dto.ZthhErrorDTO;
 import com.eun.tutorial.dto.ZthmCommonCodeMappingDTO;
 import com.eun.tutorial.service.ZthhErrorService;
 import com.eun.tutorial.service.ZthmCommonCodeMappingService;
+import com.eun.tutorial.service.user.CustomOAuth2UserService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,6 +48,7 @@ public class MyWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter
 	
 	private final ZthhErrorService zthhErrorService;
 	private final ZthmCommonCodeMappingService zthmCommonCodeMappingService;
+	private final CustomOAuth2UserService customOAuth2UserService;
 	
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -165,6 +174,22 @@ public class MyWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter
                         
                     })
                     .permitAll();    
+        
+        
+		http.oauth2Login()
+				.userInfoEndpoint()
+				.userService(customOAuth2UserService)
+				.and()
+				.successHandler(new AuthenticationSuccessHandler() {
+					@Override
+					public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
+							Authentication authentication) throws IOException, ServletException {
+						log.info("userInfo {}", authentication.getPrincipal().toString());
+						log.info("authentication {}", authentication.toString());
+						log.info("authentication Name {}", authentication.getName());
+						response.sendRedirect("/main");
+					}
+				});
         
         
         /**

@@ -29,15 +29,19 @@ import org.springframework.util.MimeTypeUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.eun.tutorial.dto.CustomOAuth2User;
 import com.eun.tutorial.dto.UserInfoDTO;
 import com.eun.tutorial.dto.ZthhFileAttachDTO;
 import com.eun.tutorial.service.UserService;
 import com.eun.tutorial.service.ZthhFileAttachService;
+import com.eun.tutorial.service.user.PrincipalDetails;
+import com.eun.tutorial.service.user.UserDetailsImpl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -84,6 +88,29 @@ public class MyWebInitController {
         	res.put("result", "not login");
         } else {
         	res.put("result", "login");
+        	
+        	//user picture setting
+        	log.debug("user picture setting");
+        	
+        	
+//        	if(SecurityContextHolder.getContext().getAuthentication().getPrincipal()!=null){
+//                if(SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof CustomOAuth2User){
+//                	CustomOAuth2User customOAuth2User = (CustomOAuth2User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//                    res.put("userProfileImg", customOAuth2User.getPicture());
+//                	res.put("userName", customOAuth2User.getName());
+//                }else {
+//                	UserDetailsImpl userDetailsImpl = (UserDetailsImpl) authentication.getPrincipal();
+//                	res.put("userProfileImg", userDetailsImpl.getPicture());
+//                	res.put("userName", userDetailsImpl.getUsername());
+//                }
+//            }
+        	
+        	PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+        	res.put("userProfileImg", principalDetails.getPicture());
+        	res.put("userName", principalDetails.getUsername());
+
+        	return res;
+        	
         }
         return res;
     }

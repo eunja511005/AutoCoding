@@ -43,12 +43,20 @@ function checkLoginStatus() {
 				$('#edit-btn').show();
 				$('#message-btn').show();
 				$('#logout-btn').show();
+				
+			    // 로그인되어있으면 이미지를 보여준다.
+				$('#navbarDropdown').append('<img src="'+response.userProfileImg+'" class="rounded-circle" width="20" height="20" alt="User Profile">');
 			} else {
 				// 로그인 되어 있지 않을 경우
 				$('#login-btn').show();
 				$('#edit-btn').hide();
 				$('#message-btn').hide();
 				$('#logout-btn').hide();
+				
+			    // 로그인되어있지 않으면 아이콘을 보여준다.
+			    const i = document.createElement('i');
+			    i.classList.add('fas', 'fa-user', 'fa-fw');
+			    $('#navbarDropdown').append(i);
 			}
 		},
 		error: function(xhr) {
