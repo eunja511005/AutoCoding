@@ -197,7 +197,7 @@ public class MyWebInitController {
         
         // 2. 로그인 페이지로 이동
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("signin");
+        modelAndView.setViewName("main");
 
         return modelAndView;
     }
