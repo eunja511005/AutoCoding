@@ -182,7 +182,7 @@ public class MyWebInitController {
 		
 		
         res.put("result", "registe success");
-        res.put("redirectUrl", "/signinInit");
+        res.put("redirectUrl", "/main");
 		return res;
 	}
     
