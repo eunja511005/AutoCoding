@@ -1,12 +1,66 @@
 package com.eun.tutorial.filter;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.servlet.ReadListener;
+import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
-public class XSSCustomRequestWrapper extends HttpServletRequestWrapper {
+import org.apache.commons.io.IOUtils;
 
-    public XSSCustomRequestWrapper(HttpServletRequest request) {
+import com.eun.tutorial.dto.ZthhErrorDTO;
+import com.eun.tutorial.service.ZthhErrorService;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+public class XSSCustomRequestWrapper extends HttpServletRequestWrapper {
+	
+	private ZthhErrorService zthhErrorService;
+
+	public XSSCustomRequestWrapper(HttpServletRequest request, ZthhErrorService zthhErrorService) {
         super(request);
+        this.zthhErrorService = zthhErrorService;
+    }
+    
+    @Override
+    public ServletInputStream getInputStream() throws IOException {
+        InputStream inputStream = super.getInputStream();
+        String contentType = super.getContentType();
+        if (contentType != null && contentType.startsWith("application/json")) {
+            String json = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
+            String sanitizedJson = cleanXSS(json);
+            ByteArrayInputStream bis = new ByteArrayInputStream(sanitizedJson.getBytes(StandardCharsets.UTF_8));
+            return new ServletInputStream() {
+                @Override
+                public boolean isFinished() {
+                    return false;
+                }
+
+                @Override
+                public boolean isReady() {
+                    return false;
+                }
+
+                @Override
+                public void setReadListener(ReadListener readListener) {
+                	// this is not needed.
+                }
+
+                @Override
+                public int read() throws IOException {
+                    return bis.read();
+                }
+            };
+        } else {
+            return super.getInputStream();
+        }
     }
 
     @Override
@@ -14,7 +68,7 @@ public class XSSCustomRequestWrapper extends HttpServletRequestWrapper {
         String[] values = super.getParameterValues(parameter);
 
         if (values == null) {
-            return null;
+            return new String[0];
         }
 
         int count = values.length;
@@ -50,12 +104,54 @@ public class XSSCustomRequestWrapper extends HttpServletRequestWrapper {
     }
 
     private String cleanXSS(String value) {
-        // Remove potentially malicious characters
-        value = value.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+        if (value == null || value.isEmpty()) {
+            return "";
+        }
 
-        // Remove potentially malicious scripts
-        value = value.replaceAll("(?i)javascript:", "");
+        boolean idDetected = false;
+        
+        // Escape XSS characters
+        if (value.contains("<")) {
+            log.warn("##### XSS detected: {}", value);
+            value = value.replace("<", "&lt;");
+            idDetected = true;
+        }
+        if (value.contains(">")) {
+            log.warn("##### XSS detected: {}", value);
+            value = value.replace(">", "&gt;");
+            idDetected = true;
+        }
+        if (value.contains("&")) {
+        	log.warn("##### XSS detected: {}", value);
+        	value = value.replace("&", "&amp;");
+        	idDetected = true;
+        }
+
+        // Escape SQL injection characters
+        if (value.contains("'")) {
+            log.warn("##### SQL injection detected: {}", value);
+            value = value.replace("'", "''");
+            idDetected = true;
+        }
+        if (value.contains("--")) {
+        	log.warn("##### SQL injection detected: {}", value);
+        	value = value.replace("--", "__");
+        	idDetected = true;
+        }
+
+        // Filter file system manipulation characters
+        if (value.contains("..")) {
+            log.warn("##### File system manipulation detected: {}", value);
+            value = value.replace("\\.\\.", "");
+            idDetected = true;
+        }
+        
+        if(idDetected) {
+        	zthhErrorService.save(
+        			ZthhErrorDTO.builder().errorMessage("Detecting security-sensitive characters in input values : " + value).build());
+        }
 
         return value;
     }
+
 }
