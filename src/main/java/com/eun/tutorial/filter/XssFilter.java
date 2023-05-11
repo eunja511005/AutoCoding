@@ -1,18 +1,9 @@
 package com.eun.tutorial.filter;
 
-import org.owasp.validator.html.AntiSamy;
-import org.owasp.validator.html.CleanResults;
-import org.owasp.validator.html.Policy;
-import org.owasp.validator.html.PolicyException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
-import org.springframework.stereotype.Component;
-
-import com.eun.tutorial.dto.ZthhErrorDTO;
-import com.eun.tutorial.service.ZthhErrorService;
-
-import lombok.extern.slf4j.Slf4j;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -20,23 +11,32 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.util.Map;
+import org.owasp.validator.html.AntiSamy;
+import org.owasp.validator.html.Policy;
+import org.owasp.validator.html.PolicyException;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+
+import com.eun.tutorial.dto.ZthhErrorDTO;
+import com.eun.tutorial.service.ZthhErrorService;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class XssFilter implements Filter {
 
 	private AntiSamy antiSamy;
 	private ZthhErrorService zthhErrorService;
+	
+	/**
+	 * XSSCustomRequestWrapper로 분기될 URL 리스트
+	 * sanitize 사용할 경우 써머노트 통한 이미지 업로드 불가
+	 * XSSCustomRequestWrapper로 분기시 < > javascript ' .. 만 막음
+	 */
+	private List<String> xssCustomUrlList = Arrays.asList("/posts/save", "/url2", "/url3"); 
 	
 	public XssFilter(ResourceLoader resourceLoader, ZthhErrorService zthhErrorService) {
 		try {
@@ -55,10 +55,21 @@ public class XssFilter implements Filter {
 			throws IOException, ServletException {
 		HttpServletRequest request = (HttpServletRequest) servletRequest;
 		HttpServletResponse response = (HttpServletResponse) servletResponse;
+		
+		log.info("##### requestURI : {}", request.getRequestURI());
+		log.info("##### remoteUser : {}", request.getRemoteUser());
+		if(request.getUserPrincipal()!=null) {
+			log.info("##### userName : {}", request.getUserPrincipal().getName());
+		}
 
 		try {
-			XssRequestWrapper wrappedRequest = new XssRequestWrapper(request, antiSamy, zthhErrorService);
-			filterChain.doFilter(wrappedRequest, response);
+			if(xssCustomUrlList.contains(request.getRequestURI())){
+				//XSSCustomRequestWrapper xSSCustomRequestWrapper = new XSSCustomRequestWrapper(request, zthhErrorService);
+				filterChain.doFilter(request, response);
+			}else {
+				XssRequestWrapper wrappedRequest = new XssRequestWrapper(request, antiSamy, zthhErrorService);
+				filterChain.doFilter(wrappedRequest, response);
+			}
 		} catch (PolicyException | IOException e) {
 
 			String errorMessage = org.apache.tika.utils.ExceptionUtils.getStackTrace(e);

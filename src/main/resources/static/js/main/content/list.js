@@ -415,8 +415,7 @@ function save(form){
 	});	
 }
 
-// onImageUpload callback 함수 정의
-function onImageUpload(files) {
+/*function onImageUpload(files) {
     for (var i = 0; i < files.length; i++) {
     	
     	// 이미지 파일을 압축합니다. (압축률: 50%)
@@ -430,7 +429,36 @@ function onImageUpload(files) {
     		reader.readAsDataURL(compressedImage);
     	});
     }
-}
+}*/
+
+function onImageUpload(files) {
+	  for (var i = 0; i < files.length; i++) {
+	    // 이미지 파일을 압축합니다. (압축률: 50%)
+	    compressImage(files[i], 200, 0.5).then(function (compressedImage) {
+	      // 압축된 이미지 파일을 서버에 업로드합니다.
+	      const formData = new FormData();
+	      formData.append('file', compressedImage);
+	      $.ajax({
+	        type: 'POST',
+	        url: '/posts/uploadImage',
+			beforeSend: function(xhr) {
+				xhr.setRequestHeader(csrfheader, csrftoken);
+			},
+	        data: formData,
+	        processData: false,
+	        contentType: false,
+	        success: function (data) {
+	          // 서버로부터 이미지 파일의 경로를 받아와 HTML 본문에 삽입합니다.
+	          const imgNode = $('<img>').attr('src', data.createdFilePath);
+	          $('#modalContent').summernote('insertNode', imgNode[0]);
+	        },
+	        error: function () {
+	          alert('이미지 업로드에 실패했습니다.');
+	        }
+	      });
+	    });
+	  }
+	}
 
 // 이미지 파일을 압축하는 함수
 function compressImage(imageFile, maxSize, quality) {

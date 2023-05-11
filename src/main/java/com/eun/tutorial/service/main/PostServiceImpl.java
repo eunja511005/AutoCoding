@@ -1,27 +1,38 @@
 package com.eun.tutorial.service.main;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import org.apache.tika.utils.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.lang.Nullable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
-
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import com.eun.tutorial.dto.main.CommentDTO;
 import com.eun.tutorial.dto.main.PostDTO;
 import com.eun.tutorial.dto.main.PostSearchDTO;
 import com.eun.tutorial.mapper.main.PostMapper;
-import com.eun.tutorial.service.user.UserDetailsImpl;
+import com.eun.tutorial.service.user.PrincipalDetails;
+import com.eun.tutorial.util.FileUtil;
+
+import lombok.AllArgsConstructor;
 
 @Service
+@AllArgsConstructor
 public class PostServiceImpl implements PostService {
+	
     private final PostMapper postMapper;
-
-    public PostServiceImpl(PostMapper postMapper) {
-        this.postMapper = postMapper;
-    }
+    
+    private final FileUtil fileUtil;
 
 	@Override
 	public List<PostDTO> searchPosts(PostSearchDTO postSearchDTO) {
@@ -47,7 +58,7 @@ public class PostServiceImpl implements PostService {
 	public Map<String, Object> save(PostDTO postDTO) {
 		Map<String, Object> res = new HashMap<>();
 
-		if(StringUtils.isBlank(postDTO.getId())) {
+		if(org.apache.tika.utils.StringUtils.isBlank(postDTO.getId())) {
     		UUID uuid = UUID.randomUUID();
     		String postId = "post_"+uuid;
     		postDTO.setId(postId);
@@ -105,7 +116,7 @@ public class PostServiceImpl implements PostService {
 		
 		String currentUserId = "";
 		if(authentication!=null) {
-			UserDetailsImpl userDetailsImpl = (UserDetailsImpl) authentication.getPrincipal();
+			PrincipalDetails userDetailsImpl = (PrincipalDetails) authentication.getPrincipal();
 			currentUserId = userDetailsImpl.getUsername();
 		}
 		
@@ -121,7 +132,7 @@ public class PostServiceImpl implements PostService {
 		
 		String currentUserId = "";
 		if(authentication!=null) {
-			UserDetailsImpl userDetailsImpl = (UserDetailsImpl) authentication.getPrincipal();
+			PrincipalDetails userDetailsImpl = (PrincipalDetails) authentication.getPrincipal();
 			currentUserId = userDetailsImpl.getUsername();
 		}
 		
@@ -130,6 +141,12 @@ public class PostServiceImpl implements PostService {
 		return res;
 	}
 
+	@Override
+	public Map<String, Object> saveImage(MultipartFile file) throws IOException {
+		Map<String, Object> res = new HashMap<>();
+		res.put("createdFilePath", fileUtil.saveImage(file));
+		return res;
+	}
 
 }
 

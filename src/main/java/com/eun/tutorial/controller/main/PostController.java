@@ -1,5 +1,6 @@
 package com.eun.tutorial.controller.main;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.eun.tutorial.dto.main.CommentDTO;
@@ -25,7 +27,7 @@ import com.eun.tutorial.dto.main.DataTableResult;
 import com.eun.tutorial.dto.main.PostDTO;
 import com.eun.tutorial.dto.main.PostSearchDTO;
 import com.eun.tutorial.service.main.PostService;
-import com.eun.tutorial.service.user.UserDetailsImpl;
+import com.eun.tutorial.service.user.PrincipalDetails;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -93,6 +95,11 @@ public class PostController {
 		return postService.save(postDTO);
 	}
 	
+    @PostMapping("/uploadImage")
+    public @ResponseBody Map<String, Object> uploadImage(@RequestParam("file") MultipartFile file) throws IOException {
+        return postService.saveImage(file);
+    }
+	
 	@PostMapping("/comment")
 	public @ResponseBody Map<String, Object> addComment(Authentication authentication, @RequestBody CommentDTO commentDTO){
 		Map<String, Object> res = new HashMap<>();
@@ -106,7 +113,7 @@ public class PostController {
 			return res;
 		}
 		
-		UserDetailsImpl userDetailsImpl = (UserDetailsImpl) authentication.getPrincipal();
+		PrincipalDetails userDetailsImpl = (PrincipalDetails) authentication.getPrincipal();
 		commentDTO.setCreateId(userDetailsImpl.getUsername());
 		return postService.addComment(commentDTO);
 	}
