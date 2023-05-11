@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eun.tutorial.mapper.main.CommonCodeMapper">
+
+    <select id="selectCommonCodeList" resultType="com.eun.tutorial.dto.main.CommonCodeDTO">
+        SELECT * FROM common_code where del_yn=0 ORDER BY code_group, code
+    </select>
+
+    <insert id="insertCommonCode">
+        INSERT INTO common_code (code_group, code, value)
+        VALUES (#{codeGroup}, #{code}, #{value})
+    </insert>
+
+    <update id="updateCommonCode">
+        UPDATE common_code
+        SET code_group = #{codeGroup}, code = #{code}, value = #{value}, updated_at = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteCommonCode">
+        UPDATE common_code SET del_yn=1, updated_at = CURRENT_TIMESTAMP WHERE id = #{id}
+    </delete>
+    
+    <select id="getCommonCodeListById" parameterType="string" resultType="com.eun.tutorial.dto.main.CommonCodeDTO">
+	  SELECT * FROM common_code
+	  WHERE id = #{id}
+	</select>
+
+</mapper>
