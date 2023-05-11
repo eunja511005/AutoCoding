@@ -11,12 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
-import com.eun.tutorial.dto.ZthhBoardDTO;
 import com.eun.tutorial.dto.project.ProjectDTO;
 import com.eun.tutorial.dto.project.ProjectListRequest;
 import com.eun.tutorial.dto.project.ProjectListResponse;
 import com.eun.tutorial.mapper.project.ProjectMapper;
-import com.eun.tutorial.service.user.UserDetailsImpl;
+import com.eun.tutorial.service.user.PrincipalDetails;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -87,17 +86,17 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	@Override
-	public Map<String, Object> delete(String id, UserDetailsImpl userDetailsImpl) {
+	public Map<String, Object> delete(String id, PrincipalDetails principalDetails) {
     	Map<String, Object> res = new HashMap<>();
     	
-	    Collection<? extends GrantedAuthority> authorities = userDetailsImpl.getAuthorities();
+	    Collection<? extends GrantedAuthority> authorities = principalDetails.getAuthorities();
 	    boolean isAdmin = authorities.stream()
 	            .anyMatch(auth -> auth.getAuthority().equals("ROLE_SYS"));
 	    
 	    ProjectDTO project = projectMapper.selectProjectById(id);
 	    
 	    // 프로젝트 메니져이거나 Admin만 삭제 가능
-		if(userDetailsImpl.getUsername().equals(project.getManager()) || isAdmin) {
+		if(principalDetails.getUsername().equals(project.getManager()) || isAdmin) {
 			// 프로젝트 참여자 삭제
 		    projectMapper.deleteProjectParticipantsByProjectId(id);
 		    

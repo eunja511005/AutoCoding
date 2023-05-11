@@ -45,7 +45,7 @@ function checkLoginStatus() {
 				$('#logout-btn').show();
 				
 			    // 로그인되어있으면 이미지를 보여준다.
-				$('#navbarDropdown').append('<img src="'+response.userProfileImg+'" class="rounded-circle" width="20" height="20" alt="User Profile">');
+				$('#navbarDropdown').append('<img src="'+response.userProfileImg+'" class="rounded-circle" width="25" height="25" alt="User Profile">');
 			} else {
 				// 로그인 되어 있지 않을 경우
 				$('#login-btn').show();

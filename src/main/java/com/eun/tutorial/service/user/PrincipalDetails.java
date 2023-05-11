@@ -42,10 +42,10 @@ public class PrincipalDetails implements UserDetails, OAuth2User{
     @Override
     public boolean equals(Object o){
         if(this==o) return true;
-        if(!(o instanceof UserDetailsImpl)) return false;
-        UserDetailsImpl userDetails = (UserDetailsImpl) o;
-        return userInfoDTO.getUsername().equals(userDetails.getUsername()) &&
-               userInfoDTO.getPassword().equals(userDetails.getPassword());
+        if(!(o instanceof PrincipalDetails)) return false;
+        PrincipalDetails principalDetails = (PrincipalDetails) o;
+        return userInfoDTO.getUsername().equals(principalDetails.getUsername()) &&
+               userInfoDTO.getPassword().equals(principalDetails.getPassword());
     }
 
     @Override
@@ -78,20 +78,17 @@ public class PrincipalDetails implements UserDetails, OAuth2User{
 
 	@Override
 	public boolean isAccountNonExpired() {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean isAccountNonLocked() {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean isCredentialsNonExpired() {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override

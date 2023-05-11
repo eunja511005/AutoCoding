@@ -7,15 +7,13 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.apache.tika.utils.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.eun.tutorial.dto.ZthhBoardDTO;
 import com.eun.tutorial.mapper.ZthhBoardMapper;
-import com.eun.tutorial.service.user.UserDetailsImpl;
+import com.eun.tutorial.service.user.PrincipalDetails;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -71,17 +69,17 @@ public class ZthhBoardServiceImpl implements ZthhBoardService {
 	}
 
 	@Override
-	public Map<String, Object> delete(String boardId, UserDetailsImpl userDetailsImpl) {
+	public Map<String, Object> delete(String boardId, PrincipalDetails principalDetails) {
     	Map<String, Object> res = new HashMap<>();
     	
-	    Collection<? extends GrantedAuthority> authorities = userDetailsImpl.getAuthorities();
+	    Collection<? extends GrantedAuthority> authorities = principalDetails.getAuthorities();
 	    boolean isAdmin = authorities.stream()
 	            .anyMatch(auth -> auth.getAuthority().equals("ROLE_SYS"));
 	    
 	    ZthhBoardDTO zthhBoardDTO = zthhBoardMapper.findById(boardId);
 	    
 	    // 자신의 글이거나 Admin만 삭제 가능
-		if(userDetailsImpl.getUsername().equals(zthhBoardDTO.getCreateId()) || isAdmin) {
+		if(principalDetails.getUsername().equals(zthhBoardDTO.getCreateId()) || isAdmin) {
 			zthhBoardMapper.delete(boardId);
 			res.put("result", "delete success");
 			res.put("redirectUrl", "/board/listForm");
@@ -95,18 +93,18 @@ public class ZthhBoardServiceImpl implements ZthhBoardService {
 	}
 
 	@Override
-	public Map<String, Object> findById(String boardId, UserDetailsImpl userDetailsImpl) {
+	public Map<String, Object> findById(String boardId, PrincipalDetails principalDetails) {
 		Map<String, Object> res = new HashMap<>();
 		
 		ZthhBoardDTO zthhBoardDTO = zthhBoardMapper.findById(boardId);
 		
 		if(zthhBoardDTO.isSecret()) {
 			
-		    Collection<? extends GrantedAuthority> authorities = userDetailsImpl.getAuthorities();
+		    Collection<? extends GrantedAuthority> authorities = principalDetails.getAuthorities();
 		    boolean isAdmin = authorities.stream()
 		            .anyMatch(auth -> auth.getAuthority().equals("ROLE_SYS"));
 			
-			if(userDetailsImpl.getUsername().equals(zthhBoardDTO.getCreateId()) || isAdmin) {
+			if(principalDetails.getUsername().equals(zthhBoardDTO.getCreateId()) || isAdmin) {
 				res.put("result", "find secret success");
 				res.put("boardList", zthhBoardDTO);
 				return res;

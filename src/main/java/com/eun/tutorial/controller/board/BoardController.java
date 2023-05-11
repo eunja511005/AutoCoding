@@ -1,9 +1,7 @@
 package com.eun.tutorial.controller.board;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.eun.tutorial.dto.ZthhBoardDTO;
 import com.eun.tutorial.service.ZthhBoardService;
-import com.eun.tutorial.service.user.UserDetailsImpl;
+import com.eun.tutorial.service.user.PrincipalDetails;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,7 +48,7 @@ public class BoardController {
 	public @ResponseBody Map<String, Object> getUserProfile(Authentication authentication, ZthhBoardDTO zthhBoardDTO){
     	logger.debug("request url : /join");
     	
-    	UserDetailsImpl userDetailsImpl = (UserDetailsImpl) authentication.getPrincipal();
+    	PrincipalDetails userDetailsImpl = (PrincipalDetails) authentication.getPrincipal();
     	
     	zthhBoardDTO.setCreateId(userDetailsImpl.getUsername());
     	zthhBoardDTO.setUpdateId(userDetailsImpl.getUsername());
@@ -89,7 +87,7 @@ public class BoardController {
 	public @ResponseBody Map<String, Object> list(Authentication authentication, @PathVariable String boardId){
     	logger.debug("request url : /join");
     	
-    	UserDetailsImpl userDetailsImpl = (UserDetailsImpl) authentication.getPrincipal();
+    	PrincipalDetails userDetailsImpl = (PrincipalDetails) authentication.getPrincipal();
     	
     	Map<String, Object> res = zthhBoardService.findById(boardId, userDetailsImpl);
     	
@@ -100,7 +98,7 @@ public class BoardController {
 	public @ResponseBody Map<String, Object> delete(Authentication authentication, @PathVariable String id){
     	logger.debug("request url : /join");
     	
-    	UserDetailsImpl userDetailsImpl = (UserDetailsImpl) authentication.getPrincipal();
+    	PrincipalDetails userDetailsImpl = (PrincipalDetails) authentication.getPrincipal();
     	
     	Map<String, Object> res = zthhBoardService.delete(id, userDetailsImpl);
     	
@@ -111,7 +109,7 @@ public class BoardController {
     public @ResponseBody Map<String, Object> updateContent(Authentication authentication, @RequestBody ZthhBoardDTO zthhBoardDTO){
 
         log.info(zthhBoardDTO.toString());
-        UserDetailsImpl userDetailsImpl = (UserDetailsImpl) authentication.getPrincipal();
+        PrincipalDetails userDetailsImpl = (PrincipalDetails) authentication.getPrincipal();
     	zthhBoardDTO.setCreateId(userDetailsImpl.getUsername());
     	zthhBoardDTO.setUpdateId(userDetailsImpl.getUsername());
 

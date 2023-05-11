@@ -29,19 +29,16 @@ import org.springframework.util.MimeTypeUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.eun.tutorial.dto.CustomOAuth2User;
 import com.eun.tutorial.dto.UserInfoDTO;
 import com.eun.tutorial.dto.ZthhFileAttachDTO;
 import com.eun.tutorial.service.UserService;
 import com.eun.tutorial.service.ZthhFileAttachService;
 import com.eun.tutorial.service.user.PrincipalDetails;
-import com.eun.tutorial.service.user.UserDetailsImpl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -224,7 +221,7 @@ public class MyWebInitController {
         
         // 2. 로그인 페이지로 이동
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("main");
+        modelAndView.setViewName("jsp/main/common/main");
 
         return modelAndView;
     }

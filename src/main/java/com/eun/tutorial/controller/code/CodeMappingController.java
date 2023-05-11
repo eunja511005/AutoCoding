@@ -1,7 +1,6 @@
 package com.eun.tutorial.controller.code;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.security.core.Authentication;
@@ -15,11 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.eun.tutorial.dto.ZthmCommonCodeDTO;
 import com.eun.tutorial.dto.ZthmCommonCodeMappingDTO;
 import com.eun.tutorial.service.ZthmCommonCodeMappingService;
 import com.eun.tutorial.service.ZthmCommonCodeService;
-import com.eun.tutorial.service.user.UserDetailsImpl;
+import com.eun.tutorial.service.user.PrincipalDetails;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +35,7 @@ public class CodeMappingController {
 	public @ResponseBody Map<String, Object> getUserProfile(Authentication authentication, @RequestBody ZthmCommonCodeMappingDTO zthmCommonCodeMappingDTO){
     	log.debug("request url : /code/mapping/save");
     	
-    	UserDetailsImpl userDetailsImpl = (UserDetailsImpl) authentication.getPrincipal();
+    	PrincipalDetails userDetailsImpl = (PrincipalDetails) authentication.getPrincipal();
     	
     	zthmCommonCodeMappingDTO.setCreateId(userDetailsImpl.getUsername());
     	zthmCommonCodeMappingDTO.setUpdateId(userDetailsImpl.getUsername());
@@ -87,8 +85,6 @@ public class CodeMappingController {
 	@DeleteMapping("/delete/{id}")
 	public @ResponseBody Map<String, Object> delete(Authentication authentication, @PathVariable long id){
     	log.debug("request url : /code/mapping/delete");
-    	
-    	UserDetailsImpl userDetailsImpl = (UserDetailsImpl) authentication.getPrincipal();
     	
     	zthmCommonCodeMappingService.delete(id);
     	

@@ -1,9 +1,7 @@
 package com.eun.tutorial.controller.code;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import org.apache.tika.utils.StringUtils;
 import org.slf4j.Logger;
@@ -14,7 +12,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -22,7 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.eun.tutorial.dto.ZthmCommonCodeDTO;
 import com.eun.tutorial.service.ZthmCommonCodeService;
-import com.eun.tutorial.service.user.UserDetailsImpl;
+import com.eun.tutorial.service.user.PrincipalDetails;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -51,10 +48,10 @@ public class CodeController {
 	public @ResponseBody Map<String, Object> getUserProfile(Authentication authentication, @RequestBody ZthmCommonCodeDTO zthmCommonCodeDTO){
     	logger.debug("request url : /join");
     	
-    	UserDetailsImpl userDetailsImpl = (UserDetailsImpl) authentication.getPrincipal();
+    	PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
     	
-    	zthmCommonCodeDTO.setCreateId(userDetailsImpl.getUsername());
-    	zthmCommonCodeDTO.setUpdateId(userDetailsImpl.getUsername());
+    	zthmCommonCodeDTO.setCreateId(principalDetails.getUsername());
+    	zthmCommonCodeDTO.setUpdateId(principalDetails.getUsername());
     	
     	zthmCommonCodeService.save(zthmCommonCodeDTO);
     	
@@ -94,8 +91,6 @@ public class CodeController {
 	@DeleteMapping("/delete/{id}")
 	public @ResponseBody Map<String, Object> delete(Authentication authentication, @PathVariable String id){
     	logger.debug("request url : /join");
-    	
-    	UserDetailsImpl userDetailsImpl = (UserDetailsImpl) authentication.getPrincipal();
     	
     	zthmCommonCodeService.delete(id);
     	
