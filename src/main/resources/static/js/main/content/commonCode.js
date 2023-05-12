@@ -27,6 +27,7 @@ $(document).ready(function() {
 	function initializeCommonCodeTable() {
 	  // Initialize the common code table
 	  $('#commonCodeTable').DataTable({
+		scrollX: true,  
 	    ajax: {
 	      url: '/commonCode/list',
 	      "type": "POST",

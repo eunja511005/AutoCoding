@@ -39,7 +39,7 @@
       </form>
     </div>
     <div class="col-md-6">
-      <table id="commonCodeTable" class="table table-hover">
+      <table id="commonCodeTable" class="table table-hover" style="width:100%">
         <thead>
           <tr>
             <th>Code Group</th>
