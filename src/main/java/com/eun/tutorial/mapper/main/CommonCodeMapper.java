@@ -14,5 +14,6 @@ public interface CommonCodeMapper {
 	int updateCommonCode(CommonCodeDTO commonCodeDTO);
 	int deleteCommonCode(Long id);
 	CommonCodeDTO getCommonCodeListById(String id);
+	List<CommonCodeDTO> getCommonCodesByCodeGroup(String codeGroup);
 
 }

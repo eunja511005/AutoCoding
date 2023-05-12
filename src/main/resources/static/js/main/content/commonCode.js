@@ -109,11 +109,21 @@ $(document).ready(function() {
 	        // Set the edit mode flag
 	        $('#commonCodeForm').attr('data-mode', 'edit');
 	      } else {
-	        alert(response.errorMessage);
+	    	swal({
+	      		  title: "Application Error",
+	      		  text: response.errorMessage,
+	      		  icon: "warning",
+	      		  button: "OK",
+	      	})
 	      }
 	    },
 	    error: function() {
-	      alert('Failed to get the common code data.');
+	    	swal({
+      		  title: "Ajax Error",
+      		  text: "Failed to get the common code data.",
+      		  icon: "warning",
+      		  button: "OK",
+      		})
 	    },
 	  });
 	}

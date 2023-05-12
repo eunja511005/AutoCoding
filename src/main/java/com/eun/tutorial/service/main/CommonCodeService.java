@@ -10,5 +10,6 @@ public interface CommonCodeService {
 	int saveCommonCode(CommonCodeDTO commonCodeDTO);
 	int deleteCommonCode(Long id);
 	CommonCodeDTO getCommonCodeListById(String id);
+	List<CommonCodeDTO> getCommonCodesByCategory(String codeGroup);
 
 }

@@ -38,4 +38,9 @@ public class CommonCodeServiceImpl implements CommonCodeService {
 		return commonCodeMapper.getCommonCodeListById(id);
 	}
 
+	@Override
+	public List<CommonCodeDTO> getCommonCodesByCategory(String codeGroup) {
+		return commonCodeMapper.getCommonCodesByCodeGroup(codeGroup);
+	}
+
 }

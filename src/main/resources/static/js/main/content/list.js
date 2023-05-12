@@ -347,6 +347,9 @@ $(document).ready(function() {
       }
     });
     
+    populateSelectBox('modalVisibility', '/commonCode/VISIBILITY');
+    populateSelectBox('modalPostType', '/commonCode/POSTTYPE');
+    
     
 });
 
@@ -548,3 +551,36 @@ function loadComments() {
 	    },
 	  });
 	}
+
+function populateSelectBox(selectBoxId, url) {
+	  var selectBox = $('#' + selectBoxId);
+	  selectBox.empty();
+	  selectBox.append($('<option>').val('').text('ALL'));
+	  $.ajax({
+	    url: url,
+	    success: function(response) {
+		      if (response.success) {
+		    	  
+		          $.each(response.data, function(index, commonCode) {
+		              selectBox.append($('<option>').val(commonCode.code).text(commonCode.value));
+		          });
+		      } else {
+			    	swal({
+			      		  title: "Application Error",
+			      		  text: response.errorMessage,
+			      		  icon: "warning",
+			      		  button: "OK",
+			      	})
+		      }
+		 },
+		 error: function() {
+		    	swal({
+		      		  title: "Ajax Error",
+		      		  text: "Failed to get the common code data.",
+		      		  icon: "warning",
+		      		  button: "OK",
+		      	})
+	     },
+	  });
+	}
+

@@ -76,37 +76,59 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <div class="card mb-4">
-          <div class="card-body">
-            <form id="postForm">
-              <input type="hidden" id="modalId" name="id" value="" />
-              <div class="row my-4">
-                <div class="col-md-12">
-                  <div class="form-check">
-                    <label class="form-check-label" for="secret">Secret</label> 
-                    <input type="checkbox" class="form-check-input" id="modaSecret" name="secret">
-                  </div>
-                </div>
-              </div>
-              <div class="row my-4">
-                <div class="col-md-12">
-                  <div>
-                    <label for="title" class="form-label">Title</label> 
-                    <input type="text" class="form-control" id="modaTitle" name="title" placeholder="title" required>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-12">
-                  <div>
-                    <label for="content" class="form-label">Content</label>
-                    <textarea class="form-control" id="modalContent" name="content" rows="10"></textarea>
-                  </div>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
+		<div class="card mb-4">
+		  <div class="card-body">
+		    <form id="postForm">
+		      <input type="hidden" id="modalId" name="id" value="" />
+		      <div class="row my-4">
+		        <div class="col-md-12">
+		          <div class="form-check">
+		            <label class="form-check-label" for="secret">Secret</label>
+		            <input type="checkbox" class="form-check-input" id="modalSecret" name="secret">
+		          </div>
+		        </div>
+		      </div>
+		      <div class="row my-4">
+		        <div class="col-md-6">
+		          <div>
+		            <label for="visibility" class="form-label">Visibility</label>
+		            <select class="form-select" id="modalVisibility" name="openTarget" required></select>
+		          </div>
+		        </div>
+		        <div class="col-md-6">
+		          <div>
+		            <label for="date" class="form-label">Date</label>
+		            <input type="date" class="form-control" id="modalDate" name="openDate" placeholder="Select date" required>
+		          </div>
+		        </div>
+		      </div>
+		      <div class="row my-4">
+		        <div class="col-md-12">
+		          <div>
+		            <label for="title" class="form-label">Title</label>
+		            <input type="text" class="form-control" id="modalTitle" name="title" placeholder="Title" required>
+		          </div>
+		        </div>
+		      </div>
+		      <div class="row my-4">
+		        <div class="col-md-12">
+		          <div>
+		            <label for="postType" class="form-label">Post Type</label>
+		            <select class="form-select" id="modalPostType" name="postType" required></select>
+		          </div>
+		        </div>
+		      </div>
+		      <div class="row">
+		        <div class="col-md-12">
+		          <div>
+		            <label for="content" class="form-label">Content</label>
+		            <textarea class="form-control" id="modalContent" name="content" rows="10"></textarea>
+		          </div>
+		        </div>
+		      </div>
+		    </form>
+		  </div>
+		</div>        
 
         <!-- 댓글 입력창과 댓글 달기 버튼 -->
         <div class="row mb-4">

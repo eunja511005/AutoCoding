@@ -25,5 +25,12 @@
 	  SELECT * FROM common_code
 	  WHERE id = #{id}
 	</select>
+	
+    <select id="getCommonCodesByCodeGroup" resultType="com.eun.tutorial.dto.main.CommonCodeDTO">
+        SELECT code_group, code, value
+        FROM common_code
+        WHERE del_yn = 0
+        AND code_group = #{codeGroup}
+    </select>	
 
 </mapper>

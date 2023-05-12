@@ -117,7 +117,7 @@ public class MyWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter
             .antMatchers("/signinInit", "/assets/**",
             		"/joinInit", "/join", "/js/**", "/img/**", "/css/**",
             		"/h2-console/**", "/error/**", "/favicon.ico", "/layout/test",
-            		"/main/**", "/content1", "/content2", "/content3", "/posts/**", "/login-status").permitAll() // 누구나 접근 허용
+            		"/main/**", "/content1", "/content2", "/content3", "/posts/**", "/login-status", "/commonCode/**").permitAll() // 누구나 접근 허용
             .anyRequest().authenticated();
         
         /**
