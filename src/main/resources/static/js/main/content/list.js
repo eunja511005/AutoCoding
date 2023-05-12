@@ -457,8 +457,8 @@ function save(form){
 
 function onImageUpload(files) {
 	  for (var i = 0; i < files.length; i++) {
-	    // 이미지 파일을 압축합니다. (압축률: 50%)
-	    compressImage(files[i], 200, 0.5).then(function (compressedImage) {
+	    // 이미지 파일을 압축합니다. (압축: 70% 수준 유지)
+	    compressImage(files[i], 300, 0.7).then(function (compressedImage) {
 	      // 압축된 이미지 파일을 서버에 업로드합니다.
 	      const formData = new FormData();
 	      formData.append('file', compressedImage);
