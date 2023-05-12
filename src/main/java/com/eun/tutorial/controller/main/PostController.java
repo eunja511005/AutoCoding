@@ -82,16 +82,20 @@ public class PostController {
 	private boolean checkLogin() {
 		// 로그인 여부 체크
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
-		    return false;
-		} else {
-		    return true;
-		}
+		return !(authentication == null || authentication instanceof AnonymousAuthenticationToken);
 	}
 	
     
 	@PostMapping("/save")
 	public @ResponseBody Map<String, Object> getUserProfile(@RequestBody PostDTO postDTO){
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if(authentication == null || authentication instanceof AnonymousAuthenticationToken) {
+			postDTO.setCreateId("anonumous");
+		}else {
+			PrincipalDetails userDetailsImpl = (PrincipalDetails) authentication.getPrincipal();
+			postDTO.setCreateId(userDetailsImpl.getName());
+		}
+		
 		return postService.save(postDTO);
 	}
 	

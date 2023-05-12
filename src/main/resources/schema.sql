@@ -215,11 +215,15 @@ CREATE TABLE zthh_project_participant (
 
 drop table posts;
 CREATE TABLE posts (
-  id VARCHAR2(200) PRIMARY KEY,
-  del_yn  CHAR(1) DEFAULT 0,
-  title VARCHAR2(255) NOT NULL,
-  content CLOB NOT NULL,
-  secret  CHAR(1) DEFAULT 0 NOT NULL,
+  id         VARCHAR2(200) PRIMARY KEY,
+  del_yn     CHAR(1) DEFAULT 0,
+  title      VARCHAR2(255) NOT NULL,
+  content    CLOB NOT NULL,
+  secret     CHAR(1) DEFAULT 0 NOT NULL,
+  visibility VARCHAR2(100),
+  openDate   DATE DEFAULT CURRENT_DATE NOT NULL,
+  post_type  VARCHAR2(100),
+  create_id  VARCHAR2(30),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 

@@ -8,6 +8,10 @@
         <result property="title" column="title" />
         <result property="content" column="content" />
         <result property="isSecret" column="is_secret" />
+        <result property="openDate" column="open_date" />
+        <result property="visibility" column="visibility" />
+        <result property="postType" column="post_type" />
+        <result property="creat_id" column="createId" />
         <result property="created_at" column="created_at" />
     </resultMap>
 
@@ -15,45 +19,66 @@
 	    SELECT
 	        id,
 	        title,
+	        content,
 	        secret,
+	        open_date,
+	        visibility,
+	        post_type,
+	        create_id,
 	        created_at
 	    FROM
 	        posts
 	    WHERE del_yn=0
+	            AND (TO_CHAR(CURRENT_DATE, 'YYYY-MM-DD') &gt;= TO_CHAR(open_date, 'YYYY-MM-DD')
+	            OR create_id = #{loginId})
 	        <if test="search.title != null and search.title.value != ''">
 	            AND LOWER(title) LIKE '%'||LOWER(#{search.title.value})||'%'
-	        </if>
-	        <if test="search.isSecret != null and search.isSecret.value != ''">
-	            AND secret = #{search.isSecret.value}
 	        </if>
 		    <if test="search.startDate != null and search.startDate.value != ''">
 		      	AND TO_CHAR(created_at, 'YYYY-MM-DD') &gt;= #{search.startDate.value}
 		    </if>
 		    <if test="search.endDate != null and search.endDate.value != ''">
 		      	AND TO_CHAR(created_at, 'YYYY-MM-DD') &lt;= #{search.endDate.value}
+		    </if>	
+		    <if test="search.visibility != null and search.visibility.value != ''">
+		      	AND visibility = #{search.visibility.value}
 		    </if>	        
+		    <if test="search.postType != null and search.postType.value != null and search.postType.value != ''">
+		      	AND post_type = #{search.postType.value}
+		    </if>	  
+		    <if test="search.createId != null and search.createId.value != ''">
+		      	AND LOWER(create_id) LIKE '%'||LOWER(#{search.createId.value})||'%'
+		    </if>			          
 	    ORDER BY ${orderColumnName} ${orderDirection}
 	    OFFSET #{offset} ROWS FETCH NEXT #{limit} ROWS ONLY
 	</select>
 	
-    <update id="mergePost" parameterType="com.eun.tutorial.dto.main.PostDTO">
-        MERGE INTO posts
-        USING DUAL 
-        	ON ( id = #{id} ) 
-        WHEN MATCHED THEN
-            UPDATE SET
-                title = #{title},
-                content = #{content},
-                secret = #{isSecret}, 
-                created_at = CURRENT_TIMESTAMP
-        WHEN NOT MATCHED THEN
-            INSERT (id, title, content, secret)
-            VALUES (#{id}, #{title}, EMPTY_CLOB(), #{isSecret})
-    </update>	
+	<update id="mergePost" parameterType="com.eun.tutorial.dto.main.PostDTO">
+	    MERGE INTO posts
+	    USING DUAL 
+	    	ON ( id = #{id} ) 
+	    WHEN MATCHED THEN
+	        UPDATE SET
+	            title = #{title},
+	            content = #{content},
+	            secret = #{isSecret},
+	            visibility = #{visibility},
+	        	post_type = #{postType},
+	            open_date = NVL(#{openDate}, CURRENT_DATE),
+	            create_id = #{createId}, 
+	            created_at = CURRENT_TIMESTAMP
+	    WHEN NOT MATCHED THEN
+	        INSERT (id, title, content, secret, visibility, open_date, post_type)
+	        VALUES (#{id}, #{title}, EMPTY_CLOB(), #{isSecret}, #{visibility}, NVL(#{openDate}, CURRENT_DATE), #{postType})
+	</update>
+	
     
 	<update id="update"> 
 		UPDATE posts SET title=#{title},
-						 secret=#{isSecret}
+						 secret=#{isSecret},
+						 visibility = #{visibility},
+	        			 post_type = #{postType},
+	            		 open_date = #{openDate}
 		WHERE id = #{id}
 	</update>    
 
@@ -63,11 +88,10 @@
         FROM
             posts
         WHERE del_yn=0
+	            AND (TO_CHAR(CURRENT_DATE, 'YYYY-MM-DD') &gt;= TO_CHAR(open_date, 'YYYY-MM-DD')
+	            OR create_id = #{loginId})
 	        <if test="search.title != null and search.title.value != ''">
 	            AND LOWER(title) LIKE '%'||LOWER(#{search.title.value})||'%'
-	        </if>
-	        <if test="search.isSecret != null and search.isSecret.value != ''">
-	            AND secret = #{search.isSecret.value}
 	        </if>
 		    <if test="search.startDate != null and search.startDate.value != ''">
 		      	AND TO_CHAR(created_at, 'YYYY-MM-DD') &gt;= #{search.startDate.value}
@@ -75,6 +99,15 @@
 		    <if test="search.endDate != null and search.endDate.value != ''">
 		      	AND TO_CHAR(created_at, 'YYYY-MM-DD') &lt;= #{search.endDate.value}
 		    </if>	
+		    <if test="search.visibility != null and search.visibility.value != ''">
+		      	AND visibility = #{search.visibility.value}
+		    </if>	        
+		    <if test="search.postType != null and search.postType.value != null and search.postType.value != ''">
+		      	AND post_type = #{search.postType.value}
+		    </if>	  
+		    <if test="search.createId != null and search.createId.value != ''">
+		      	AND LOWER(create_id) LIKE '%'||LOWER(#{search.createId.value})||'%'
+		    </if>	    	    
     </select>
     
 	<delete id="delete"> 
@@ -87,6 +120,10 @@
 	        title,
 	        content,
 	        secret,
+	        open_date,
+	        visibility,
+	        post_type,
+	        create_id,
 	        created_at
 	    FROM
 	        posts

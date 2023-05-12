@@ -12,7 +12,9 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.Nullable;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -42,6 +44,14 @@ public class PostServiceImpl implements PostService {
 		params.put("orderColumnName", postSearchDTO.getOrderColumnName());
 		params.put("orderDirection", postSearchDTO.getOrderDirection());
 		params.put("search", postSearchDTO.getSearch());
+		
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if(authentication == null || authentication instanceof AnonymousAuthenticationToken) {
+			params.put("loginId", "anonumous");
+		}else {
+			PrincipalDetails userDetailsImpl = (PrincipalDetails) authentication.getPrincipal();
+			params.put("loginId", userDetailsImpl.getName());
+		}
 
 		return postMapper.selectPosts(params);
 	}
@@ -50,6 +60,14 @@ public class PostServiceImpl implements PostService {
 	public int getTotalCount(PostSearchDTO postSearchDTO) {
 		Map<String, Object> params = new HashMap<>();
 		params.put("search", postSearchDTO.getSearch());
+		
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if(authentication == null || authentication instanceof AnonymousAuthenticationToken) {
+			params.put("loginId", "anonumous");
+		}else {
+			PrincipalDetails userDetailsImpl = (PrincipalDetails) authentication.getPrincipal();
+			params.put("loginId", userDetailsImpl.getName());
+		}
 		
 		return postMapper.getTotalCount(params);
 	}

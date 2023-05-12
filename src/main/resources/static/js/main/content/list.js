@@ -17,8 +17,10 @@ $(document).ready(function() {
             "data": function (d) {
             	
             	var searchParams = {
+                	postType  : {value : $("#postType option:selected").val(), regex : false},
                 	title     : {value : $('#title').val(), regex : false},	
                 	isSecret  : {value : $('#is_secret').val(), regex : false},
+                	createId  : {value : $('#createId').val(), regex : false},
                 	startDate : {value : $('#start_date').val(), regex : false},
                 	endDate   : {value : $('#end_date').val(), regex : false}
             	};
@@ -33,8 +35,9 @@ $(document).ready(function() {
             }
         },
         "columns": [
+        	{"data": "postType"},
             {"data": "title"},
-            {"data": "secret"},
+            {"data": "createId"},
             {"data": "created_at",
 	            "render": function(data) {
 	            	return moment(data, "YYYY-MM-DDTHH:mm:ss").format("YYYY년 MM월 DD일 HH:mm");
@@ -42,20 +45,21 @@ $(document).ready(function() {
             },
             {"data": "id",
          	   "render": function(data, type, row, meta){
-         		   // return '<button type="button" class="btn
-					// btn-primary">View Content</button>';
-         		   return '<i class="fa-solid fa-magnifying-glass-chart"></i>';
+         		  var viewButton = '<button type="button" class="btn btn-sm btn-outline-info mx-1 view-button" data-id="' + row.id + '"><i class="fa-solid fa-magnifying-glass-chart"></i></button>';
+    		      return viewButton;
          	   }                       
             },
             {"data": "",
          	   "render": function(data, type, row, meta){
-                    // return '<button type="button" class="btn
-					// btn-danger">Delete</button>';
-                    return '<i class="fa-solid fa-trash-can"></i>';
+         		  var deleteButton = '<button type="button" class="btn btn-sm btn-outline-danger mx-1 delete-button" data-id="' + row.id + '"><i class="fa-solid fa-trash-can"></i></button>';
+    		      return deleteButton;
                 }
             }
         ],
-        order: [[2, 'desc']]
+        columnDefs: [
+            { className: "text-center", "targets": [ 4, 5 ] }
+        ],
+        order: [[3, 'desc']]
     });
 
     $('#search_btn').on('click', function () {
@@ -67,6 +71,8 @@ $(document).ready(function() {
     	// 댓글 입력창 숨기기
 		$("#comment-form").hide(); 
 		$("#commentButton").hide();
+		
+		checkLoginStatus();
 		
 		// 모달 창 보이기
         $('#newPostModal').modal('show');
@@ -110,6 +116,14 @@ $(document).ready(function() {
         form.classList.add('was-validated');
         if (form.checkValidity()) {
             save(form);
+        }else{
+            // 유효성 검사에 실패한 경우, 사용자에게 알림 메시지를 표시하는 코드를 추가합니다.
+        	swal({
+        		  title: "Input Error",
+        		  text: "Please check input.",
+        		  icon: "warning",
+        		  button: "OK",
+        		})	 
         }
     });
     
@@ -122,15 +136,8 @@ $(document).ready(function() {
     });
     
     // Bind click event to content button
-    $(document).on('click', '.fa-magnifying-glass-chart', function(){ 
-        var $btn=$(this);
-        var $tr=$btn.closest('tr');
-        var dataTableRow=$("#example").DataTable().row($tr[0]); // get the DT
-																// row so we can
-																// use the API
-																// on it
-        var rowData=dataTableRow.data();
-        var id = rowData.id;
+    $(document).on('click', '.view-button', function(){ 
+    	var id = $(this).data('id');
           $.ajax({
               url: '/posts/list/'+ id,
               type: 'POST',
@@ -141,21 +148,36 @@ $(document).ready(function() {
               	if(response.postList != undefined && response.postList != ""){
               		$('#modalId').val(response.postList.id);
               		$('#modalContent').summernote('code', response.postList.content);
-			       	$('#modaTitle').val(response.postList.title);
+			       	$('#modalTitle').val(response.postList.title);
+			       	$('#modalPostType').val(response.postList.postType);
+			       	$('#modalOpenDate').val(response.postList.openDate);
+			       	$('#modalVisibility').val(response.postList.visibility);
 			       	$('#modaSecret').prop('checked', response.postList.secret);
-			       	
-					// 댓글 리스트 보여 주기
-					loadComments();
 			       	
 			       	if (response.login === true) {
 			       		// 댓글 입력창 보이기
 						$("#commentArea").show(); 
 						$("#commentButton").show();
+						
+						// 모달창의 visibility, openDate 보이기
+						$("#modalVisibilityDiv").show();
+						$("#modalOpenDateDiv").show();
+						$('#modalVisibility').prop('required', true);
+						$('#modalOpenDate').prop('required', true);
 			       	}else{
 			       		// 댓글 입력창 숨기기
 						$("#comment-form").hide(); 
 						$("#commentButton").hide(); 
+						
+						// 모달창의 visibility, openDate 숨기기
+						$("#modalVisibilityDiv").hide();
+						$("#modalOpenDateDiv").hide();
+						$('#modalVisibility').prop('required', false);
+						$('#modalOpenDate').prop('required', false);
 			       	}
+			       	
+			       	// 댓글 리스트 보여 주기
+					loadComments();
 			       	
 			       	$('#newPostModal').modal('show');
               	}else{
@@ -175,7 +197,7 @@ $(document).ready(function() {
 	});    
     
     // Bind click event to delete button
-    $('#example').on('click', '.fa-trash-can', function() {
+    $('#example').on('click', '.delete-button', function() {
     	
     	swal({
     		  title: "Are you sure you want to delete it?",
@@ -186,8 +208,7 @@ $(document).ready(function() {
     		})
     		.then((willDelete) => {
     		  if (willDelete) {
-    			var data = table.row($(this).parents('tr')).data();
-	                var id = data.id;
+    			    var id = $(this).data('id');
 	                $.ajax({
 	                    url: '/posts/delete/'+ id,
 	                    type: 'DELETE',
@@ -349,7 +370,7 @@ $(document).ready(function() {
     
     populateSelectBox('modalVisibility', '/commonCode/VISIBILITY');
     populateSelectBox('modalPostType', '/commonCode/POSTTYPE');
-    
+    populateSelectBox('postType', '/commonCode/POSTTYPE');
     
 });
 
@@ -552,35 +573,28 @@ function loadComments() {
 	  });
 	}
 
-function populateSelectBox(selectBoxId, url) {
-	  var selectBox = $('#' + selectBoxId);
-	  selectBox.empty();
-	  selectBox.append($('<option>').val('').text('ALL'));
-	  $.ajax({
-	    url: url,
-	    success: function(response) {
-		      if (response.success) {
-		    	  
-		          $.each(response.data, function(index, commonCode) {
-		              selectBox.append($('<option>').val(commonCode.code).text(commonCode.value));
-		          });
-		      } else {
-			    	swal({
-			      		  title: "Application Error",
-			      		  text: response.errorMessage,
-			      		  icon: "warning",
-			      		  button: "OK",
-			      	})
-		      }
-		 },
-		 error: function() {
-		    	swal({
-		      		  title: "Ajax Error",
-		      		  text: "Failed to get the common code data.",
-		      		  icon: "warning",
-		      		  button: "OK",
-		      	})
-	     },
-	  });
-	}
-
+function checkLoginStatus() {
+	$.ajax({
+		url: "/login-status",
+		type: "GET",
+		dataType: "json",
+		success: function(response) {
+			if(response.result != undefined && response.result == "login") {
+				// 모달창의 visibility, openDate 보이기
+				$("#modalVisibilityDiv").show();
+				$("#modalOpenDateDiv").show();
+				$('#modalVisibility').prop('required', true);
+				$('#modalOpenDate').prop('required', true);
+			} else {
+				// 모달창의 visibility, openDate 숨기기
+				$("#modalVisibilityDiv").hide();
+				$("#modalOpenDateDiv").hide();
+				$('#modalVisibility').prop('required', false);
+				$('#modalOpenDate').prop('required', false);
+			}
+		},
+		error: function(xhr) {
+			console.error(xhr);
+		}
+	});
+}

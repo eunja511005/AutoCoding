@@ -45,7 +45,8 @@
             <th>Code Group</th>
             <th>Code</th>
             <th>Value</th>
-            <th></th>
+			<th>Edit</th>
+	        <th>Delete</th>
           </tr>
         </thead>
         <tbody>

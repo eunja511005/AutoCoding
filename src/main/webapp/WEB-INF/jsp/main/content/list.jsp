@@ -11,34 +11,34 @@
 		<div class="card mb-4">
 			<div class="card-body">
 				<div class="row">
-					<div class="col-md-6">
-						<div class="row">
-							<div class="col-4 mb-3">
-								<label for="title">Title</label> 
-								<input type="text" id="title" name="title" class="form-control">
-							</div>
-							<div class="col-4 mb-3">
-								<label for="is_secret">Category</label> 
-								<select id="is_secret" name="is_secret" class="form-control">
-									<option value="">ALL</option>
-									<option value="1">Secret</option>
-									<option value="0">Normal</option>
-								</select>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-6">
-						<div class="row">
-							<div class="col-6 mb-3">
-								<label for="start_date">Start Date</label> 
-								<input type="date" id="start_date" name="start_date" class="form-control">
-							</div>
-							<div class="col-6 mb-3">
-								<label for="end_date">End Date</label> 
-								<input type="date" id="end_date" name="end_date" class="form-control">
-							</div>
-						</div>
-					</div>
+				    <div class="col-md-6">
+				        <div class="row">
+				            <div class="col-4 mb-3">
+				                <label for="postType">Type</label> 
+				                <select id="postType" name="postType" class="form-control"></select>
+				            </div>				        
+				            <div class="col-4 mb-3">
+				                <label for="title">Title</label> 
+				                <input type="text" id="title" name="title" class="form-control">
+				            </div>
+				            <div class="col-4 mb-3">
+				                <label for="create_id">Writer</label> 
+				                <input type="text" id="createId" name="createId" class="form-control">
+				            </div>
+				        </div>
+				    </div>
+				    <div class="col-md-6">
+				        <div class="row">
+				            <div class="col-6 mb-3">
+				                <label for="start_date">Start Date</label> 
+				                <input type="date" id="start_date" name="start_date" class="form-control">
+				            </div>
+				            <div class="col-6 mb-3">
+				                <label for="end_date">End Date</label> 
+				                <input type="date" id="end_date" name="end_date" class="form-control">
+				            </div>
+				        </div>
+				    </div>
 				</div>
 				<div class="text-end">
 					<button id="search_btn" class="btn btn-light"><i class="fas fa-search"></i> Search</button>
@@ -54,8 +54,9 @@
 			    <table id="example" class="display" style="width:100%">
 			        <thead>			        
 			            <tr>
+			                <th>Type</th>
 			                <th>Title</th>
-			                <th>Category</th>
+			                <th>Create</th>
 			                <th>Date</th>
 			                <th>Contents</th>
 	            			<th>Delete</th>
@@ -89,24 +90,16 @@
 		        </div>
 		      </div>
 		      <div class="row my-4">
-		        <div class="col-md-6">
+		        <div class="col-md-6" id="modalVisibilityDiv">
 		          <div>
 		            <label for="visibility" class="form-label">Visibility</label>
-		            <select class="form-select" id="modalVisibility" name="openTarget" required></select>
+		            <select class="form-select" id="modalVisibility" name="visibility" required></select>
 		          </div>
 		        </div>
-		        <div class="col-md-6">
+		        <div class="col-md-6" id="modalOpenDateDiv">
 		          <div>
-		            <label for="date" class="form-label">Date</label>
-		            <input type="date" class="form-control" id="modalDate" name="openDate" placeholder="Select date" required>
-		          </div>
-		        </div>
-		      </div>
-		      <div class="row my-4">
-		        <div class="col-md-12">
-		          <div>
-		            <label for="title" class="form-label">Title</label>
-		            <input type="text" class="form-control" id="modalTitle" name="title" placeholder="Title" required>
+		            <label for="date" class="form-label">Open Date</label>
+		            <input type="date" class="form-control" id="modalOpenDate" name="openDate" placeholder="Select date" required>
 		          </div>
 		        </div>
 		      </div>
@@ -115,6 +108,14 @@
 		          <div>
 		            <label for="postType" class="form-label">Post Type</label>
 		            <select class="form-select" id="modalPostType" name="postType" required></select>
+		          </div>
+		        </div>
+		      </div>		      
+		      <div class="row my-4">
+		        <div class="col-md-12">
+		          <div>
+		            <label for="title" class="form-label">Title</label>
+		            <input type="text" class="form-control" id="modalTitle" name="title" placeholder="Title" required>
 		          </div>
 		        </div>
 		      </div>

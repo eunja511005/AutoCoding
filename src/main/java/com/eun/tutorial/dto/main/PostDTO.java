@@ -1,5 +1,6 @@
 package com.eun.tutorial.dto.main;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
@@ -14,5 +15,9 @@ public class PostDTO {
     private String title;
     private String content;
     private boolean isSecret;
+    private String visibility;
+    private String postType;
+    private LocalDate openDate;
+    private String createId;
     private LocalDateTime created_at;
 }

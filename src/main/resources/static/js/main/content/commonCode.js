@@ -43,11 +43,16 @@ $(document).ready(function() {
 	        data: null,
 	        render: function(data, type, row, meta) {
 	          var editButton = '<button type="button" class="btn btn-sm btn-outline-info mx-1 edit-button" data-id="' + row.id + '"><i class="fas fa-edit"></i></button>';
-	          var deleteButton = '<button type="button" class="btn btn-sm btn-outline-danger mx-1 delete-button" data-id="' + row.id + '"><i class="fas fa-trash"></i></button>';
-
-	          return editButton + deleteButton;
+	          return editButton;
 	        },
 	      },
+	      {
+		    data: null,
+		    render: function(data, type, row, meta) {
+		      var deleteButton = '<button type="button" class="btn btn-sm btn-outline-danger mx-1 delete-button" data-id="' + row.id + '"><i class="fas fa-trash"></i></button>';
+		      return deleteButton;
+		    },
+		  },	      
 	    ],
 	  });
 
