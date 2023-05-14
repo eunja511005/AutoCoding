@@ -25,14 +25,25 @@ function handleClick(event) {
     event.preventDefault();
 
     // 페이지를 로드합니다.
-    var page = $(this).attr('href');
-    if (page !== undefined) {
-    	$('#dynamic-content').load(page);
+    var url = $(this).attr('href');
+    if (url !== undefined) {
+    	loadDynamicContent(url);
         
         $('.a-menu').off('click');
         $('.a-menu').on('click', handleClick);
     }
     
+}
+
+function loadDynamicContent(url) {
+	  // 기존 모든 이벤트를 제거
+	  $('#dynamic-content').off();
+	  
+	  // 이전에 로딩된 동적 요소를 삭제
+	  $('#dynamic-content').empty();
+
+	  // 새 페이지 로딩
+	  $('#dynamic-content').load(url);
 }
 
 function checkLoginStatus() {
