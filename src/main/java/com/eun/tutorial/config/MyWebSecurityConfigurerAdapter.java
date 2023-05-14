@@ -26,6 +26,7 @@ import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
@@ -118,7 +119,10 @@ public class MyWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter
             		"/joinInit", "/join", "/js/**", "/img/**", "/css/**",
             		"/h2-console/**", "/error/**", "/favicon.ico", "/layout/test",
             		"/main/**", "/content1", "/content2", "/content3", "/posts/**", "/login-status", "/commonCode/**").permitAll() // 누구나 접근 허용
-            .anyRequest().authenticated();
+            .anyRequest().authenticated()
+            .and()
+            .exceptionHandling()
+            .authenticationEntryPoint(new Http403ForbiddenEntryPoint());
         
         /**
          * 5.로그인 설정
