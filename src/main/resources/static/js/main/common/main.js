@@ -1,12 +1,16 @@
 var csrfheader = $("meta[name='_csrf_header']").attr("content");
 var csrftoken = $("meta[name='_csrf']").attr("content");
+
+// 카드 리스트 페이징 CBO 처리를 위한 변수
+const MAX_PAGES_DISPLAYED = 10; // 10개 페이지씩 보여줌
+const MID_PAGES_DISPLAYED = 8; // 중간 페이지
     	
 $(document).ready(function(){
 	// 첫번째 페이지
 	$('#dynamic-content').load("/content1");
 	
     // 클릭 이벤트를 등록합니다.
-    $('nav a').on('click', handleClick);
+    $('.a-menu').on('click', handleClick);
     
 	// 로그인 여부를 체크합니다.
 	checkLoginStatus();
@@ -25,8 +29,8 @@ function handleClick(event) {
     if (page !== undefined) {
     	$('#dynamic-content').load(page);
         
-        $('nav a').off('click');
-        $('nav a').on('click', handleClick);
+        $('.a-menu').off('click');
+        $('.a-menu').on('click', handleClick);
     }
     
 }
@@ -96,34 +100,79 @@ function addLogoutEvent(){
 	  }); 	
 }
 
-function populateSelectBox(selectBoxId, url) {
+function initSelectBox(selectBoxId, url, includeAll, selectedValues) {
 	  var selectBox = $('#' + selectBoxId);
 	  selectBox.empty();
-	  selectBox.append($('<option>').val('').text('ALL'));
+	  
+	  if (includeAll) {
+	    selectBox.append($('<option>').val('').text('ALL'));
+	  }
+
+	  callAjax(url, "GET", null, function(response) {
+	      if (response.success) {
+		        $.each(response.data, function(index, commonCode) {
+		          var option = $('<option>').val(commonCode.code).text(commonCode.value);
+		          if (selectedValues && selectedValues.indexOf(commonCode.code) !== -1) {
+		            option.prop('selected', true);
+		          }
+		          selectBox.append(option);		         
+		        });
+		  }
+	  });
+	  
+}
+
+
+function callAjax(url, method, data, successCallback){
+	  // 입력값이 form 요소인 경우
+	  if (data instanceof jQuery) {
+		// Convert FormData object to JSON object[(ex) var formData = new FormData(this);]
+		var json = {};
+		data.forEach(function(value, key) {
+	      // If the key is "enable", set the value as a boolean
+	      if (key === 'enable') {
+	        json[key] = $("#enable").is(':checked');
+	      } else {
+	        json[key] = value;
+	      }
+		});
+	    
+		data = JSON.stringify(json);
+	  }
+	  
+	  if(typeof data === 'object'){
+		  data = JSON.stringify(data);
+	  }
+	  
+	  // AJAX 호출 수행
 	  $.ajax({
 	    url: url,
+	    type: method,
+	    beforeSend: function(xhr) {
+			xhr.setRequestHeader(csrfheader, csrftoken);
+		},
+	    data: data,
+	    contentType: 'application/json; charset=UTF-8',
 	    success: function(response) {
-		      if (response.success) {
-		    	  
-		          $.each(response.data, function(index, commonCode) {
-		              selectBox.append($('<option>').val(commonCode.code).text(commonCode.value));
-		          });
-		      } else {
-			    	swal({
-			      		  title: "Application Error",
-			      		  text: response.errorMessage,
-			      		  icon: "warning",
-			      		  button: "OK",
-			      	})
-		      }
-		 },
-		 error: function() {
+			if (response.success) {
+				successCallback(response);
+		    } else {
 		    	swal({
-		      		  title: "Ajax Error",
-		      		  text: "Failed to get the common code data.",
+		      		  title: "Application Error",
+		      		  text: response.errorMessage,
 		      		  icon: "warning",
 		      		  button: "OK",
 		      	})
-	     },
+		    }
+		},
+		error: function(error) {
+			console.log(error);
+	  	    swal({
+	    		  title: "Error",
+	    		  text: "Please check browser console",
+	    		  icon: "warning",
+	    		  button: "OK",
+	    	})
+		},
 	  });
-	}
+}

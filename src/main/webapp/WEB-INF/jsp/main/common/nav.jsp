@@ -15,11 +15,11 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"></a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        <li><a id="edit-btn" style="display: none;" class="dropdown-item" href="#!">Edit</a></li>
-                        <li><a id="message-btn" style="display: none;" class="dropdown-item" href="#!">Message</a></li>
+                        <li><a id="edit-btn" style="display: none;" class="dropdown-item a-menu">Edit</a></li>
+                        <li><a id="message-btn" style="display: none;" class="dropdown-item a-menu">Message</a></li>
                         <li><hr class="dropdown-divider" /></li>
-                    	<li><a id="login-btn" class="dropdown-item" href="signinInit">Login</a></li>
-                        <li><a id="logout-btn" style="display: none;" class="dropdown-item">Logout</a></li>
+                    	<li><a id="login-btn" class="dropdown-item a-menu" href="signinInit">Login</a></li>
+                        <li><a id="logout-btn" style="display: none;" class="dropdown-item a-menu">Logout</a></li>
                     </ul>
                 </li>
             </ul>

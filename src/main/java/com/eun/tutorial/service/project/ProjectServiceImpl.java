@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import org.apache.tika.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
@@ -46,10 +47,8 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	@Override
-	public Map<String, Object> createProject(ProjectDTO project) {
+	public void createProject(ProjectDTO project) {
 
-	    Map<String, Object> res = new HashMap<>();
-	    
     	if(StringUtils.isBlank(project.getId())) {
     		UUID uuid = UUID.randomUUID();
     		String id = "project_"+uuid;
@@ -66,12 +65,8 @@ public class ProjectServiceImpl implements ProjectService {
 	    Map<String, Object> params = new HashMap<>();
 	    params.put("projectId", project.getId());
 	    params.put("participants", project.getParticipants());
+	    
 	    projectMapper.insertProjectParticipants(params);
-
-	    res.put("result", "creation success");
-	    res.put("redirectUrl", "/project/listForm");
-
-	    return res;
 	}
 
 	@Override
@@ -86,9 +81,7 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	@Override
-	public Map<String, Object> delete(String id, PrincipalDetails principalDetails) {
-    	Map<String, Object> res = new HashMap<>();
-    	
+	public void delete(String id, PrincipalDetails principalDetails) {
 	    Collection<? extends GrantedAuthority> authorities = principalDetails.getAuthorities();
 	    boolean isAdmin = authorities.stream()
 	            .anyMatch(auth -> auth.getAuthority().equals("ROLE_SYS"));
@@ -102,16 +95,11 @@ public class ProjectServiceImpl implements ProjectService {
 		    
 			// 프로젝트 삭제 마크
 			projectMapper.delete(id);
-		    
-			res.put("result", "delete success");
-			res.put("redirectUrl", "/project/listForm");
-			return res;
+		}else {
+			throw new AccessDeniedException("You do not have sufficient privileges to access this resource");
 		}
     	
-    	res.put("result", "No Authorization");
-    	res.put("redirectUrl", null);
         
-		return res;
 	}
 
 }

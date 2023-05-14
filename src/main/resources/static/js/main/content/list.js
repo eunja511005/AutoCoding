@@ -368,9 +368,9 @@ $(document).ready(function() {
       }
     });
     
-    populateSelectBox('modalVisibility', '/commonCode/VISIBILITY');
-    populateSelectBox('modalPostType', '/commonCode/POSTTYPE');
-    populateSelectBox('postType', '/commonCode/POSTTYPE');
+    initSelectBox('modalVisibility', '/commonCode/VISIBILITY', true);
+    initSelectBox('modalPostType', '/commonCode/POSTTYPE', true);
+    initSelectBox('postType', '/commonCode/POSTTYPE', true);
     
 });
 

@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.eun.tutorial.dto.main.ApiResponse;
+import com.eun.tutorial.dto.main.CommonCodeDTO;
 import com.eun.tutorial.dto.project.ProjectDTO;
 import com.eun.tutorial.dto.project.ProjectListRequest;
 import com.eun.tutorial.dto.project.ProjectListResponse;
@@ -34,7 +36,7 @@ public class ProjectController {
 	public ModelAndView listForm(){
 		
 		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("jsp/project/projectListForm");
+		modelAndView.setViewName("jsp/main/content/projectListForm");
 		
 		return modelAndView;
 	}
@@ -45,20 +47,11 @@ public class ProjectController {
         return projectService.getProjects(projectListRequest);
     }
     
-//	@PostMapping("/list/{id}")
-//	public @ResponseBody Map<String, Object> list(Authentication authentication, @PathVariable String id){
-//    	log.debug("request url : /project/list/"+id);
-//    	
-//    	UserDetailsImpl userDetailsImpl = (UserDetailsImpl) authentication.getPrincipal();
-//    	
-//		return projectService.getProjectById(id);
-//	}
-    
 	@GetMapping("/inputForm")
 	public ModelAndView init() {
 		
 		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("jsp/project/projectInputForm");
+		modelAndView.setViewName("jsp/main/content/projectInputForm");
 		
 		return modelAndView;
 	}
@@ -68,26 +61,30 @@ public class ProjectController {
 		
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.addObject("project", projectService.getProjectById(id));
-		modelAndView.setViewName("jsp/project/projectInputForm");
+		modelAndView.setViewName("jsp/main/content/projectInputForm");
 		
 		return modelAndView;
 	}
 	
     @PostMapping("/create")
-    public @ResponseBody Map<String, Object> createProject(@RequestBody ProjectDTO project) {
-    	Map<String, Object> res = projectService.createProject(project);
-    	
-		return res;
+    public @ResponseBody ApiResponse<ProjectDTO> createProject(@RequestBody ProjectDTO project) {
+        try {
+        	projectService.createProject(project);
+            return new ApiResponse<>(true, "Created successfully.", null);
+        } catch (Exception e) {
+        	return new ApiResponse<>(false, e.getMessage(), null);
+        }
     }
     
 	@DeleteMapping("/delete/{id}")
-	public @ResponseBody Map<String, Object> delete(Authentication authentication, @PathVariable String id){
-    	
-		PrincipalDetails userDetailsImpl = (PrincipalDetails) authentication.getPrincipal();
-    	
-    	Map<String, Object> res = projectService.delete(id, userDetailsImpl);
-    	
-		return res;
+	public @ResponseBody ApiResponse<ProjectDTO> delete(Authentication authentication, @PathVariable String id){
+        try {
+        	PrincipalDetails userDetailsImpl = (PrincipalDetails) authentication.getPrincipal();
+        	projectService.delete(id, userDetailsImpl);
+            return new ApiResponse<>(true, "Deleted successfully.", null);
+        } catch (Exception e) {
+        	return new ApiResponse<>(false, e.getMessage(), null);
+        }
 	}
 	
 }

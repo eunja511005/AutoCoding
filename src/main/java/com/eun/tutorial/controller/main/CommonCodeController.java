@@ -71,9 +71,9 @@ public class CommonCodeController {
     @GetMapping("/{codeGroup}")
     public @ResponseBody ApiResponse getCommonCodesByCategory(@PathVariable String codeGroup) {
         try {
-            return new ApiResponse<>(true, "Successfully deleted the common code data.", commonCodeService.getCommonCodesByCategory(codeGroup));
+            return new ApiResponse<>(true, "Successfully search the common code data.", commonCodeService.getCommonCodesByCategory(codeGroup));
         } catch (Exception e) {
-            return new ApiResponse<>(false, "Failed to delete the common code data.", null);
+            return new ApiResponse<>(false, "Failed to search the common code data.", null);
         }
     }
 
