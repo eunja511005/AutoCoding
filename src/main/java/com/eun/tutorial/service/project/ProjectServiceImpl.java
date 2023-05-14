@@ -43,7 +43,7 @@ public class ProjectServiceImpl implements ProjectService {
 	    }
 		
 		long totalElements = projectMapper.selectTotalProjects();
-		return new ProjectListResponse(projects, totalElements);
+		return new ProjectListResponse(true, projects, totalElements);
 	}
 
 	@Override

@@ -68,12 +68,12 @@ $(document).ready(function() {
 
 function createCallback(response){
 	console.log(response.errorMessage);
-	$('#dynamic-content').load("/project/listForm");
+	loadDynamicContent("/project/listForm");
 }
 
 function deleteCallback(response){
 	console.log(response.errorMessage);
-	$('#dynamic-content').load("/project/listForm");
+	loadDynamicContent("/project/listForm");
 }
 
 function parseParticipants(participantsStr) {
