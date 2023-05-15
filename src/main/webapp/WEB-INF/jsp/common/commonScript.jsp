@@ -51,5 +51,5 @@
 <!-- DataTable -->
 <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
 
-<!-- nav's javascript -->
-<script type="text/javascript" src="/js/init/nav.js"></script>
+<!-- nav's javascript 
+<script type="text/javascript" src="/js/init/nav.js"></script>-->
