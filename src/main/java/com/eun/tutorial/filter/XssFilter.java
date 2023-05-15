@@ -35,8 +35,13 @@ public class XssFilter implements Filter {
 	 * XSSCustomRequestWrapper로 분기될 URL 리스트
 	 * sanitize 사용할 경우 써머노트 통한 이미지 업로드 불가
 	 * XSSCustomRequestWrapper로 분기시 < > javascript ' .. 만 막음
+	 * 
+	 * 결론 : noXssUrlList : 써머노트
+	 *       xssCustomUrlList : 댓글(.을 &quote로 치환해서 문제 되어서 Customer로 체크)
+	 *       sanitize : 나머지 
 	 */
-	private List<String> xssCustomUrlList = Arrays.asList("/posts/save", "/url2", "/url3"); 
+	private List<String> noXssUrlList = Arrays.asList("/posts/save", "/url2", "/url3"); 
+	private List<String> xssCustomUrlList = Arrays.asList("/posts/comment"); 
 	
 	public XssFilter(ResourceLoader resourceLoader, ZthhErrorService zthhErrorService) {
 		try {
@@ -63,9 +68,11 @@ public class XssFilter implements Filter {
 		}
 
 		try {
-			if(xssCustomUrlList.contains(request.getRequestURI())){
-				//XSSCustomRequestWrapper xSSCustomRequestWrapper = new XSSCustomRequestWrapper(request, zthhErrorService);
+			if(noXssUrlList.contains(request.getRequestURI())){
 				filterChain.doFilter(request, response);
+			}else if(xssCustomUrlList.contains(request.getRequestURI())){
+				XSSCustomRequestWrapper xSSCustomRequestWrapper = new XSSCustomRequestWrapper(request, zthhErrorService);
+				filterChain.doFilter(xSSCustomRequestWrapper, response);
 			}else {
 				XssRequestWrapper wrappedRequest = new XssRequestWrapper(request, antiSamy, zthhErrorService);
 				filterChain.doFilter(wrappedRequest, response);

@@ -139,12 +139,12 @@ public class XSSCustomRequestWrapper extends HttpServletRequestWrapper {
         	idDetected = true;
         }
 
-        // Filter file system manipulation characters
-        if (value.contains("..")) {
-            log.warn("##### File system manipulation detected: {}", value);
-            value = value.replace("\\.\\.", "");
-            idDetected = true;
-        }
+        // Filter file system manipulation characters(댓글에 마침표는 들어 갈수 있어서 일단 제외)
+		/*
+		 * if (value.contains("..")) {
+		 * log.warn("##### File system manipulation detected: {}", value); value =
+		 * value.replace("\\.\\.", ""); idDetected = true; }
+		 */
         
         if(idDetected) {
         	zthhErrorService.save(
