@@ -31,6 +31,7 @@
 	    WHERE del_yn=0
 	            AND (TO_CHAR(CURRENT_DATE, 'YYYY-MM-DD') &gt;= TO_CHAR(open_date, 'YYYY-MM-DD')
 	            OR create_id = #{loginId})
+	            AND (visibility &lt;&gt; '1R' OR create_id = #{loginId})
 	        <if test="search.title != null and search.title.value != ''">
 	            AND LOWER(title) LIKE '%'||LOWER(#{search.title.value})||'%'
 	        </if>
