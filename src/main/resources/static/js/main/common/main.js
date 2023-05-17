@@ -43,7 +43,11 @@ function loadDynamicContent(url) {
 	  $('#dynamic-content').empty();
 
 	  // 새 페이지 로딩
-	  $('#dynamic-content').load(url);
+	  $('#dynamic-content').load(url, function(response, status, xhr) {
+		  if (status === "error" && xhr.status === 403) {
+		    $('#dynamic-content').html("403 Forbidden - Access Denied");
+		  }
+	  });
 }
 
 function checkLoginStatus() {
