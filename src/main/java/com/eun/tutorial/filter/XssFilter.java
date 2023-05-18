@@ -41,7 +41,7 @@ public class XssFilter implements Filter {
 	 *       sanitize : 나머지 
 	 */
 	private List<String> noXssUrlList = Arrays.asList("/posts/save", "/url2", "/url3"); 
-	private List<String> xssCustomUrlList = Arrays.asList("/posts/comment", "/project/create"); 
+	private List<String> xssCustomUrlList = Arrays.asList("/posts/comment", "/project/create", "/autoCoding/generate"); 
 	
 	public XssFilter(ResourceLoader resourceLoader, ZthhErrorService zthhErrorService) {
 		try {
