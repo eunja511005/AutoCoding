@@ -209,7 +209,7 @@ $(document).ready(function() {
 		  for (var autoCoding of data) {
 		    const li = $('<li>').addClass('list-group-item d-flex flex-column gap-2');
 		    
-		    const nameElement = $('<span>').text(autoCoding.sourceName + '.java');
+		    const nameElement = $('<span>').text(autoCoding.sourceName);
 		    li.append(nameElement);
 		    
 		    const codeElement = $('<textarea>').attr('rows', autoCoding.sourceCode.split('\n').length).val(autoCoding.sourceCode);

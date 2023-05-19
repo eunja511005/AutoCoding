@@ -68,7 +68,7 @@ public class AutoCodingController {
             AutoCodingDTO autoCodingService = codeGenerator.generateServiceClass(apiRequest.getSubject());
             AutoCodingDTO autoCodingServiceImpl = codeGenerator.generateServiceImplClass(apiRequest.getSubject());
             AutoCodingDTO autoCodingMapper = codeGenerator.generateMapperClass(apiRequest.getSubject());
-            AutoCodingDTO autoCodingMapperXml = codeGenerator.generateMapperXml(apiRequest.getSubject());
+            AutoCodingDTO autoCodingMapperXml = codeGenerator.generateMapperXml(fields, apiRequest.getSubject());
             autoCodingList.add(autoCodingDTO);
             autoCodingList.add(autoCodingController);
             autoCodingList.add(autoCodingService);

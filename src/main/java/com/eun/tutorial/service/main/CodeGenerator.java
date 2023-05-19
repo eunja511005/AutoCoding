@@ -1,5 +1,6 @@
 package com.eun.tutorial.service.main;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -13,6 +14,9 @@ public class CodeGenerator {
     public AutoCodingDTO generateDTOClass(List<Field> fields, String subject) {
     	AutoCodingDTO autoCodingDTO = new AutoCodingDTO();
     	
+    	String capitalizedSubject = capitalizeFirstLetter(subject);
+    	String className = capitalizedSubject+"DTO";
+    	
         StringBuilder builder = new StringBuilder();
         
         builder.append("package com.eun.tutorial.dto.main;\n");
@@ -24,19 +28,25 @@ public class CodeGenerator {
         builder.append("@Data\n");
         builder.append("@NoArgsConstructor\n");
         builder.append("@AllArgsConstructor\n");
-        builder.append("public class MyDTO {\n");
+        builder.append("public class "+className+" {\n");
 
         for (Field field : fields) {
             builder.append("\tprivate ")
                    .append(field.getType())
                    .append(" ")
-                   .append(field.getName())
+                   .append(convertToCamelCase(field.getName()))
                    .append(";\n");
         }
+        
+        builder.append("\tprivate boolean delyn;\n");
+        builder.append("\tprivate String createid;\n");
+        builder.append("\tprivate LocalDateTime createdt;\n");
+        builder.append("\tprivate String updateid;\n");
+        builder.append("\tprivate LocalDateTime updatedt;\n");
 
         builder.append("}\n");
         
-        autoCodingDTO.setSourceName(capitalizeFirstLetter(subject)+"DTO.java");
+        autoCodingDTO.setSourceName(className+".java");
         autoCodingDTO.setSourceCode(builder.toString());
 
         return autoCodingDTO;
@@ -292,48 +302,62 @@ public class CodeGenerator {
         return autoCodingDTO;
     }
     
-    public AutoCodingDTO generateMapperXml(String subject) {
+    public AutoCodingDTO generateMapperXml(List<Field> fields, String subject) {
+        if (subject == null || subject.isEmpty()) {
+            throw new IllegalArgumentException("Subject cannot be null or empty.");
+        }
+        
     	AutoCodingDTO autoCodingDTO = new AutoCodingDTO();
     	
-    	subject = capitalizeFirstLetter(subject);
-    	String className = subject+"Mapper";
-        String namespace = "com.eun.tutorial.mapper.main." + subject + "Mapper";
-
+    	String capitalizedSubject = capitalizeFirstLetter(subject);
+    	String className = capitalizedSubject+"Mapper";
+        String namespace = "com.eun.tutorial.mapper.main." + capitalizedSubject + "Mapper";
+        String tableName = "ZTHH_"+subject.toUpperCase();
+        String fieldNames = getFieldNames(fields);
+        String wrappedFieldNames = getWrappedFieldNames(fields);
+        String formattedFieldNames = getFormattedFieldNames(fields);
+        
         StringBuilder content = new StringBuilder();
         content.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
         content.append("<!DOCTYPE mapper PUBLIC \"-//mybatis.org//DTD Mapper 3.0//EN\" \"http://mybatis.org/dtd/mybatis-3-mapper.dtd\">\n");
-        content.append(String.format("<mapper namespace=\"%s\">\n\n", namespace));
-        content.append("\t<select id=\"select" + subject + "List\" resultType=\"com.eun.tutorial.dto.main." + subject + "DTO\">\n");
-        content.append("\t\tSELECT * FROM " + subject + " where del_yn=0 ORDER BY code_group, code\n");
+        content.append("<mapper namespace=\"%s\">\n\n");
+        
+        content.append("\t<select id=\"select%sList\" resultType=\"com.eun.tutorial.dto.main.%sDTO\">\n");
+        content.append("\t\tSELECT %s FROM %s where del_yn=0 ORDER BY update_dt, create_dt\n");
         content.append("\t</select>\n\n");
-        content.append("\t<insert id=\"insert" + subject + "\">\n");
-        content.append("\t\tINSERT INTO " + subject + " (code_group, code, value)\n");
-        content.append("\t\tVALUES (#{codeGroup}, #{code}, #{value})\n");
+        
+        content.append("\t<insert id=\"insert%s\">\n");
+        content.append("\t\tINSERT INTO %s (%s)\n");
+        content.append("\t\tVALUES (%s)\n");
         content.append("\t</insert>\n\n");
-        content.append("\t<update id=\"update" + subject + "\">\n");
-        content.append("\t\tUPDATE " + subject + "\n");
-        content.append("\t\tSET code_group = #{codeGroup}, code = #{code}, value = #{value}, updated_at = CURRENT_TIMESTAMP\n");
+        
+        content.append("\t<update id=\"update%s\">\n");
+        content.append("\t\tUPDATE %s\n");
+        content.append("\t\tSET %s\n");
         content.append("\t\tWHERE id = #{id}\n");
         content.append("\t</update>\n\n");
-        content.append("\t<delete id=\"delete" + subject + "\">\n");
-        content.append("\t\tUPDATE " + subject + " SET del_yn=1, updated_at = CURRENT_TIMESTAMP WHERE id = #{id}\n");
+        
+        content.append("\t<delete id=\"delete%s\">\n");
+        content.append("\t\tUPDATE %s SET del_yn = 1, updatd_dt = CURRENT_TIMESTAMP WHERE id = #{id}\n");
         content.append("\t</delete>\n\n");
-        content.append("\t<select id=\"get" + subject + "ListById\" parameterType=\"string\" resultType=\"com.eun.tutorial.dto.main." + subject + "DTO\">\n");
-        content.append("\t\tSELECT * FROM " + subject + "\n");
+        
+        content.append("\t<select id=\"get%sListById\" parameterType=\"string\" resultType=\"com.eun.tutorial.dto.main.%sDTO\">\n");
+        content.append("\t\tSELECT %s FROM %s\n");
         content.append("\t\tWHERE id = #{id}\n");
-        content.append("\t\tORDER BY code_group, code\n");
-        content.append("\t</select>\n\n");
-        content.append("\t<select id=\"get" + subject + "sByCodeGroup\" resultType=\"com.eun.tutorial.dto.main." + subject + "DTO\">\n");
-        content.append("\t\tSELECT code_group, code, value\n");
-        content.append("\t\tFROM " + subject + "\n");
-        content.append("\t\tWHERE del_yn = 0\n");
-        content.append("\t\tAND code_group = #{codeGroup}\n");
-        content.append("\t\tORDER BY code_group, code\n");
+        content.append("\t\tORDER BY update_dt, create_dt\n");
         content.append("\t</select>\n\n");
         content.append("</mapper>");
+        
+        String result = String.format(content.toString(), 
+        		namespace, 
+        		capitalizedSubject, capitalizedSubject, fieldNames, tableName, //select
+        		capitalizedSubject, tableName, fieldNames, wrappedFieldNames, //insert
+        		capitalizedSubject, tableName, formattedFieldNames,//update
+        		capitalizedSubject, tableName, //delete
+        		capitalizedSubject, capitalizedSubject, fieldNames, tableName); //selectById
 
         autoCodingDTO.setSourceName(className+".xml");
-        autoCodingDTO.setSourceCode(content.toString());
+        autoCodingDTO.setSourceCode(result);
         
         return autoCodingDTO;
     }
@@ -345,6 +369,81 @@ public class CodeGenerator {
 
         char firstChar = Character.toUpperCase(input.charAt(0));
         return firstChar + input.substring(1);
+    }
+    
+    public String getFieldNames(List<Field> fields) {
+        StringBuilder fieldNames = new StringBuilder();
+
+        for (Field field : fields) {
+            fieldNames.append(field.getName()).append(", ");
+        }
+
+        // Remove the trailing comma if there are any fields
+        if (fieldNames.length() > 0) {
+            fieldNames.setLength(fieldNames.length() - 2);
+        }
+        
+        fieldNames.append(", del_yn, create_id, create_dt, update_id, update_dt");
+
+        return fieldNames.toString();
+    }
+    
+    public String getWrappedFieldNames(List<Field> fields) {
+        StringBuilder wrappedFieldNames = new StringBuilder();
+
+        for (Field field : fields) {
+            String fieldName = field.getName();
+            wrappedFieldNames.append("#{" + convertToCamelCase(fieldName) + "}, ");
+        }
+
+        // Remove the trailing comma if there are any fields
+        if (wrappedFieldNames.length() > 0) {
+            wrappedFieldNames.setLength(wrappedFieldNames.length() - 2);
+        }
+        
+        wrappedFieldNames.append(", 0, #{createId}, CURRENT_TIMESTAMP, #{updateId}, CURRENT_TIMESTAMP");
+
+        return wrappedFieldNames.toString();
+    }
+
+    public String getFormattedFieldNames(List<Field> fields) {
+        StringBuilder formattedFieldNames = new StringBuilder();
+
+        for (Field field : fields) {
+            String fieldName = field.getName();
+            formattedFieldNames.append(fieldName).append(" = #{").append(convertToCamelCase(fieldName)).append("}, ");
+        }
+
+        // Remove the trailing comma and space if there are any fields
+        if (formattedFieldNames.length() > 0) {
+            formattedFieldNames.setLength(formattedFieldNames.length() - 2);
+        }
+        
+        formattedFieldNames.append(", update_id = #{updateId}, update_dt = CURRENT_TIMESTAMP");
+
+        return formattedFieldNames.toString();
+    }
+    
+    private String convertToCamelCase(String fieldName) {
+        StringBuilder camelCase = new StringBuilder();
+        boolean nextUpperCase = false;
+
+        for (int i = 0; i < fieldName.length(); i++) {
+            char currentChar = fieldName.charAt(i);
+
+            if (currentChar == '_') {
+                nextUpperCase = true;
+            } else {
+                if (nextUpperCase) {
+                    camelCase.append(Character.toUpperCase(currentChar));
+                    nextUpperCase = false;
+                } else {
+                    camelCase.append(Character.toLowerCase(currentChar));
+                }
+            }
+        }
+
+        return camelCase.toString();
     }
 
 }
