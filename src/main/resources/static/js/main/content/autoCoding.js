@@ -197,34 +197,74 @@ $(document).ready(function() {
 	        });
 	    }
 	}
-	
+
 	function listCallback(response) {
 		  var data = response.data;
 		  const sourceList = $('#sourceList');
-		  
+
 		  // Clear the source list
-		  sourceList.empty();		  
+		  sourceList.empty();
 
 		  // Create list items for each source code
 		  for (var autoCoding of data) {
-		    const li = $('<li>').addClass('list-group-item d-flex flex-column gap-2');
-		    
-		    const nameElement = $('<span>').text(autoCoding.sourceName);
-		    li.append(nameElement);
-		    
-		    const codeElement = $('<textarea>').attr('rows', autoCoding.sourceCode.split('\n').length).val(autoCoding.sourceCode);
+		    const li = $('<li>').css('padding', '20px').addClass('list-group-item d-flex flex-column gap-2');
+		    const row = $('<div>').addClass('row');
+		    const col = $('<div>').addClass('col-md-12 d-flex justify-content-between');
 
-		    li.append(codeElement);
-		    
-		    const saveButton = $('<button>').text('Save');
-		    saveButton.on('click', function() {
-		      saveCode(index, codeElement.val());
+		    const nameElement = $('<span>').addClass('mr-4').text(autoCoding.sourceName);
+
+		    const copyButton = $('<button>').addClass('btn btn-sm btn-dark');
+		    const copyIcon = $('<i>').addClass('fas fa-copy');
+		    const buttonText = $('<span>').text('Copy');
+		    const separator = $('<span>').addClass('mx-2 separator').text('|'); // Add separator between icon and button text
+		    copyButton.append(copyIcon);
+		    copyButton.append(separator);
+		    copyButton.append(buttonText);
+		    copyButton.on('click', function() {
+		        copyToClipboard(codeElement.text());
+		        buttonText.text('Copied!');
+		        copyIcon.removeClass('fa-copy').addClass('fa-check'); // Change the icon to check mark
+		        setTimeout(function() {
+		            buttonText.text('Copy');
+		            copyIcon.removeClass('fa-check').addClass('fa-copy'); // Change the icon back to copy
+		        }, 2000);
 		    });
-		    li.append(saveButton);
-		    
+
+
+		    col.append(nameElement);
+		    col.append(copyButton);
+		    row.append(col);
+		    li.append(row);
+
+		    const codeElement = $('<pre>').css('padding-left', '50px').css('padding-top', '20px');
+		    codeElement.addClass('bg-dark');
+
+		    if (autoCoding.sourceName.endsWith('.java')) {
+		      codeElement.addClass('language-java').text(autoCoding.sourceCode);
+		      codeElement.html(Prism.highlight(autoCoding.sourceCode, Prism.languages.java));
+		    } else if (autoCoding.sourceName.endsWith('.xml')) {
+		      codeElement.addClass('language-xml').text(autoCoding.sourceCode);
+		      codeElement.html(Prism.highlight(autoCoding.sourceCode, Prism.languages.xml));
+		    } else {
+		      // Handle other code types or default behavior
+		      codeElement.text(autoCoding.sourceCode);
+		    }
+
+		    li.css('padding', '20px');
+		    li.append(codeElement);
 		    sourceList.append(li);
 		  }
 		}
+
+		function copyToClipboard(text) {
+		  const textarea = $('<textarea>').val(text);
+		  $('body').append(textarea);
+		  textarea.select();
+		  document.execCommand('copy');
+		  textarea.remove();
+		}
+
+
 
 
 

@@ -12,3 +12,8 @@
     <!-- https://sweetalert.js.org/guides/ -->
 	<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+	
+	<!-- 자동 생성된 소스 코드 예쁘게 보이게 -->
+	<script src="https://cdn.jsdelivr.net/npm/prismjs@1.27.0/prism.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.27.0/components/prism-java.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.27.0/components/prism-markup.min.js"></script>

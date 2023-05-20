@@ -86,3 +86,6 @@
 </div>
 
 <script src="/js/main/content/autoCoding.js"></script>
+<script>
+   Prism.highlightAll();
+</script>

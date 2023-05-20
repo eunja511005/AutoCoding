@@ -20,6 +20,9 @@
         <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
     
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+        
+        <!-- 자동 생성된 소스 코드 예쁘게 보이게 -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.27.0/themes/prism-okaidia.min.css">
     </head>
 	<body class="sb-nav-fixed">
     <%-- Top Menu --%>
