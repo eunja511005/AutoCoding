@@ -2,6 +2,7 @@ package com.eun.tutorial.service.main;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
@@ -38,6 +39,7 @@ public class CodeGenerator {
                    .append(";\n");
         }
         
+        builder.append("\tprivate String id;\n");
         builder.append("\tprivate boolean delyn;\n");
         builder.append("\tprivate String createid;\n");
         builder.append("\tprivate LocalDateTime createdt;\n");
@@ -128,7 +130,7 @@ public class CodeGenerator {
         builder.append("\t}\n\n");
 
         builder.append("\t@DeleteMapping(\"/{id}\")\n");
-        builder.append("\tpublic @ResponseBody ApiResponse delete%s(@PathVariable Long id) {\n");
+        builder.append("\tpublic @ResponseBody ApiResponse delete%s(@PathVariable String id) {\n");
         builder.append("\t\ttry {\n");
         builder.append("\t\t\tlog.info(\"Delete by ID : {}\", id);\n");
         builder.append("\t\t\t%sService.delete%s(id);\n");
@@ -178,7 +180,7 @@ public class CodeGenerator {
         // Generate the method signatures
         builder.append("\tList<%sDTO> get%sList();\n");
         builder.append("\tint save%s(%sDTO %sDTO);\n");
-        builder.append("\tint delete%s(Long id);\n");
+        builder.append("\tint delete%s(String id);\n");
         builder.append("\t%sDTO get%sListById(String id);\n");
 
         builder.append("}");
@@ -208,6 +210,7 @@ public class CodeGenerator {
 
         // Generate the imports
         builder.append("import java.util.List;\n\n");
+        builder.append("import java.util.UUID;\n\n");
         builder.append("import org.springframework.stereotype.Service;\n\n");
         builder.append("import com.eun.tutorial.dto.main.%sDTO;\n");
         builder.append("import com.eun.tutorial.mapper.main.%sMapper;\n\n");
@@ -229,34 +232,31 @@ public class CodeGenerator {
         builder.append("\t@Override\n");
         builder.append("\tpublic int save%s(%sDTO %sDTO) {\n");
         builder.append("\t\tif (%sDTO.getId() == null) {\n");
+        builder.append("\t\t\t%sDTO.setId(\"%s_\"+UUID.randomUUID());\n");
         builder.append("\t\t\treturn %sMapper.insert%s(%sDTO);\n");
         builder.append("\t\t} else {\n");
         builder.append("\t\t\treturn %sMapper.update%s(%sDTO);\n");
         builder.append("\t\t}\n");
         builder.append("\t}\n\n");
         builder.append("\t@Override\n");
-        builder.append("\tpublic int delete%s(Long id) {\n");
+        builder.append("\tpublic int delete%s(String id) {\n");
         builder.append("\t\treturn %sMapper.delete%s(id);\n");
         builder.append("\t}\n\n");
         builder.append("\t@Override\n");
         builder.append("\tpublic %sDTO get%sListById(String id) {\n");
         builder.append("\t\treturn %sMapper.get%sListById(id);\n");
         builder.append("\t}\n\n");
-        builder.append("\t@Override\n");
-        builder.append("\tpublic List<%sDTO> get%ssByCategory(String codeGroup) {\n");
-        builder.append("\t\treturn %sMapper.get%ssByCategory(codeGroup);\n");
-        builder.append("\t}\n\n");
 
         builder.append("}");
 
-        String result =  String.format(builder.toString(), capitalizedSubject, capitalizedSubject, className, capitalizedSubject, 
-        		capitalizedSubject, subject, 
-        		capitalizedSubject, capitalizedSubject, capitalizedSubject, 
-        		capitalizedSubject, capitalizedSubject, capitalizedSubject, capitalizedSubject, subject, 
-        		capitalizedSubject, capitalizedSubject, capitalizedSubject, subject, 
-        		capitalizedSubject, capitalizedSubject, subject,
-        		capitalizedSubject, capitalizedSubject, capitalizedSubject, capitalizedSubject, capitalizedSubject, 
-        		capitalizedSubject, capitalizedSubject, capitalizedSubject, capitalizedSubject, capitalizedSubject, capitalizedSubject);
+        String result =  String.format(builder.toString(), 
+        		capitalizedSubject, capitalizedSubject, //import
+        		className, capitalizedSubject, //class 
+        		capitalizedSubject, subject, //injection
+        		capitalizedSubject, capitalizedSubject, subject, capitalizedSubject, //get
+        		capitalizedSubject, capitalizedSubject, subject, subject, subject, subject, subject, capitalizedSubject, subject, subject, capitalizedSubject, subject,  //save
+        		capitalizedSubject, subject, capitalizedSubject, //delete
+        		capitalizedSubject, capitalizedSubject, subject, capitalizedSubject); //getById
         
         autoCodingDTO.setSourceName(className+".java");
         autoCodingDTO.setSourceCode(result);
@@ -288,7 +288,7 @@ public class CodeGenerator {
         builder.append("\tList<%sDTO> select%sList();\n");
         builder.append("\tint insert%s(%sDTO %sDTO);\n");
         builder.append("\tint update%s(%sDTO %sDTO);\n");
-        builder.append("\tint delete%s(Long id);\n");
+        builder.append("\tint delete%s(String id);\n");
         builder.append("\t%sDTO get%sListById(String id);\n");
         builder.append("}");
 
@@ -385,7 +385,7 @@ public class CodeGenerator {
             fieldNames.setLength(fieldNames.length() - 2);
         }
         
-        fieldNames.append(", del_yn, create_id, create_dt, update_id, update_dt");
+        fieldNames.append(", id, del_yn, create_id, create_dt, update_id, update_dt");
 
         return fieldNames.toString();
     }
@@ -403,7 +403,7 @@ public class CodeGenerator {
             wrappedFieldNames.setLength(wrappedFieldNames.length() - 2);
         }
         
-        wrappedFieldNames.append(", 0, #{createId}, CURRENT_TIMESTAMP, #{updateId}, CURRENT_TIMESTAMP");
+        wrappedFieldNames.append(", #{id}, 0, #{createId}, CURRENT_TIMESTAMP, #{updateId}, CURRENT_TIMESTAMP");
 
         return wrappedFieldNames.toString();
     }
