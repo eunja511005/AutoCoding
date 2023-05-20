@@ -207,7 +207,7 @@ $(document).ready(function() {
 
 		  // Create list items for each source code
 		  for (var autoCoding of data) {
-		    const li = $('<li>').css('padding', '20px').addClass('list-group-item d-flex flex-column gap-2');
+		    const li = $('<li>').addClass('list-group-item d-flex flex-column gap-2');
 		    const row = $('<div>').addClass('row');
 		    const col = $('<div>').addClass('col-md-12 d-flex justify-content-between');
 
@@ -236,7 +236,7 @@ $(document).ready(function() {
 		    row.append(col);
 		    li.append(row);
 
-		    const codeElement = $('<pre>').css('padding-left', '50px').css('padding-top', '20px');
+		    const codeElement = $('<pre>').css('padding-left', '20px').css('padding-top', '20px');
 		    codeElement.addClass('bg-dark');
 
 		    if (autoCoding.sourceName.endsWith('.java')) {

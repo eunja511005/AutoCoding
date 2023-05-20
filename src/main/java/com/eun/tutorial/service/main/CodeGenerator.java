@@ -32,7 +32,7 @@ public class CodeGenerator {
 
         for (Field field : fields) {
             builder.append("\tprivate ")
-                   .append(field.getType())
+                   .append(field.getType().getSimpleName())
                    .append(" ")
                    .append(convertToCamelCase(field.getName()))
                    .append(";\n");
@@ -109,6 +109,7 @@ public class CodeGenerator {
         builder.append("\t@PostMapping(\"/list/{id}\")\n");
         builder.append("\tpublic @ResponseBody ApiResponse list(@PathVariable String id) {\n");
         builder.append("\t\ttry {\n");
+        builder.append("\t\t\tlog.info(\"Post List by ID : {}\", id);\n");
         builder.append("\t\t\t%sDTO %sDTOList = %sService.get%sListById(id);\n");
         builder.append("\t\t\treturn new ApiResponse<>(true, \"Successfully retrieved the %s list.\", %sDTOList);\n");
         builder.append("\t\t} catch (Exception e) {\n");
@@ -129,6 +130,7 @@ public class CodeGenerator {
         builder.append("\t@DeleteMapping(\"/{id}\")\n");
         builder.append("\tpublic @ResponseBody ApiResponse delete%s(@PathVariable Long id) {\n");
         builder.append("\t\ttry {\n");
+        builder.append("\t\t\tlog.info(\"Delete by ID : {}\", id);\n");
         builder.append("\t\t\t%sService.delete%s(id);\n");
         builder.append("\t\t\treturn new ApiResponse<>(true, \"Successfully deleted the %s data.\", null);\n");
         builder.append("\t\t} catch (Exception e) {\n");

@@ -50,6 +50,8 @@ public class AutoCodingController {
     	
         try {
         	
+        	log.info("Post List by ID : {}", apiRequest.getSubject());
+        	
             if (apiRequest.getSubject() == null || apiRequest.getSubject().isEmpty()) {
                 throw new IllegalArgumentException("Subject cannot be null or empty.");
             }
