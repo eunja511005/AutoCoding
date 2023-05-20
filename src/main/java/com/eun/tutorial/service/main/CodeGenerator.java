@@ -364,6 +364,46 @@ public class CodeGenerator {
         return autoCodingDTO;
     }
     
+    public AutoCodingDTO generateSchemaSql(List<Field> fields, String subject) {
+        if (subject == null || subject.isEmpty()) {
+            throw new IllegalArgumentException("Subject cannot be null or empty.");
+        }
+        
+    	AutoCodingDTO autoCodingDTO = new AutoCodingDTO();
+        
+        StringBuilder content = new StringBuilder();
+        content.append("CREATE TABLE zthh_"+subject+" (\n");
+        content.append("\tid VARCHAR2(255),\n");
+        
+        
+        for (Field field : fields) {
+            String fieldName = field.getName();
+            String fiedlType = "VARCHAR2";
+            content.append("\t");
+            content.append(fieldName);
+            content.append(" ");
+            content.append(fiedlType);
+            content.append(",\n");
+        }
+        
+        
+        content.append("\tdel_yn CHAR(1),\n");
+        content.append("\tcreate_id VARCHAR2(50),\n");
+        content.append("\tcreate_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,\n");
+        content.append("\tupdate_id VARCHAR2(50),\n");
+        content.append("\tupdate_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,\n");
+        content.append("\n");
+        
+        content.append("\tCONSTRAINT pk_zthh_"+subject+" PRIMARY KEY (id)\n");
+        
+        content.append(");");
+        
+        autoCodingDTO.setSourceName("schema.sql");
+        autoCodingDTO.setSourceCode(content.toString());
+        
+        return autoCodingDTO;
+    }
+    
     public static String capitalizeFirstLetter(String input) {
         if (input == null || input.isEmpty()) {
             return input;

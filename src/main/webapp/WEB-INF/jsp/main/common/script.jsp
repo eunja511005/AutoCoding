@@ -17,3 +17,4 @@
 	<script src="https://cdn.jsdelivr.net/npm/prismjs@1.27.0/prism.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.27.0/components/prism-java.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.27.0/components/prism-markup.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.27.0/components/prism-sql.min.js"></script>

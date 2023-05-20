@@ -240,15 +240,15 @@ $(document).ready(function() {
 		    codeElement.addClass('bg-dark');
 
 		    if (autoCoding.sourceName.endsWith('.java')) {
-		      codeElement.addClass('language-java').text(autoCoding.sourceCode);
-		      codeElement.html(Prism.highlight(autoCoding.sourceCode, Prism.languages.java));
+		    	codeElement.addClass('language-java').html(Prism.highlight(autoCoding.sourceCode, Prism.languages.java));
 		    } else if (autoCoding.sourceName.endsWith('.xml')) {
-		      codeElement.addClass('language-xml').text(autoCoding.sourceCode);
-		      codeElement.html(Prism.highlight(autoCoding.sourceCode, Prism.languages.xml));
+		    	codeElement.addClass('language-xml').html(Prism.highlight(autoCoding.sourceCode, Prism.languages.xml));
+		    } else if (autoCoding.sourceName.endsWith('.sql')) {
+		    	codeElement.addClass('language-sql').html(Prism.highlight(autoCoding.sourceCode, Prism.languages.sql));
 		    } else {
-		      // Handle other code types or default behavior
-		      codeElement.text(autoCoding.sourceCode);
+		    	codeElement.text(autoCoding.sourceCode);
 		    }
+
 
 		    li.css('padding', '20px');
 		    li.append(codeElement);
