@@ -7,5 +7,5 @@ import lombok.Data;
 @AllArgsConstructor
 public class Field {
     private String name;
-    private Class<?> type;
+    private String type;
 }

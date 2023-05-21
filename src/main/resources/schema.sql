@@ -253,4 +253,26 @@ CREATE TABLE common_code (
   updated_at TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP
 );
 CREATE SEQUENCE code_seq START WITH 1 INCREMENT BY 1 MAXVALUE 99999999 CYCLE NOCACHE;
-*/
+
+drop table zthh_autocoding_field;
+CREATE TABLE zthh_autocoding_field (
+    id VARCHAR2(255),
+    structure_name VARCHAR2(255),
+    field_name VARCHAR2(255),
+    description VARCHAR2(255),
+    field_type VARCHAR2(50),
+    searchable CHAR(1),
+    primary_key CHAR(1),
+    nullable CHAR(1),
+    default_value VARCHAR2(255),
+    order_number NUMBER,
+    del_yn CHAR(1),
+    create_id VARCHAR2(50),
+    create_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
+    update_id VARCHAR2(50),
+    update_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
+    
+    CONSTRAINT pk_zthh_autocoding_field PRIMARY KEY (id)
+);
+
+**/

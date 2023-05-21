@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eun.tutorial.mapper.main.AutoCodingMapper">
+
+    <select id="selectAutoCoding" resultType="com.eun.tutorial.dto.main.AutocodingFieldDTO">
+        SELECT * FROM zthh_autocoding_field where del_yn='N' ORDER BY update_dt, create_dt
+    </select>
+
+    <insert id="insertAutoCoding">
+        INSERT INTO zthh_autocoding_field (id, structure_name, field_name, description, field_type,
+        searchable, primary_key, nullable, default_value, order_number, del_yn,
+        create_id, update_id)
+        VALUES (#{id}, #{structureName}, #{fieldName}, #{description}, #{fieldType}, 
+        #{searchable}, #{primaryKey}, #{nullable}, #{defaultValue}, #{orderNumber}, 'N',
+        #{createId}, #{updateId})
+    </insert>
+
+    <update id="updateAutoCoding">
+        UPDATE zthh_autocoding_field
+	        SET structure_name = #{structureName}, 
+	        FIELD_NAME = #{fieldName}, 
+	        FIELD_TYPE = #{fieldType}, 
+	        description = #{description}, 
+	        searchable = #{searchable}, 
+	        primary_key = #{primaryKey}, 
+	        nullable = #{nullable}, 
+	        default_value = #{defaultValue}, 
+	        order_number = #{orderNumber}, 
+	        update_id = #{updateId}, 
+	        update_dt = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteAutoCoding">
+        UPDATE zthh_autocoding_field SET del_yn='Y', update_dt = CURRENT_TIMESTAMP WHERE id = #{id}
+    </delete>
+    
+    <select id="getAutoCodingListById" parameterType="string" resultType="com.eun.tutorial.dto.main.AutocodingFieldDTO">
+	  SELECT * FROM zthh_autocoding_field
+	  WHERE id = #{id}
+	  ORDER BY update_dt, create_dt
+	</select>
+
+</mapper>

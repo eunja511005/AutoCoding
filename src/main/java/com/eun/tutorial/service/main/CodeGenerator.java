@@ -1,13 +1,14 @@
 package com.eun.tutorial.service.main;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import com.eun.tutorial.dto.main.AutoCodingDTO;
 import com.eun.tutorial.dto.main.Field;
+import com.eun.tutorial.util.OracleTypeConverter;
+import com.eun.tutorial.util.StringUtils;
 
 @Service
 public class CodeGenerator {
@@ -33,7 +34,7 @@ public class CodeGenerator {
 
         for (Field field : fields) {
             builder.append("\tprivate ")
-                   .append(field.getType().getSimpleName())
+                   .append(OracleTypeConverter.convertToJavaType(field.getType()).getSimpleName())
                    .append(" ")
                    .append(convertToCamelCase(field.getName()))
                    .append(";\n");
@@ -110,34 +111,22 @@ public class CodeGenerator {
 
         builder.append("\t@PostMapping(\"/list/{id}\")\n");
         builder.append("\tpublic @ResponseBody ApiResponse list(@PathVariable String id) {\n");
-        builder.append("\t\ttry {\n");
-        builder.append("\t\t\tlog.info(\"Post List by ID : {}\", id);\n");
-        builder.append("\t\t\t%sDTO %sDTOList = %sService.get%sListById(id);\n");
-        builder.append("\t\t\treturn new ApiResponse<>(true, \"Successfully retrieved the %s list.\", %sDTOList);\n");
-        builder.append("\t\t} catch (Exception e) {\n");
-        builder.append("\t\t\treturn new ApiResponse<>(false, \"Failed to retrieve the %s list.\", null);\n");
-        builder.append("\t\t}\n");
+        builder.append("\t\tlog.info(\"Post List by ID : {}\", id);\n");
+        builder.append("\t\t%sDTO %sDTOList = %sService.get%sListById(id);\n");
+        builder.append("\t\treturn new ApiResponse<>(true, \"Successfully retrieved the %s list.\", %sDTOList);\n");
         builder.append("\t}\n\n");
 
         builder.append("\t@PostMapping(\"/save\")\n");
-        builder.append("\tpublic @ResponseBody ApiResponse save%s(%sDTO %sDTO) {\n");
-        builder.append("\t\ttry {\n");
-        builder.append("\t\t\t%sService.save%s(%sDTO);\n");
-        builder.append("\t\t\treturn new ApiResponse<>(true, \"Success message\", null);\n");
-        builder.append("\t\t} catch (Exception e) {\n");
-        builder.append("\t\t\treturn new ApiResponse<>(false, \"Error message\", null);\n");
-        builder.append("\t\t}\n");
+        builder.append("\tpublic @ResponseBody ApiResponse save%s(@RequestBody %sDTO %sDTO) {\n");
+        builder.append("\t\t%sService.save%s(%sDTO);\n");
+        builder.append("\t\treturn new ApiResponse<>(true, \"Success message\", null);\n");
         builder.append("\t}\n\n");
 
         builder.append("\t@DeleteMapping(\"/{id}\")\n");
         builder.append("\tpublic @ResponseBody ApiResponse delete%s(@PathVariable String id) {\n");
-        builder.append("\t\ttry {\n");
-        builder.append("\t\t\tlog.info(\"Delete by ID : {}\", id);\n");
-        builder.append("\t\t\t%sService.delete%s(id);\n");
-        builder.append("\t\t\treturn new ApiResponse<>(true, \"Successfully deleted the %s data.\", null);\n");
-        builder.append("\t\t} catch (Exception e) {\n");
-        builder.append("\t\t\treturn new ApiResponse<>(false, \"Failed to delete the %s data.\", null);\n");
-        builder.append("\t\t}\n");
+        builder.append("\t\tlog.info(\"Delete by ID : {}\", id);\n");
+        builder.append("\t\t%sService.delete%s(id);\n");
+        builder.append("\t\treturn new ApiResponse<>(true, \"Successfully deleted the %s data.\", null);\n");
         builder.append("\t}\n\n");
 
         builder.append("}\n");
@@ -209,11 +198,12 @@ public class CodeGenerator {
         builder.append("package com.eun.tutorial.service.main;\n\n");
 
         // Generate the imports
-        builder.append("import java.util.List;\n\n");
+        builder.append("import java.util.List;\n");
         builder.append("import java.util.UUID;\n\n");
         builder.append("import org.springframework.stereotype.Service;\n\n");
         builder.append("import com.eun.tutorial.dto.main.%sDTO;\n");
         builder.append("import com.eun.tutorial.mapper.main.%sMapper;\n\n");
+        builder.append("import com.eun.tutorial.util.StringUtils;\n\n");
         builder.append("import lombok.AllArgsConstructor;\n\n");
 
         // Generate the class declaration
@@ -231,7 +221,7 @@ public class CodeGenerator {
         builder.append("\t}\n\n");
         builder.append("\t@Override\n");
         builder.append("\tpublic int save%s(%sDTO %sDTO) {\n");
-        builder.append("\t\tif (%sDTO.getId() == null) {\n");
+        builder.append("\t\tif (StringUtils.isBlank(%sDTO.getId())) {\n");
         builder.append("\t\t\t%sDTO.setId(\"%s_\"+UUID.randomUUID());\n");
         builder.append("\t\t\treturn %sMapper.insert%s(%sDTO);\n");
         builder.append("\t\t} else {\n");
@@ -325,7 +315,7 @@ public class CodeGenerator {
         content.append("<mapper namespace=\"%s\">\n\n");
         
         content.append("\t<select id=\"select%sList\" resultType=\"com.eun.tutorial.dto.main.%sDTO\">\n");
-        content.append("\t\tSELECT %s FROM %s where del_yn=0 ORDER BY update_dt, create_dt\n");
+        content.append("\t\tSELECT %s FROM %s where del_yn='N' ORDER BY update_dt, create_dt\n");
         content.append("\t</select>\n\n");
         
         content.append("\t<insert id=\"insert%s\">\n");
@@ -340,7 +330,7 @@ public class CodeGenerator {
         content.append("\t</update>\n\n");
         
         content.append("\t<delete id=\"delete%s\">\n");
-        content.append("\t\tUPDATE %s SET del_yn = 1, updatd_dt = CURRENT_TIMESTAMP WHERE id = #{id}\n");
+        content.append("\t\tUPDATE %s SET del_yn = 'Y', update_dt = CURRENT_TIMESTAMP WHERE id = #{id}\n");
         content.append("\t</delete>\n\n");
         
         content.append("\t<select id=\"get%sListById\" parameterType=\"string\" resultType=\"com.eun.tutorial.dto.main.%sDTO\">\n");
@@ -443,7 +433,7 @@ public class CodeGenerator {
             wrappedFieldNames.setLength(wrappedFieldNames.length() - 2);
         }
         
-        wrappedFieldNames.append(", #{id}, 0, #{createId}, CURRENT_TIMESTAMP, #{updateId}, CURRENT_TIMESTAMP");
+        wrappedFieldNames.append(", #{id}, 'N', #{createId}, CURRENT_TIMESTAMP, #{updateId}, CURRENT_TIMESTAMP");
 
         return wrappedFieldNames.toString();
     }

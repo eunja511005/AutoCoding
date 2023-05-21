@@ -16,10 +16,10 @@ import org.springframework.web.servlet.ModelAndView;
 import com.eun.tutorial.dto.main.ApiRequest;
 import com.eun.tutorial.dto.main.ApiResponse;
 import com.eun.tutorial.dto.main.AutoCodingDTO;
-import com.eun.tutorial.dto.main.CommonCodeDTO;
+import com.eun.tutorial.dto.main.AutocodingFieldDTO;
 import com.eun.tutorial.dto.main.Field;
+import com.eun.tutorial.service.main.AutoCodingService;
 import com.eun.tutorial.service.main.CodeGenerator;
-import com.eun.tutorial.service.main.CommonCodeService;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 public class AutoCodingController {
 	
-	private final CommonCodeService commonCodeService;
+	private final AutoCodingService autoCodingService;
 	private final CodeGenerator codeGenerator;
 	
     @GetMapping("/list")
@@ -41,12 +41,12 @@ public class AutoCodingController {
     }
     
     @PostMapping("/list")
-    public @ResponseBody List<CommonCodeDTO> getCommonCodeList() {
-        return commonCodeService.getCommonCodeList();
+    public @ResponseBody List<AutocodingFieldDTO> getCommonCodeList() {
+        return autoCodingService.getAutoCodingList();
     } 
     
     @PostMapping("/generate")
-    public @ResponseBody ApiResponse generate(@RequestBody ApiRequest<List<CommonCodeDTO>> apiRequest) {
+    public @ResponseBody ApiResponse generate(@RequestBody ApiRequest<List<AutocodingFieldDTO>> apiRequest) {
     	
         try {
         	
@@ -59,8 +59,8 @@ public class AutoCodingController {
         	
         	List<Field> fields = new ArrayList<>();
         	Field field = null;
-        	for (CommonCodeDTO commonCodeDTOList : apiRequest.getData()) {
-        		field = new Field(commonCodeDTOList.getCode(), String.class); 
+        	for (AutocodingFieldDTO autocodingFieldDTO : apiRequest.getData()) {
+        		field = new Field(autocodingFieldDTO.getFieldName(), autocodingFieldDTO.getFieldType()); 
         		fields.add(field);
     		}
             
@@ -90,40 +90,23 @@ public class AutoCodingController {
 	@PostMapping("/list/{id}")
 	public @ResponseBody ApiResponse list(@PathVariable String id){
 	    try {
-	    	CommonCodeDTO commonCodeDTOList = commonCodeService.getCommonCodeListById(id);
-	        return new ApiResponse<>(true, "Successfully retrieved the common code list.", commonCodeDTOList);
+	    	AutocodingFieldDTO autocodingFieldDTO = autoCodingService.getAutoCodingListById(id);
+	        return new ApiResponse<>(true, "Successfully retrieved the common code list.", autocodingFieldDTO);
 	    } catch (Exception e) {
 	        return new ApiResponse<>(false, "Failed to retrieve the common code list.", null);
 	    }
 	}
     
     @PostMapping("/save")
-    public @ResponseBody ApiResponse saveCommonCode(CommonCodeDTO commonCodeDTO) {
-        try {
-            commonCodeService.saveCommonCode(commonCodeDTO);
-            return new ApiResponse<Boolean>(true, "Success message", null);
-        } catch (Exception e) {
-        	return new ApiResponse<Boolean>(false, "Error message", null);
-        }
+    public @ResponseBody ApiResponse saveCommonCode(@RequestBody AutocodingFieldDTO autocodingFieldDTO) {
+    	autoCodingService.saveAutoCoding(autocodingFieldDTO);
+        return new ApiResponse<Boolean>(true, "Success message", null);
     }
     
     @DeleteMapping("/{id}")
-    public @ResponseBody ApiResponse deleteCommonCode(@PathVariable Long id) {
-        try {
-            commonCodeService.deleteCommonCode(id);
-            return new ApiResponse<Boolean>(true, "Successfully deleted the common code data.", null);
-        } catch (Exception e) {
-            return new ApiResponse<Boolean>(false, "Failed to delete the common code data.", null);
-        }
-    }
-    
-    @GetMapping("/{codeGroup}")
-    public @ResponseBody ApiResponse getCommonCodesByCategory(@PathVariable String codeGroup) {
-        try {
-            return new ApiResponse<>(true, "Successfully search the common code data.", commonCodeService.getCommonCodesByCategory(codeGroup));
-        } catch (Exception e) {
-            return new ApiResponse<>(false, "Failed to search the common code data.", null);
-        }
-    }
+	public @ResponseBody ApiResponse deleteAutoCoding(@PathVariable String id) {
+		autoCodingService.deleteAutoCoding(id);
+		return new ApiResponse<Boolean>(true, "Successfully deleted the common code data.", null);
+	}
 
 }

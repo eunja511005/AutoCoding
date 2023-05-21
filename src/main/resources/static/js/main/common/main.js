@@ -140,7 +140,7 @@ function initSelectBox(selectBoxId, url, includeAll, selectedValues) {
 
 function callAjax(url, method, data, successCallback){
 	  // 입력값이 form 요소인 경우
-	  if (data instanceof jQuery) {
+	  if (data instanceof FormData) {
 		// Convert FormData object to JSON object[(ex) var formData = new FormData(this);]
 		var json = {};
 		data.forEach(function(value, key) {
@@ -181,7 +181,9 @@ function callAjax(url, method, data, successCallback){
 		    }
 		},
 		error: function(error) {
-			console.log(error);
+			console.log(error.responseJSON.status);
+			console.log(error.responseJSON.code);
+			console.log(error.responseJSON.message);
 	  	    swal({
 	    		  title: "Error",
 	    		  text: "Please check browser console",
