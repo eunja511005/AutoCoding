@@ -22,37 +22,37 @@
 					    <div class="col-12" style="overflow-x: auto;">
 					      <form id="autoCodingForm" class="row g-2 align-items-center">
 					        <input type="hidden" id="id" name="id">
-					        <div class="col">
+					        <div class="col-md">
 					          <div class="form-floating">
 					            <input type="text" class="form-control" id="structureName" name="structureName" placeholder="Enter structureName" required>
 					            <label for="structureName">Structure Name</label>
 					          </div>
 					        </div>
-					        <div class="col">
+					        <div class="col-md">
 					          <div class="form-floating">
 					            <input type="text" class="form-control" id="fieldName" name="fieldName" placeholder="Enter fieldName" required>
 					            <label for="fieldName">Field Name</label>
 					          </div>
 					        </div>
-					        <div class="col">
+					        <div class="col-md">
 					          <div class="form-floating">
 					            <input type="text" class="form-control" id="fieldType" name="fieldType" placeholder="Enter fieldType" required>
 					            <label for="fieldType">Field Type</label>
 					          </div>
 					        </div>
-					        <div class="col">
+					        <div class="col-md">
 					          <div class="form-floating">
 					            <input type="text" class="form-control" id="defaultValue" name="defaultValue" placeholder="Enter defaultValue" required>
 					            <label for="defaultValue">Default Value</label>
 					          </div>
 					        </div>
-					        <div class="col">
+					        <div class="col-md">
 					          <div class="form-floating">
 					            <input type="number" class="form-control" id="orderNumber" name="orderNumber" placeholder="Enter orderNumber" required>
 					            <label for="orderNumber">Order Number</label>
 					          </div>
 					        </div>
-					        <div class="col">
+					        <div class="col-md">
 					          <div class="form-floating">
 					            <select class="form-select" id="searchable" name="searchable" required>
 					              <option value="Y">Yes</option>
@@ -61,7 +61,7 @@
 					            <label for="searchable">Searchable</label>
 					          </div>
 					        </div>
-					        <div class="col">
+					        <div class="col-md">
 					          <div class="form-floating">
 					            <select class="form-select" id="primaryKey" name="primaryKey" required>
 					              <option value="Y">Yes</option>
@@ -70,7 +70,7 @@
 					            <label for="primaryKey">Primary Key</label>
 					          </div>
 					        </div>
-					        <div class="col">
+					        <div class="col-md">
 					          <div class="form-floating">
 					            <select class="form-select" id="nullable" name="nullable" required>
 					              <option value="Y">Yes</option>
@@ -79,13 +79,13 @@
 					            <label for="nullable">Nullable</label>
 					          </div>
 					        </div>
-					        <div class="col">
+					        <div class="col-md">
 					          <div class="form-floating">
 					            <input type="text" class="form-control" id="description" name="description" placeholder="Enter description" required>
 					            <label for="description">Description</label>
 					          </div>
 					        </div>
-					        <div class="col text-center">
+					        <div class="col-md text-center">
 					          <button type="submit" class="btn btn-outline-primary"><i class="fas fa-save"></i></button>
 					          <button type="reset" class="btn btn-outline-secondary"><i class="fas fa-undo"></i></button>
 					        </div>
@@ -93,6 +93,7 @@
 					    </div>
 					  </div>
 					</div>
+
 
 		        </div>
 		    </div>
