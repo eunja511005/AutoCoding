@@ -239,6 +239,10 @@ function deleteCallback(response){
 		    	codeElement.addClass('language-xml').html(Prism.highlight(autoCoding.sourceCode, Prism.languages.xml));
 		    } else if (autoCoding.sourceName.endsWith('.sql')) {
 		    	codeElement.addClass('language-sql').html(Prism.highlight(autoCoding.sourceCode, Prism.languages.sql));
+		    } else if (autoCoding.sourceName.endsWith('.jsp')) {
+		    	codeElement.addClass('language-markup').html(Prism.highlight(autoCoding.sourceCode, Prism.languages.sql));
+		    } else if (autoCoding.sourceName.endsWith('.js')) {
+		    	codeElement.addClass('language-javascript').html(Prism.highlight(autoCoding.sourceCode, Prism.languages.sql));
 		    } else {
 		    	codeElement.text(autoCoding.sourceCode);
 		    }

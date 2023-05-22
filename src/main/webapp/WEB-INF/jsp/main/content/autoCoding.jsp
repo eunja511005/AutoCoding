@@ -103,7 +103,7 @@
 		<div class="card mb-4" style="width:100%">
 		  <div class="card-header" id="fieldHeading">
 		    <h1 class="mb-0">
-		      <button id="searchField" class="btn btn-link" type="button" data-toggle="collapse" data-target="#fieldCollapse" aria-expanded="true" aria-controls="fieldCollapse">
+		      <button id="searchField" class="btn btn-link" type="button" aria-expanded="true" aria-controls="fieldCollapse">
 		        Search Field
 		      </button>
 		    </h1>

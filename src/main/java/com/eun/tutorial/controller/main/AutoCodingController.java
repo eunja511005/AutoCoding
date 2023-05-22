@@ -47,45 +47,40 @@ public class AutoCodingController {
     
     @PostMapping("/generate")
     public @ResponseBody ApiResponse generate(@RequestBody ApiRequest<List<AutocodingFieldDTO>> apiRequest) {
-    	
-        try {
-        	
-        	log.info("Post List by ID : {}", apiRequest.getSubject());
-        	
-            if (apiRequest.getSubject() == null || apiRequest.getSubject().isEmpty()) {
-                throw new IllegalArgumentException("Subject cannot be null or empty.");
-            }
-        	
-        	
-        	List<Field> fields = new ArrayList<>();
-        	Field field = null;
-        	for (AutocodingFieldDTO autocodingFieldDTO : apiRequest.getData()) {
-        		field = new Field(autocodingFieldDTO.getFieldName(), autocodingFieldDTO.getFieldType()); 
-        		fields.add(field);
-    		}
-            
-            List<AutoCodingDTO> autoCodingList = new ArrayList<>();
-            AutoCodingDTO autoCodingDTO = codeGenerator.generateDTOClass(fields, apiRequest.getSubject());
-            AutoCodingDTO autoCodingController = codeGenerator.generateControllerClass(apiRequest.getSubject());
-            AutoCodingDTO autoCodingService = codeGenerator.generateServiceClass(apiRequest.getSubject());
-            AutoCodingDTO autoCodingServiceImpl = codeGenerator.generateServiceImplClass(apiRequest.getSubject());
-            AutoCodingDTO autoCodingMapper = codeGenerator.generateMapperClass(apiRequest.getSubject());
-            AutoCodingDTO autoCodingMapperXml = codeGenerator.generateMapperXml(fields, apiRequest.getSubject());
-            AutoCodingDTO autoCodingSchemaSql = codeGenerator.generateSchemaSql(fields, apiRequest.getSubject());
-            autoCodingList.add(autoCodingDTO);
-            autoCodingList.add(autoCodingController);
-            autoCodingList.add(autoCodingService);
-            autoCodingList.add(autoCodingServiceImpl);
-            autoCodingList.add(autoCodingMapper);
-            autoCodingList.add(autoCodingMapperXml);
-            autoCodingList.add(autoCodingSchemaSql);
-            
-            return new ApiResponse<>(true, "Successfully search the common code data.", autoCodingList);
-        } catch (Exception e) {
-            return new ApiResponse<>(false, "Failed to search the common code data.", null);
-        }
-    	
-    } 
+
+		log.info("Post List by ID : {}", apiRequest.getSubject());
+
+		if (apiRequest.getSubject() == null || apiRequest.getSubject().isEmpty()) {
+			throw new IllegalArgumentException("Subject cannot be null or empty.");
+		}
+
+		List<Field> fields = new ArrayList<>();
+		Field field = null;
+		for (AutocodingFieldDTO autocodingFieldDTO : apiRequest.getData()) {
+			field = new Field(autocodingFieldDTO.getFieldName(), autocodingFieldDTO.getFieldType());
+			fields.add(field);
+		}
+
+		List<AutoCodingDTO> autoCodingList = new ArrayList<>();
+		AutoCodingDTO autoCodingDTO = codeGenerator.generateDTOClass(fields, apiRequest.getSubject());
+		AutoCodingDTO autoCodingController = codeGenerator.generateControllerClass(apiRequest.getSubject());
+		AutoCodingDTO autoCodingServiceFile = codeGenerator.generateServiceClass(apiRequest.getSubject());
+		AutoCodingDTO autoCodingServiceImpl = codeGenerator.generateServiceImplClass(apiRequest.getSubject());
+		AutoCodingDTO autoCodingMapper = codeGenerator.generateMapperClass(apiRequest.getSubject());
+		AutoCodingDTO autoCodingMapperXml = codeGenerator.generateMapperXml(fields, apiRequest.getSubject());
+		AutoCodingDTO autoCodingSchemaSql = codeGenerator.generateSchemaSql(fields, apiRequest.getSubject());
+		AutoCodingDTO autoCodingJsp = codeGenerator.generateJsp(fields, apiRequest.getSubject());
+		autoCodingList.add(autoCodingDTO);
+		autoCodingList.add(autoCodingController);
+		autoCodingList.add(autoCodingServiceFile);
+		autoCodingList.add(autoCodingServiceImpl);
+		autoCodingList.add(autoCodingMapper);
+		autoCodingList.add(autoCodingMapperXml);
+		autoCodingList.add(autoCodingSchemaSql);
+		autoCodingList.add(autoCodingJsp);
+
+		return new ApiResponse<>(true, "Successfully search the common code data.", autoCodingList);
+	}
     
 	@PostMapping("/list/{id}")
 	public @ResponseBody ApiResponse list(@PathVariable String id){

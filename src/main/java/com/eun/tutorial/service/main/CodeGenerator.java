@@ -394,7 +394,146 @@ public class CodeGenerator {
         return autoCodingDTO;
     }
     
-    public static String capitalizeFirstLetter(String input) {
+    public AutoCodingDTO generateJsp(List<Field> fields, String subject) {
+    	if (subject == null || subject.isEmpty()) {
+    		throw new IllegalArgumentException("Subject cannot be null or empty.");
+    	}
+    	
+    	AutoCodingDTO autoCodingDTO = new AutoCodingDTO();
+    	
+    	String capitalizedSubject = capitalizeFirstLetter(subject);
+        String formFields = getFormFields(fields);
+        String tableheader = getTableHeader(fields);
+        
+        StringBuilder content = new StringBuilder();
+        content.append("<div class=\"container-fluid px-4\">\n");
+        content.append("\t<div class=\"d-flex justify-content-between align-items-center mb-4\">\n");
+        content.append("\t\t<h1 class=\"mt-4\">%s</h1>\n");
+        content.append("\t</div>\n");
+        content.append("\n");
+        
+        content.append("\t<ol class=\"breadcrumb mb-4\">\n");
+        content.append("\t\t<li class=\"breadcrumb-item\"><a href=\"index.html\">Dashboard</a></li>\n");
+        content.append("\t\t<li class=\"breadcrumb-item active\">%s</li>\n");
+        content.append("\t</ol>\n");
+        content.append("\n");
+        
+        content.append("\t<div class=\"card mb-4\">\n");
+        content.append("\t\t<div class=\"card-header\" id=\"fieldHeading\">\n");
+        content.append("\t\t\t<h1 class=\"mb-0\">\n");
+        content.append("\t\t\t\t<button id=\"newField\" class=\"btn btn-link\" type=\"button\" aria-expanded=\"true\" aria-controls=\"fieldCollapse\">\n");
+        content.append("\t\t\t\t\tNew %s\n");
+        content.append("\t\t\t\t</button>\n");
+        content.append("\t\t\t</h1>\n");
+        content.append("\t\t</div>\n");
+        content.append("\t\t<div id=\"fieldCollapse\" class=\"collapse show\" aria-labelledby=\"fieldHeading\">\n");
+        content.append("\t\t\t<div class=\"card-body\">\n");
+        content.append("\t\t\t\t<div class=\"container-fluid\">\n");
+        content.append("\t\t\t\t\t<div class=\"row\">\n");
+        content.append("\t\t\t\t\t\t<div class=\"col-12\">\n");
+        content.append("\t\t\t\t\t\t\t<form id=\"%sForm\" class=\"row g-2 align-items-center\">\n");
+        content.append("\t\t\t\t\t\t\t\t<input type=\"hidden\" id=\"id\" name=\"id\">\n");
+        content.append(formFields);
+        content.append("\t\t\t\t\t\t\t</form>\n");
+        content.append("\t\t\t\t\t\t</div>\n");
+        content.append("\t\t\t\t\t</div>\n");
+        content.append("\t\t\t\t</div>\n");
+        content.append("\t\t\t</div>\n");
+        content.append("\t\t</div>\n");
+        content.append("\t</div>\n");
+        content.append("\n");
+        
+        content.append("\t<div class=\"card mb-4\" style=\"width:100%%\">\n");
+        content.append("\t\t<div class=\"card-header\" id=\"fieldHeading\">\n");
+        content.append("\t\t\t<h1 class=\"mb-0\">\n");
+        content.append("\t\t\t\t<button id=\"searchField\" class=\"btn btn-link\" type=\"button\" aria-expanded=\"true\" aria-controls=\"fieldCollapse\">\n");
+        content.append("\t\t\t\t\tSearch %s\n");
+        content.append("\t\t\t\t</button>\n");
+        content.append("\t\t\t</h1>\n");
+        content.append("\t\t</div>\n");
+        content.append("\t\t<div id=\"fieldCollapse\" class=\"collapse show\" aria-labelledby=\"fieldHeading\">\n");
+        content.append("\t\t\t<div class=\"card-body\" style=\"width:100%%\">\n");
+        content.append("\t\t\t\t<table id=\"%sTable\" class=\"table table-hover\" style=\"width:100%%\">\n");
+        content.append("\t\t\t\t\t<thead>\n");
+        content.append("\t\t\t\t\t\t<tr>\n");
+        content.append(tableheader);
+        content.append("\t\t\t\t\t\t</tr>\n");
+        content.append("\t\t\t\t\t</thead>\n");
+        content.append("\t\t\t\t\t<tbody>\n");
+        content.append("\t\t\t\t\t</tbody>\n");
+        content.append("\t\t\t\t</table>\n");
+        content.append("\t\t\t</div>\n");
+        content.append("\t\t</div>\n");
+        content.append("\t</div>\n");
+        content.append("\n");
+        
+        content.append("</div>\n");
+        content.append("\n");
+        
+        content.append("<script src=\"/js/main/content/%s.js\"></script>\n");
+        
+        String result = String.format(content.toString(), 
+        		capitalizedSubject, //h1 title
+        		capitalizedSubject, //ol tag
+        		capitalizedSubject, //New card-header
+        		capitalizedSubject, //New form
+        		capitalizedSubject, //table card-header
+        		subject, //table id
+        		subject); //js file name
+
+        autoCodingDTO.setSourceName(subject+".jsp");
+        autoCodingDTO.setSourceCode(result);
+        
+        return autoCodingDTO;
+    }
+    
+    private String getTableHeader(List<Field> fields) {
+    	StringBuilder result = new StringBuilder();
+    	for (Field field : fields) {
+    		result.append("\t\t\t\t\t\t\t<th>"+field.getName()+"</th>\n");
+    	}
+		return result.toString();
+	}
+
+	private String getFormFields(List<Field> fields) {
+    	StringBuilder result = new StringBuilder();
+      
+    	String input = "";
+    	for (Field field : fields) {
+    		String fieldName = convertToCamelCase(field.getName());
+    		String fieldType = field.getType();
+    		OracleTypeConverter.convertToJavaType(field.getType()).getSimpleName();
+    		
+    		StringBuilder sb = new StringBuilder();
+        	sb.append("\t\t\t\t\t\t\t\t<div class=\"col-md\">\n");
+        	sb.append("\t\t\t\t\t\t\t\t\t<div class=\"form-floating\">\n");
+        	
+        	if(fieldType.equalsIgnoreCase("CHAR")) {
+        		sb.append("\t\t\t\t\t\t\t\t\t\t<select class=\"form-select\" id=\"%s\" name=\"%s\" required>\n");
+        		sb.append("\t\t\t\t\t\t\t\t\t\t\t<option value=\"Y\">Yes</option>\n");
+        		sb.append("\t\t\t\t\t\t\t\t\t\t\t<option value=\"N\">No</option>\n");
+        		sb.append("\t\t\t\t\t\t\t\t\t\t</select>\n");
+        	}else if(fieldType.equalsIgnoreCase("NUMBER")) {
+        		sb.append("\t\t\t\t\t\t\t\t\t\t<input type=\"number\" class=\"form-control\" id=\"%s\" name=\"%s\" placeholder=\"Enter %s\" required>\n");
+        	}else if(fieldType.equalsIgnoreCase("DATE") || field.getType().equalsIgnoreCase("TIMESTAMP")) {
+        		sb.append("\t\t\t\t\t\t\t\t\t\t<input type=\"date\" class=\"form-control\" id=\"%s\" name=\"%s\" placeholder=\"Enter %s\" required>\n");
+        	}else {
+        		sb.append("\t\t\t\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" id=\"%s\" name=\"%s\" placeholder=\"Enter %s\" required>\n");
+        	}
+        	sb.append("\t\t\t\t\t\t\t\t\t\t<label for=\"%s\">%s</label>\n");
+        	sb.append("\t\t\t\t\t\t\t\t\t</div>\n");
+        	sb.append("\t\t\t\t\t\t\t\t</div>\n");
+        	
+        	input = String.format(sb.toString(), fieldName, fieldName, fieldName
+        			, fieldName, field.getName());
+        	
+        	result.append(input);
+		}
+    	
+		return result.toString();
+	}
+
+	public static String capitalizeFirstLetter(String input) {
         if (input == null || input.isEmpty()) {
             return input;
         }
