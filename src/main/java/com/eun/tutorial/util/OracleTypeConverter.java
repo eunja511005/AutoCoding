@@ -7,8 +7,8 @@ import java.time.LocalDateTime;
 
 public class OracleTypeConverter {
     public static Class<?> convertToJavaType(String oracleType) {
-        if (oracleType.equalsIgnoreCase("VARCHAR2") ||
-            oracleType.equalsIgnoreCase("CHAR") ||
+        if (oracleType.toUpperCase().startsWith("VARCHAR2") ||
+        	oracleType.toUpperCase().startsWith("CHAR") ||
             oracleType.equalsIgnoreCase("CLOB")) {
             return String.class;
         } else if (oracleType.equalsIgnoreCase("NUMBER")) {

@@ -39,6 +39,7 @@
                                             <a class="nav-link a-menu" href="/project/inputForm">Project Creation</a>
                                             <a class="nav-link a-menu" href="/commonCode/list">Common Code</a>
                                             <a class="nav-link a-menu" href="/autoCoding/list">Auto Coding</a>
+                                            <a class="nav-link a-menu" href="/projectMember/list">Project Member</a>
                                         </nav>
                                     </div>
                                     <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseError" aria-expanded="false" aria-controls="pagesCollapseError">

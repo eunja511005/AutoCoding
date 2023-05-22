@@ -23,6 +23,8 @@ public class CodeGenerator {
         
         builder.append("package com.eun.tutorial.dto.main;\n");
         builder.append("\n");
+        builder.append("import java.time.LocalDateTime;\n");
+        builder.append("\n");
         builder.append("import lombok.AllArgsConstructor;\n");
         builder.append("import lombok.Data;\n");
         builder.append("import lombok.NoArgsConstructor;\n");
@@ -41,11 +43,11 @@ public class CodeGenerator {
         }
         
         builder.append("\tprivate String id;\n");
-        builder.append("\tprivate boolean delyn;\n");
-        builder.append("\tprivate String createid;\n");
-        builder.append("\tprivate LocalDateTime createdt;\n");
-        builder.append("\tprivate String updateid;\n");
-        builder.append("\tprivate LocalDateTime updatedt;\n");
+        builder.append("\tprivate boolean delYn;\n");
+        builder.append("\tprivate String createId;\n");
+        builder.append("\tprivate LocalDateTime createDt;\n");
+        builder.append("\tprivate String updateId;\n");
+        builder.append("\tprivate LocalDateTime updateDt;\n");
 
         builder.append("}\n");
         
@@ -67,11 +69,14 @@ public class CodeGenerator {
         builder.append("\n");
         
         // Generate the imports
+        builder.append("import java.util.List;\n");
+        builder.append("\n");
         builder.append("import org.springframework.stereotype.Controller;\n");
         builder.append("import org.springframework.web.bind.annotation.DeleteMapping;\n");
         builder.append("import org.springframework.web.bind.annotation.GetMapping;\n");
         builder.append("import org.springframework.web.bind.annotation.PathVariable;\n");
         builder.append("import org.springframework.web.bind.annotation.PostMapping;\n");
+        builder.append("import org.springframework.web.bind.annotation.RequestBody;\n");
         builder.append("import org.springframework.web.bind.annotation.RequestMapping;\n");
         builder.append("import org.springframework.web.bind.annotation.ResponseBody;\n");
         builder.append("import org.springframework.web.servlet.ModelAndView;\n\n");
@@ -90,11 +95,6 @@ public class CodeGenerator {
 
         // Generate the fields
         builder.append("\tprivate final %sService %sService;\n\n");
-
-        // Generate the constructor
-        builder.append("\tpublic %s(%sService %sService) {\n");
-        builder.append("\t\tthis.%sService = %sService;\n");
-        builder.append("\t}\n\n");
 
         // Generate the methods
         builder.append("\t@GetMapping(\"/list\")\n");
@@ -135,12 +135,11 @@ public class CodeGenerator {
         		capitalizedSubject, capitalizedSubject, //imports
         		subject, className, //declaration
         		capitalizedSubject, subject, //field
-        		capitalizedSubject, capitalizedSubject, subject, subject, subject, //constructor
         		subject, //GetMapping
-        		capitalizedSubject, capitalizedSubject, capitalizedSubject, capitalizedSubject, //PostMapping
-        		capitalizedSubject, subject, capitalizedSubject, capitalizedSubject, subject, capitalizedSubject, subject, //PostMapping 
-        		capitalizedSubject, capitalizedSubject, subject, capitalizedSubject, capitalizedSubject, subject, //PostMapping
-        		capitalizedSubject, subject, capitalizedSubject, subject, subject); //DeleteMapping
+        		capitalizedSubject, capitalizedSubject, subject, capitalizedSubject, //PostMapping
+        		capitalizedSubject, subject, subject, capitalizedSubject, subject, subject, //PostMapping 
+        		capitalizedSubject, capitalizedSubject, subject, subject, capitalizedSubject, subject, //PostMapping
+        		capitalizedSubject, subject, capitalizedSubject, subject); //DeleteMapping
         
         autoCodingDTO.setSourceName(className+".java");
         autoCodingDTO.setSourceCode(result);
@@ -362,13 +361,17 @@ public class CodeGenerator {
     	AutoCodingDTO autoCodingDTO = new AutoCodingDTO();
         
         StringBuilder content = new StringBuilder();
+        content.append("DROP TABLE zthh_"+subject+";\n");
         content.append("CREATE TABLE zthh_"+subject+" (\n");
         content.append("\tid VARCHAR2(255),\n");
         
         
         for (Field field : fields) {
             String fieldName = field.getName();
-            String fiedlType = "VARCHAR2";
+            String fiedlType = field.getType();
+            if (fiedlType.equals("VARCHAR2")) {
+            	fiedlType = "VARCHAR2(255)";
+			}
             content.append("\t");
             content.append(fieldName);
             content.append(" ");
@@ -382,7 +385,6 @@ public class CodeGenerator {
         content.append("\tcreate_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,\n");
         content.append("\tupdate_id VARCHAR2(50),\n");
         content.append("\tupdate_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,\n");
-        content.append("\n");
         
         content.append("\tCONSTRAINT pk_zthh_"+subject+" PRIMARY KEY (id)\n");
         
@@ -434,6 +436,10 @@ public class CodeGenerator {
         content.append("\t\t\t\t\t\t\t<form id=\"%sForm\" class=\"row g-2 align-items-center\">\n");
         content.append("\t\t\t\t\t\t\t\t<input type=\"hidden\" id=\"id\" name=\"id\">\n");
         content.append(formFields);
+      	content.append("\t\t\t\t\t\t\t\t<div class=\"col-md text-center\">\n");
+      	content.append("\t\t\t\t\t\t\t\t\t<button type=\"submit\" class=\"btn btn-outline-primary\"><i class=\"fas fa-save\"></i></button>\n");
+      	content.append("\t\t\t\t\t\t\t\t\t<button type=\"reset\" class=\"btn btn-outline-secondary\"><i class=\"fas fa-undo\"></i></button>\n");
+      	content.append("\t\t\t\t\t\t\t\t</div>\n");
         content.append("\t\t\t\t\t\t\t</form>\n");
         content.append("\t\t\t\t\t\t</div>\n");
         content.append("\t\t\t\t\t</div>\n");
@@ -476,7 +482,7 @@ public class CodeGenerator {
         		capitalizedSubject, //h1 title
         		capitalizedSubject, //ol tag
         		capitalizedSubject, //New card-header
-        		capitalizedSubject, //New form
+        		subject, //New form
         		capitalizedSubject, //table card-header
         		subject, //table id
         		subject); //js file name
@@ -505,6 +511,7 @@ public class CodeGenerator {
         content.append("\n");
         
         content.append("$(document).ready(function() {\n");
+        content.append("\tdebugger;\n");
         content.append("\tinitialize%sTable();\n");
         content.append("\n");
         
@@ -562,13 +569,13 @@ public class CodeGenerator {
         
         content.append("\t$('#%sTable tbody').on('click', '.edit-button', function() {\n");
         content.append("\t\tvar id = $(this).data('id');\n");
-        content.append("\t\teditAutoCoding(id);\n");
+        content.append("\t\tedit%s(id);\n");
         content.append("\t});\n");
         content.append("\n");
         
         content.append("\t$('#%sTable tbody').on('click', '.delete-button', function() {\n");
         content.append("\t\tvar id = $(this).data('id');\n");
-        content.append("\t\tdeleteCommonCode(id);\n");
+        content.append("\t\tdelete%s(id);\n");
         content.append("\t});\n");
         content.append("\n");
         
@@ -577,6 +584,24 @@ public class CodeGenerator {
         content.append("\t});\n");
         content.append("\n");
         
+        content.append("}\n");
+        content.append("\n");
+        
+        
+        content.append("function save%s(formData) {\n");
+        content.append("\tcallAjax(\"/%s/save\", \"POST\", formData, saveCallback);\n");
+        content.append("}\n");
+        content.append("\n");
+        
+        content.append("function edit%s(id) {\n");
+        content.append("\tcallAjax(\"/%s/list/\"+ id, \"POST\", null, editCallback);\n");
+        content.append("}\n");
+        content.append("\n");
+        
+        content.append("function delete%s(id) {\n");
+        content.append("\tif (confirm('Are you sure you want to delete?')) {\n");
+        content.append("\t\tcallAjax(\"/%s/\"+ id, \"DELETE\", null, deleteCallback);\n");
+        content.append("\t}\n");
         content.append("}\n");
         content.append("\n");
         
@@ -610,14 +635,15 @@ public class CodeGenerator {
         		subject, capitalizedSubject, // new form submit event add
         		subject, //clear event add
         		capitalizedSubject, subject, subject, // initialize function
-        		capitalizedSubject, //New form
-        		capitalizedSubject, //table card-header
-        		subject, //table edit button add event
-        		subject, //table delete button add event
-        		subject, //table select toggle add event
-        		subject, //edit function
-        		subject, subject,//save function
-        		subject, subject, subject); //delete function
+        		subject, capitalizedSubject, //Edit event
+        		subject, capitalizedSubject, //Delete event
+        		subject, //Toggle event
+        		capitalizedSubject, subject, //Save function
+        		capitalizedSubject, subject, //Edit function
+        		capitalizedSubject, subject, //Delete function
+        		subject, //edit callback function
+        		subject, subject,//save callback function
+        		subject, subject, subject); //delete callback function
 
         autoCodingDTO.setSourceName(subject+".js");
         autoCodingDTO.setSourceCode(result);
@@ -647,6 +673,9 @@ public class CodeGenerator {
     	for (Field field : fields) {
     		result.append("\t\t\t\t\t\t\t<th>"+field.getName()+"</th>\n");
     	}
+    	result.append("\t\t\t\t\t\t\t<th>Edit</th>\n");
+    	result.append("\t\t\t\t\t\t\t<th>Delete</th>\n");
+        	
 		return result.toString();
 	}
 

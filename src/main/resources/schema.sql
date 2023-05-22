@@ -275,4 +275,21 @@ CREATE TABLE zthh_autocoding_field (
     CONSTRAINT pk_zthh_autocoding_field PRIMARY KEY (id)
 );
 
+DROP TABLE zthh_projectMember;
+CREATE TABLE zthh_projectMember (
+	id VARCHAR2(255),
+	NAME VARCHAR2(255),
+	EMAIL VARCHAR2(50),
+	CONTACT VARCHAR2(50),
+	POSITION VARCHAR2(30),
+	PICTURE VARCHAR2(200),
+	INTRODUCTION VARCHAR2(4000),
+	del_yn CHAR(1),
+	create_id VARCHAR2(50),
+	create_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
+	update_id VARCHAR2(50),
+	update_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
+	CONSTRAINT pk_zthh_projectMember PRIMARY KEY (id)
+);
+
 **/

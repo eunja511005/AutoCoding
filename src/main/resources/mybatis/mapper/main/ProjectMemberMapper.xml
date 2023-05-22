@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eun.tutorial.mapper.main.ProjectMemberMapper">
+
+	<select id="selectProjectMemberList" resultType="com.eun.tutorial.dto.main.ProjectMemberDTO">
+		SELECT NAME, EMAIL, CONTACT, POSITION, PICTURE, INTRODUCTION, id, del_yn, create_id, create_dt, update_id, update_dt FROM ZTHH_PROJECTMEMBER where del_yn='N' ORDER BY update_dt, create_dt
+	</select>
+
+	<insert id="insertProjectMember">
+		INSERT INTO ZTHH_PROJECTMEMBER (NAME, EMAIL, CONTACT, POSITION, PICTURE, INTRODUCTION, id, del_yn, create_id, create_dt, update_id, update_dt)
+		VALUES (#{name}, #{email}, #{contact}, #{position}, #{picture}, #{introduction}, #{id}, 'N', #{createId}, CURRENT_TIMESTAMP, #{updateId}, CURRENT_TIMESTAMP)
+	</insert>
+
+	<update id="updateProjectMember">
+		UPDATE ZTHH_PROJECTMEMBER
+		SET NAME = #{name}, EMAIL = #{email}, CONTACT = #{contact}, POSITION = #{position}, PICTURE = #{picture}, INTRODUCTION = #{introduction}, update_id = #{updateId}, update_dt = CURRENT_TIMESTAMP
+		WHERE id = #{id}
+	</update>
+
+	<delete id="deleteProjectMember">
+		UPDATE ZTHH_PROJECTMEMBER SET del_yn = 'Y', update_dt = CURRENT_TIMESTAMP WHERE id = #{id}
+	</delete>
+
+	<select id="getProjectMemberListById" parameterType="string" resultType="com.eun.tutorial.dto.main.ProjectMemberDTO">
+		SELECT NAME, EMAIL, CONTACT, POSITION, PICTURE, INTRODUCTION, id, del_yn, create_id, create_dt, update_id, update_dt FROM ZTHH_PROJECTMEMBER
+		WHERE id = #{id}
+		ORDER BY update_dt, create_dt
+	</select>
+
+</mapper>
