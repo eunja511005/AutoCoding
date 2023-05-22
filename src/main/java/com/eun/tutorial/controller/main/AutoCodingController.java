@@ -70,6 +70,7 @@ public class AutoCodingController {
 		AutoCodingDTO autoCodingMapperXml = codeGenerator.generateMapperXml(fields, apiRequest.getSubject());
 		AutoCodingDTO autoCodingSchemaSql = codeGenerator.generateSchemaSql(fields, apiRequest.getSubject());
 		AutoCodingDTO autoCodingJsp = codeGenerator.generateJsp(fields, apiRequest.getSubject());
+		AutoCodingDTO autoCodingJs = codeGenerator.generateJs(fields, apiRequest.getSubject());
 		autoCodingList.add(autoCodingDTO);
 		autoCodingList.add(autoCodingController);
 		autoCodingList.add(autoCodingServiceFile);
@@ -78,6 +79,7 @@ public class AutoCodingController {
 		autoCodingList.add(autoCodingMapperXml);
 		autoCodingList.add(autoCodingSchemaSql);
 		autoCodingList.add(autoCodingJsp);
+		autoCodingList.add(autoCodingJs);
 
 		return new ApiResponse<>(true, "Successfully search the common code data.", autoCodingList);
 	}

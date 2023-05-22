@@ -130,31 +130,7 @@ $(document).ready(function() {
 
 	function deleteCommonCode(id) {
 	    if (confirm('Are you sure you want to delete this common code?')) {
-	    	
 	    	callAjax("/autoCoding/"+ id, "DELETE", null, deleteCallback);
-	    	
-	        /*$.ajax({
-	            url: '/commonCode/' + id,
-	            type: 'DELETE',
-	            beforeSend : function(xhr){   
-	    			xhr.setRequestHeader(csrfheader, csrftoken);
-	    	    },
-	            success: function(result) {
-	                if (result.success) {
-	                    // Remove the common code row from the table
-	                    $('#commonCodeTable tbody').find('tr[data-id="' + id + '"]').remove();
-	                    alert('Common code deleted successfully.');
-	                    
-	                    // Reload the common code table
-	        	        $('#commonCodeTable').DataTable().ajax.reload();
-	                } else {
-	                    alert('Failed to delete common code. Please try again later.');
-	                }
-	            },
-	            error: function() {
-	                alert('Failed to delete common code. Please try again later.');
-	            }
-	        });*/
 	    }
 	}
 	

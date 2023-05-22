@@ -487,7 +487,162 @@ public class CodeGenerator {
         return autoCodingDTO;
     }
     
-    private String getTableHeader(List<Field> fields) {
+    public AutoCodingDTO generateJs(List<Field> fields, String subject) {
+    	if (subject == null || subject.isEmpty()) {
+    		throw new IllegalArgumentException("Subject cannot be null or empty.");
+    	}
+    	
+    	AutoCodingDTO autoCodingDTO = new AutoCodingDTO();
+    	
+    	String capitalizedSubject = capitalizeFirstLetter(subject);
+        String column = getColumn(fields);
+        String editField = getEditField(fields);
+        
+        StringBuilder content = new StringBuilder();
+        content.append("var csrfheader = $(\"meta[name='_csrf_header']\").attr(\"content\");\n");
+        content.append("var csrftoken = $(\"meta[name='_csrf']\").attr(\"content\");\n");
+        content.append("var table;\n");
+        content.append("\n");
+        
+        content.append("$(document).ready(function() {\n");
+        content.append("\tinitialize%sTable();\n");
+        content.append("\n");
+        
+        content.append("\t$('#%sForm').on('submit', function(event) {\n");
+        content.append("\t\tevent.preventDefault();\n");
+        content.append("\t\tvar formData = new FormData(this);\n");
+        content.append("\t\tsave%s(formData);\n");
+        content.append("\t});\n");
+        content.append("\n");
+        
+        content.append("\t$('#clear-btn').on('click', function() {\n");
+        content.append("\t\t$('#%sForm input').val('');\n");
+        content.append("\t});\n");
+        content.append("\n");
+        
+        content.append("\tfunction handleCollapseClick() {\n");
+        content.append("\t\tvar $cardBody = $(this).parents('.card').find('.card-body');\n");
+        content.append("\t\t$cardBody.slideToggle();\n");
+        content.append("\t}\n");
+        content.append("\n");
+
+        content.append("\t$('#newField, #searchField').click(handleCollapseClick);\n");
+        content.append("});\n");
+
+        content.append("function initialize%sTable() {\n");
+        content.append("\ttable = $('#%sTable').DataTable({\n");
+        content.append("\t\tscrollX: true, \n");
+        content.append("\t\tajax: {\n");
+        content.append("\t\t\turl: '/%s/list',\n");
+        content.append("\t\t\t\"type\": \"POST\",\n");
+        content.append("\t\t\tbeforeSend : function(xhr){\n");
+        content.append("\t\t\t\txhr.setRequestHeader(csrfheader, csrftoken);\n");
+        content.append("\t\t\t},\n");
+        content.append("\t\t\tdataSrc: '',\n");
+        content.append("\t\t},\n");
+        content.append("\t\tcolumns: [\n");
+        content.append(column);
+        content.append("\t\t\t{\n");
+        content.append("\t\t\t\tdata: null,\n");
+        content.append("\t\t\t\trender: function(data, type, row, meta) {\n");
+        content.append("\t\t\t\t\tvar editButton = '<button type=\"button\" class=\"btn btn-sm btn-outline-info mx-1 edit-button\" data-id=\"' + row.id + '\"><i class=\"fas fa-edit\"></i></button>';\n");
+        content.append("\t\t\t\t\treturn editButton;\n");
+        content.append("\t\t\t\t},\n");
+        content.append("\t\t\t},\n");
+        content.append("\t\t\t{\n");
+        content.append("\t\t\t\tdata: null,\n");
+        content.append("\t\t\t\trender: function(data, type, row, meta) {\n");
+        content.append("\t\t\t\t\tvar deleteButton = '<button type=\"button\" class=\"btn btn-sm btn-outline-danger mx-1 delete-button\" data-id=\"' + row.id + '\"><i class=\"fas fa-trash\"></i></button>';\n");
+        content.append("\t\t\t\t\treturn deleteButton;\n");
+        content.append("\t\t\t\t},\n");
+        content.append("\t\t\t},\n");
+        content.append("\t\t],\n");
+        content.append("\t});\n");
+        content.append("\n");
+        
+        content.append("\t$('#%sTable tbody').on('click', '.edit-button', function() {\n");
+        content.append("\t\tvar id = $(this).data('id');\n");
+        content.append("\t\teditAutoCoding(id);\n");
+        content.append("\t});\n");
+        content.append("\n");
+        
+        content.append("\t$('#%sTable tbody').on('click', '.delete-button', function() {\n");
+        content.append("\t\tvar id = $(this).data('id');\n");
+        content.append("\t\tdeleteCommonCode(id);\n");
+        content.append("\t});\n");
+        content.append("\n");
+        
+        content.append("\t$('#%sTable tbody').on('click', 'tr', function() {\n");
+        content.append("\t\t$(this).toggleClass('selected');\n");
+        content.append("\t});\n");
+        content.append("\n");
+        
+        content.append("}\n");
+        content.append("\n");
+        
+        content.append("function editCallback(response){\n");
+        content.append(editField);
+        content.append("\n");
+        content.append("\t$('#%sForm').attr('data-mode', 'edit');\n");
+        content.append("}\n");
+        content.append("\n");
+        
+        content.append("function saveCallback(response){\n");
+        content.append("\t$('#%sForm input').val('');\n");
+        content.append("\t$('#%sTable').DataTable().ajax.reload();\n");
+        content.append("}\n");
+        content.append("\n");
+        
+        content.append("function deleteCallback(response){\n");
+        content.append("\t$('#%sTable tbody').find('tr[data-id=\"' + id + '\"]').remove();\n");
+        content.append("\tswal({\n");
+        content.append("\t\ttitle: \"Success\",\n");
+        content.append("\t\ttext: \"%s deleted successfully.\",\n");
+        content.append("\t\ticon: \"success\",\n");
+        content.append("\t\tbutton: \"OK\",\n");
+        content.append("\t})\n");
+        content.append("\t$('#%sTable').DataTable().ajax.reload();\n");
+        content.append("}\n");
+        content.append("\n");
+        
+        String result = String.format(content.toString(), 
+        		capitalizedSubject, //initialize table
+        		subject, capitalizedSubject, // new form submit event add
+        		subject, //clear event add
+        		capitalizedSubject, subject, subject, // initialize function
+        		capitalizedSubject, //New form
+        		capitalizedSubject, //table card-header
+        		subject, //table edit button add event
+        		subject, //table delete button add event
+        		subject, //table select toggle add event
+        		subject, //edit function
+        		subject, subject,//save function
+        		subject, subject, subject); //delete function
+
+        autoCodingDTO.setSourceName(subject+".js");
+        autoCodingDTO.setSourceCode(result);
+        
+        return autoCodingDTO;
+    }
+    
+    private String getEditField(List<Field> fields) {
+    	StringBuilder result = new StringBuilder();
+    	result.append("\t$('#id').val(response.data.id);\n");
+    	for (Field field : fields) {
+    		result.append("\t$('#"+convertToCamelCase(field.getName())+"').val(response.data."+convertToCamelCase(field.getName())+");\n");
+    	}
+		return result.toString();
+	}
+
+	private String getColumn(List<Field> fields) {
+    	StringBuilder result = new StringBuilder();
+    	for (Field field : fields) {
+    		result.append("\t\t\t{ data: '"+convertToCamelCase(field.getName())+"' },\n");
+    	}
+		return result.toString();
+	}
+
+	private String getTableHeader(List<Field> fields) {
     	StringBuilder result = new StringBuilder();
     	for (Field field : fields) {
     		result.append("\t\t\t\t\t\t\t<th>"+field.getName()+"</th>\n");
