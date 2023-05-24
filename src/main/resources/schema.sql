@@ -33,6 +33,7 @@ CREATE TABLE zthm_user
     email         VARCHAR2(100),
     role          VARCHAR2(200),
     picture       VARCHAR2(500),
+    language      VARCHAR2(50),
     enable        CHAR(1), 
     create_id     VARCHAR2(30),
     create_time   VARCHAR2(14),

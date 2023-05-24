@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.eun.tutorial.dto.UserInfoDTO;
 import com.eun.tutorial.mapper.TestMapper;
+import com.eun.tutorial.mapper.UserMapper;
 
 import lombok.RequiredArgsConstructor;
 
@@ -16,13 +17,13 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    private final TestMapper testDao;
+	private final UserMapper userDao;
 
     @Override
     public PrincipalDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		Map<String, Object> map = new HashMap<>();
 		map.put("username", username); // 가져온 데이터에 키와 벨류값을 지정
-        UserInfoDTO userInfoDTO = testDao.getUser(map);
+        UserInfoDTO userInfoDTO = userDao.getUser(map);
         
         if(userInfoDTO != null) {
         	return new PrincipalDetails(userInfoDTO);

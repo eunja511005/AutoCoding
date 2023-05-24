@@ -75,6 +75,10 @@ public class PrincipalDetails implements UserDetails, OAuth2User{
     public String getPicture() {
     	return userInfoDTO.getPicture();
     }
+    
+    public String getLanguage() {
+    	return userInfoDTO.getLanguage();
+    }
 
 	@Override
 	public boolean isAccountNonExpired() {

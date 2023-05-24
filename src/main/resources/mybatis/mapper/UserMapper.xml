@@ -6,13 +6,13 @@
 <mapper namespace="com.eun.tutorial.mapper.UserMapper">
 
   <select id="getBookLists" resultType="com.eun.tutorial.dto.UserInfoDTO">
-  	SELECT username, password, email, role, picture, enable,
+  	SELECT username, password, email, role, picture, language, enable,
   	       create_id, create_time, update_id, update_time
     FROM zthm_user
   </select>
   
   <select id="getUser" parameterType="hashMap" resultType="com.eun.tutorial.dto.UserInfoDTO">
-  	SELECT username, password, email, role, picture, enable,
+  	SELECT username, password, email, role, picture, language, enable,
   	       create_id, create_time, update_id, update_time
   	FROM zthm_user 
   	WHERE username = #{username}
@@ -28,14 +28,16 @@
 				,email = #{email, jdbcType=VARCHAR}
 				,role = #{role, jdbcType=VARCHAR}
 				,picture = #{picture, jdbcType=VARCHAR}
+				,language = #{language, jdbcType=VARCHAR}
 		WHEN NOT MATCHED THEN /* ON 조건에 매칭되지 않으면 아래 실행(Insert)*/
-		    INSERT (username, password, email, role, picture, enable,
+		    INSERT (username, password, email, role, picture, language, enable,
 		    		create_id, create_time, update_id, update_time)
 		   		VALUES (#{username, jdbcType=VARCHAR}, 
 				   		#{password, jdbcType=VARCHAR}, 
 				   		#{email, jdbcType=VARCHAR}, 
 				   		#{role, jdbcType=VARCHAR}, 
 				   		#{picture, jdbcType=VARCHAR},
+				   		#{language, jdbcType=VARCHAR},
 				   		#{isEnable},
 				   		#{createId, jdbcType=VARCHAR}, 
 				   		to_char(CURRENT_DATE,'yyyymmddhh24miss'), 

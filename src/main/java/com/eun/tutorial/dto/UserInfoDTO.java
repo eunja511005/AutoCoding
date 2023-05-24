@@ -22,6 +22,7 @@ public class UserInfoDTO implements Serializable {
     private String email;
     private String role;
     private String picture;
+    private String language;
     private boolean isEnable;
     private String createId;
     private String createTime;
@@ -33,6 +34,5 @@ public class UserInfoDTO implements Serializable {
         this.picture = picture;
         return this;
     }
-
 }
 

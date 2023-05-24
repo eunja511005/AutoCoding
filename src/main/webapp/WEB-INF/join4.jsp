@@ -123,6 +123,14 @@
 									address for sign up.</div>
 							</div>
 
+							<div class="col-12">
+					            <label for="language">Language</label>
+					            <select class="form-select" id="language" name="language" required>
+					              <option value="ko">Korea</option>
+					              <option value="en">English</option>
+					            </select>
+							</div>
+
 						</div>
 
 						<hr class="my-4">
