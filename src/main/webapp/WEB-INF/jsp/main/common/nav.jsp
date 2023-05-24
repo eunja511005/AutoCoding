@@ -18,8 +18,8 @@
                         <li><a id="edit-btn" style="display: none;" class="dropdown-item a-menu">Edit</a></li>
                         <li><a id="message-btn" style="display: none;" class="dropdown-item a-menu">Message</a></li>
                         <li><hr class="dropdown-divider" /></li>
-                    	<li><a id="login-btn" class="dropdown-item a-menu" href="signinInit">Login</a></li>
-                        <li><a id="logout-btn" style="display: none;" class="dropdown-item a-menu">Logout</a></li>
+                    	<li><a id="login-btn" class="dropdown-item a-menu" href="signinInit"><fmt:message key="nav.loing" /></a></li>
+                        <li><a id="logout-btn" style="display: none;" class="dropdown-item a-menu"><fmt:message key="nav.logout" /></a></li>
                     </ul>
                 </li>
             </ul>

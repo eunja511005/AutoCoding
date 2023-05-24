@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -31,12 +32,14 @@ import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
+import org.springframework.web.servlet.LocaleResolver;
 
 import com.eun.tutorial.dto.ZthhErrorDTO;
 import com.eun.tutorial.dto.ZthmCommonCodeMappingDTO;
 import com.eun.tutorial.service.ZthhErrorService;
 import com.eun.tutorial.service.ZthmCommonCodeMappingService;
 import com.eun.tutorial.service.user.CustomOAuth2UserService;
+import com.eun.tutorial.service.user.PrincipalDetails;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,6 +53,7 @@ public class MyWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter
 	private final ZthhErrorService zthhErrorService;
 	private final ZthmCommonCodeMappingService zthmCommonCodeMappingService;
 	private final CustomOAuth2UserService customOAuth2UserService;
+	private final LocaleResolver localeResolver;
 	
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -139,8 +143,14 @@ public class MyWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter
                     .loginProcessingUrl("/signin") // 로그인 버튼 클릭 시 호출 되는 URL로 호출시 스프링 시큐리티에서 제공하는 기능 호출
 //                	.usernameParameter("userId")
                     .successHandler((request, response, auth)->{
+                    	
                         for (GrantedAuthority authority : auth.getAuthorities()){
                             log.info("Authority Information {} ", authority.getAuthority());
+                        }
+                        
+                        if (auth != null && auth.isAuthenticated()) {
+                        	PrincipalDetails userDetailsImpl = (PrincipalDetails) auth.getPrincipal();
+                        	localeResolver.setLocale(request, response, new Locale(userDetailsImpl.getLanguage()));
                         }
                         
                         Date date = new Date();
@@ -187,10 +197,16 @@ public class MyWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter
 				.successHandler(new AuthenticationSuccessHandler() {
 					@Override
 					public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-							Authentication authentication) throws IOException, ServletException {
-						log.info("userInfo {}", authentication.getPrincipal().toString());
-						log.info("authentication {}", authentication.toString());
-						log.info("authentication Name {}", authentication.getName());
+							Authentication auth) throws IOException, ServletException {
+						
+                        if (auth != null && auth.isAuthenticated()) {
+                        	PrincipalDetails userDetailsImpl = (PrincipalDetails) auth.getPrincipal();
+                        	localeResolver.setLocale(request, response, new Locale(userDetailsImpl.getLanguage()));
+                        }
+						
+						log.info("userInfo {}", auth.getPrincipal().toString());
+						log.info("authentication {}", auth.toString());
+						log.info("authentication Name {}", auth.getName());
 						response.sendRedirect("/main");
 					}
 				});
