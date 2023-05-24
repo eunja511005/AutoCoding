@@ -30,7 +30,7 @@
     
     <div id="layoutSidenav">
     	<%-- Left Menu --%>
-    	<%@ include file="/WEB-INF/jsp/main/common/leftNav.jsp" %>
+    	<%@ include file="/WEB-INF/jsp/main/common/leftNav2.jsp" %>
     	<div id="layoutSidenav_content">
         	<main>
     			<div id="dynamic-content"></div>
@@ -40,6 +40,7 @@
     </div>	
     
     <%@ include file="/WEB-INF/jsp/main/common/script.jsp" %>
+    <!-- <script src="/js/main/common/leftNav.js"></script>  -->
     <script src="/js/main/common/main.js"></script>    
     
 	</body>

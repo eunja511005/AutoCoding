@@ -74,10 +74,12 @@ public class XssFilter implements Filter {
 				XSSCustomRequestWrapper xSSCustomRequestWrapper = new XSSCustomRequestWrapper(request, zthhErrorService);
 				filterChain.doFilter(xSSCustomRequestWrapper, response);
 			}else {
-				XssRequestWrapper wrappedRequest = new XssRequestWrapper(request, antiSamy, zthhErrorService);
-				filterChain.doFilter(wrappedRequest, response);
+				XSSCustomRequestWrapper xSSCustomRequestWrapper = new XSSCustomRequestWrapper(request, zthhErrorService);
+				filterChain.doFilter(xSSCustomRequestWrapper, response);
+//				XssRequestWrapper wrappedRequest = new XssRequestWrapper(request, antiSamy, zthhErrorService);
+//				filterChain.doFilter(wrappedRequest, response);
 			}
-		} catch (PolicyException | IOException e) {
+		} catch (IOException e) {
 
 			String errorMessage = org.apache.tika.utils.ExceptionUtils.getStackTrace(e);
 

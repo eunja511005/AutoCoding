@@ -1,5 +1,6 @@
 var csrfheader = $("meta[name='_csrf_header']").attr("content");
 var csrftoken = $("meta[name='_csrf']").attr("content");
+var navLoad; // nav.jsp 로드 여부를 추적하는 변수
 
 // 카드 리스트 페이징 CBO 처리를 위한 변수
 const MAX_PAGES_DISPLAYED = 10; // 10개 페이지씩 보여줌
@@ -9,19 +10,19 @@ $(document).ready(function(){
 	// 첫번째 페이지
 	$('#dynamic-content').load("/content1");
 	
-    // 클릭 이벤트를 등록합니다.
-    $('.a-menu').on('click', handleClick);
-    
 	// 로그인 여부를 체크합니다.
 	checkLoginStatus();
 	
+	// 좌측 메뉴
+	loadNav();
+	
 	// 로그 아웃 이벤트 등록(위임을 통해 상위에 이벤트 등록하여 dynamic-content 부분만 바뀌어도 이벤트 유지도록 함)
-	// $(document).on('click', '#logout-btn', function(event) {
 	addLogoutEvent();
 	
 });
 
 function handleClick(event) {
+	debugger;
     event.preventDefault();
 
     // 페이지를 로드합니다.
@@ -29,8 +30,13 @@ function handleClick(event) {
     if (url !== undefined) {
     	loadDynamicContent(url);
         
-        $('.a-menu').off('click');
-        $('.a-menu').on('click', handleClick);
+        //$('.a-menu').off('click');
+        //$('.a-menu').on('click', handleClick);
+        
+        //$('nav').off('click', '.a-menu', handleClick);
+        //$('nav').on('click', '.a-menu', handleClick);
+        //$('nav').off('click', '.a-menu').on('click', '.a-menu', handleClick);
+
     }
     
 }
@@ -38,9 +44,11 @@ function handleClick(event) {
 function loadDynamicContent(url) {
 	  // 기존 모든 이벤트를 제거
 	  $('#dynamic-content').off();
+	  //$("#menuContainer").off();
 	  
 	  // 이전에 로딩된 동적 요소를 삭제
 	  $('#dynamic-content').empty();
+	  //$("#menuContainer").empty();
 
 	  // 새 페이지 로딩
 	  $('#dynamic-content').load(url, function(response, status, xhr) {
@@ -48,6 +56,8 @@ function loadDynamicContent(url) {
 		    $('#dynamic-content').html("403 Forbidden - Access Denied");
 		  }
 	  });
+	  
+	  //$("#menuContainer").html(navLoad);
 }
 
 function checkLoginStatus() {
@@ -192,4 +202,22 @@ function callAjax(url, method, data, successCallback){
 	    	})
 		},
 	  });
+}
+
+function loadNav(){
+    // 클릭 이벤트를 등록합니다.(꼭 클릭 이벤트는 한번만 등록 할것. 여러번 등록하면 중복 호출 이슈 있으니 주의)
+	$('nav').off('click', '.a-menu').on('click', '.a-menu', handleClick);
+	
+    // leftNav 구성(서버에서 메뉴 HTML을 가져와서 menuContainer에 삽입)
+    $.ajax({
+        url: "/menu/loadMenu",
+        type: "GET",
+        success: function(response) {
+        	navLoad = response;
+            $("#menuContainer").html(response);
+        },
+        error: function(xhr, status, error) {
+            console.log("Failed to load menu: " + error);
+        }
+    });
 }

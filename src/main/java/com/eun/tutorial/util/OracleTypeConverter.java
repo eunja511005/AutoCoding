@@ -12,7 +12,7 @@ public class OracleTypeConverter {
             oracleType.equalsIgnoreCase("CLOB")) {
             return String.class;
         } else if (oracleType.equalsIgnoreCase("NUMBER")) {
-            return BigDecimal.class; // 또는 int, long, double 등 숫자 타입 중 하나로 매핑 가능
+            return int.class; // 또는 int, long, double 등 숫자 타입 중 하나로 매핑 가능
         } else if (oracleType.equalsIgnoreCase("DATE") ||
                    oracleType.equalsIgnoreCase("TIMESTAMP")) {
             return Timestamp.class; // 또는 java.util.Date, java.time.LocalDateTime 등으로 매핑 가능
