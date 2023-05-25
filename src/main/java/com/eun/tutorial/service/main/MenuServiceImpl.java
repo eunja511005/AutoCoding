@@ -3,13 +3,19 @@ package com.eun.tutorial.service.main;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
+import org.springframework.context.MessageSource;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.eun.tutorial.dto.main.MenuDTO;
 import com.eun.tutorial.mapper.main.MenuMapper;
+import com.eun.tutorial.service.user.PrincipalDetails;
 import com.eun.tutorial.util.StringUtils;
 
 import lombok.AllArgsConstructor;
@@ -19,6 +25,7 @@ import lombok.AllArgsConstructor;
 public class MenuServiceImpl implements MenuService {
 
 	private final MenuMapper menuMapper;
+	private final MessageSource messageSource;
 
 	@Override
 	public List<MenuDTO> getMenuList() {
@@ -74,6 +81,16 @@ public class MenuServiceImpl implements MenuService {
 
 	private void generateMenuItemHtml(StringBuilder sb, MenuDTO menu, Map<String, List<MenuDTO>> subMenuMap) {
 		List<MenuDTO> subMenuList = subMenuMap.get(menu.getMenuId());
+		
+		String menuName = "";
+		
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if(authentication == null || authentication instanceof AnonymousAuthenticationToken) {
+			menuName = messageSource.getMessage(menu.getMenuId(), null, Locale.KOREA);
+		}else {
+			PrincipalDetails userDetailsImpl = (PrincipalDetails) authentication.getPrincipal();
+        	menuName = messageSource.getMessage(menu.getMenuId(), null, new Locale(userDetailsImpl.getLanguage()));
+		}
 
 		if (menu.getMenuLevel() == 1 && menu.getMenuOrder() == 1) {
 			sb.append("\t<div class=\"sb-sidenav-menu-heading\">" + menu.getCategory() + "</div>\n");
@@ -85,7 +102,7 @@ public class MenuServiceImpl implements MenuService {
 			sb.append("\" href=\"").append(menu.getMenuPath()).append("\">\n");
 
 			sb.append("\t\t<div class=\"sb-nav-link-icon\"><i class=\"").append(menu.getMenuIcon())
-					.append("\"></i></div>").append(menu.getMenuName()).append("\n");
+					.append("\"></i></div>").append(menuName).append("\n");
 
 			sb.append("\t</a>\n");
 
@@ -97,7 +114,7 @@ public class MenuServiceImpl implements MenuService {
 				.append("\" aria-expanded=\"false\" aria-controls=\"collapse").append(menu.getMenuId()).append("\">\n");
 
 		sb.append("\t\t<div class=\"sb-nav-link-icon\"><i class=\"").append(menu.getMenuIcon()).append("\"></i></div>")
-				.append(menu.getMenuName()).append("\n");
+				.append(menuName).append("\n");
 
 		sb.append("\t\t<div class=\"sb-sidenav-collapse-arrow\"><i class=\"fas fa-angle-down\"></i></div>\n");
 
