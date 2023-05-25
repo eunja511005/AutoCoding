@@ -1,6 +1,5 @@
 var csrfheader = $("meta[name='_csrf_header']").attr("content");
 var csrftoken = $("meta[name='_csrf']").attr("content");
-var navLoad; // nav.jsp 로드 여부를 추적하는 변수
 
 // 카드 리스트 페이징 CBO 처리를 위한 변수
 const MAX_PAGES_DISPLAYED = 10; // 10개 페이지씩 보여줌
@@ -212,8 +211,8 @@ function loadNav(){
     $.ajax({
         url: "/menu/loadMenu",
         type: "GET",
-        success: function(response) {
-        	navLoad = response;
+        success: function(response) {            
+            // 받은 HTML을 동적으로 추가합니다.
             $("#menuContainer").html(response);
         },
         error: function(xhr, status, error) {
