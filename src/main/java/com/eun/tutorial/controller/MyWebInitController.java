@@ -60,6 +60,13 @@ public class MyWebInitController {
 	
 	@Autowired private LogoutHandler logoutHandler;
 	
+	@GetMapping("/")
+	public ModelAndView main() {
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("jsp/main/common/main");
+		return modelAndView;
+	}	
+	
 	@GetMapping("/signinInit")
     public ModelAndView signinInit(HttpServletRequest request, HttpServletResponse response) {
 		logger.debug("request url : /signinInit");
