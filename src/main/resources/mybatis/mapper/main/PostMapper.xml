@@ -17,38 +17,53 @@
 
 	<select id="selectPosts" parameterType="java.util.HashMap" resultMap="postResultMap">
 	    SELECT
-	        id,
-	        title,
-	        content,
-	        secret,
-	        open_date,
-	        visibility,
-	        post_type,
-	        create_id,
-	        created_at
+	        p.id,
+	        p.title,
+	        p.content,
+	        p.secret,
+	        p.open_date,
+	        p.visibility,
+	        p.post_type,
+	        p.create_id,
+	        p.created_at
 	    FROM
-	        posts
-	    WHERE del_yn=0
-	            AND (TO_CHAR(CURRENT_DATE, 'YYYY-MM-DD') &gt;= TO_CHAR(open_date, 'YYYY-MM-DD')
-	            OR create_id = #{loginId})
-	            AND (visibility &lt;&gt; '1R' OR create_id = #{loginId})
+	        posts p
+	    WHERE p.del_yn=0
+	            AND (TO_CHAR(CURRENT_DATE, 'YYYY-MM-DD') &gt;= TO_CHAR(p.open_date, 'YYYY-MM-DD')
+	            OR p.create_id = #{loginId})
+	            AND (visibility &gt;= (
+		            SELECT
+					    CASE WHEN record_count = 0 THEN '9R' ELSE relation || 'R' END AS result
+					FROM
+					    (
+					        SELECT
+					            COUNT(*) AS record_count,
+					            MAX(relation) AS relation
+					        FROM
+					            zthh_relationShip
+					        WHERE
+					            from_user = p.create_id
+					            AND to_user = #{loginId}
+	    				)
+	            	)
+	            OR p.create_id = #{loginId})
 	        <if test="search.title != null and search.title.value != ''">
-	            AND LOWER(title) LIKE '%'||LOWER(#{search.title.value})||'%'
+	            AND LOWER(p.title) LIKE '%'||LOWER(#{search.title.value})||'%'
 	        </if>
 		    <if test="search.startDate != null and search.startDate.value != ''">
-		      	AND TO_CHAR(created_at, 'YYYY-MM-DD') &gt;= #{search.startDate.value}
+		      	AND TO_CHAR(p.created_at, 'YYYY-MM-DD') &gt;= #{search.startDate.value}
 		    </if>
 		    <if test="search.endDate != null and search.endDate.value != ''">
-		      	AND TO_CHAR(created_at, 'YYYY-MM-DD') &lt;= #{search.endDate.value}
+		      	AND TO_CHAR(p.created_at, 'YYYY-MM-DD') &lt;= #{search.endDate.value}
 		    </if>	
 		    <if test="search.visibility != null and search.visibility.value != ''">
-		      	AND visibility = #{search.visibility.value}
+		      	AND p.visibility = #{search.visibility.value}
 		    </if>	        
 		    <if test="search.postType != null and search.postType.value != null and search.postType.value != ''">
-		      	AND post_type = #{search.postType.value}
+		      	AND p.post_type = #{search.postType.value}
 		    </if>	  
 		    <if test="search.createId != null and search.createId.value != ''">
-		      	AND LOWER(create_id) LIKE '%'||LOWER(#{search.createId.value})||'%'
+		      	AND LOWER(p.create_id) LIKE '%'||LOWER(#{search.createId.value})||'%'
 		    </if>			          
 	    ORDER BY ${orderColumnName} ${orderDirection}
 	    OFFSET #{offset} ROWS FETCH NEXT #{limit} ROWS ONLY
@@ -87,10 +102,26 @@
         SELECT
             COUNT(*)
         FROM
-            posts
+            posts p
         WHERE del_yn=0
-	            AND (TO_CHAR(CURRENT_DATE, 'YYYY-MM-DD') &gt;= TO_CHAR(open_date, 'YYYY-MM-DD')
-	            OR create_id = #{loginId})
+	            AND (TO_CHAR(CURRENT_DATE, 'YYYY-MM-DD') &gt;= TO_CHAR(p.open_date, 'YYYY-MM-DD')
+	            OR p.create_id = #{loginId})
+	            AND (visibility &gt;= (
+		            SELECT
+					    CASE WHEN record_count = 0 THEN '9R' ELSE relation || 'R' END AS result
+					FROM
+					    (
+					        SELECT
+					            COUNT(*) AS record_count,
+					            MAX(relation) AS relation
+					        FROM
+					            zthh_relationShip
+					        WHERE
+					            from_user = p.create_id
+					            AND to_user = #{loginId}
+	    				)
+	            	)
+	            OR p.create_id = #{loginId})
 	        <if test="search.title != null and search.title.value != ''">
 	            AND LOWER(title) LIKE '%'||LOWER(#{search.title.value})||'%'
 	        </if>
