@@ -40,6 +40,7 @@ import com.eun.tutorial.service.ZthhErrorService;
 import com.eun.tutorial.service.ZthmCommonCodeMappingService;
 import com.eun.tutorial.service.user.CustomOAuth2UserService;
 import com.eun.tutorial.service.user.PrincipalDetails;
+import com.eun.tutorial.util.StringUtils;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -122,7 +123,7 @@ public class MyWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter
             .antMatchers("/signinInit", "/assets/**",
             		"/joinInit", "/join", "/js/**", "/img/**", "/css/**",
             		"/h2-console/**", "/error/**", "/favicon.ico", "/layout/test",
-            		"/main/**", "/content1", "/content2", "/content3", "/posts/**", "/login-status", "/commonCode/**", "/menu/loadMenu", "/").permitAll() // 누구나 접근 허용
+            		"/main/**", "/content1", "/content2", "/content3", "/posts/**", "/login-status", "/commonCode/**", "/menu/loadMenu", "/", "/signout").permitAll() // 누구나 접근 허용
             .anyRequest().authenticated()
             .and()
             .exceptionHandling()
@@ -150,7 +151,13 @@ public class MyWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter
                         
                         if (auth != null && auth.isAuthenticated()) {
                         	PrincipalDetails userDetailsImpl = (PrincipalDetails) auth.getPrincipal();
-                        	localeResolver.setLocale(request, response, new Locale(userDetailsImpl.getLanguage()));
+                        	
+                        	String language = "ko";
+                        	if(!StringUtils.isBlank(userDetailsImpl.getLanguage())) {
+                        		language = userDetailsImpl.getLanguage();
+                        	}
+                        	
+                        	localeResolver.setLocale(request, response, new Locale(language));
                         }
                         
                         Date date = new Date();
@@ -201,7 +208,13 @@ public class MyWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter
 						
                         if (auth != null && auth.isAuthenticated()) {
                         	PrincipalDetails userDetailsImpl = (PrincipalDetails) auth.getPrincipal();
-                        	localeResolver.setLocale(request, response, new Locale(userDetailsImpl.getLanguage()));
+                        	
+                        	String language = "ko";
+                        	if(!StringUtils.isBlank(userDetailsImpl.getLanguage())) {
+                        		language = userDetailsImpl.getLanguage();
+                        	}
+                        	
+                        	localeResolver.setLocale(request, response, new Locale(language));
                         }
 						
 						log.info("userInfo {}", auth.getPrincipal().toString());

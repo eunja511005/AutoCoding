@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eun.tutorial.mapper.main.AccessControlMapper">
+
+	<select id="selectAccessControlList" resultType="com.eun.tutorial.dto.main.AccessControlDTO">
+		SELECT USER_ID, ROLE_ID, RELATION, RESOURCE_ID, PERMISSION, id, del_yn, create_id, create_dt, update_id, update_dt FROM ZTHH_ACCESSCONTROL where del_yn='N' ORDER BY update_dt, create_dt
+	</select>
+
+	<insert id="insertAccessControl">
+		INSERT INTO ZTHH_ACCESSCONTROL (USER_ID, ROLE_ID, RELATION, RESOURCE_ID, PERMISSION, id, del_yn, create_id, create_dt, update_id, update_dt)
+		VALUES (#{userId}, #{roleId}, #{relation}, #{resourceId}, #{permission}, #{id}, 'N', #{createId}, CURRENT_TIMESTAMP, #{updateId}, CURRENT_TIMESTAMP)
+	</insert>
+
+	<update id="updateAccessControl">
+		UPDATE ZTHH_ACCESSCONTROL
+		SET USER_ID = #{userId}, ROLE_ID = #{roleId}, RELATION = #{relation}, RESOURCE_ID = #{resourceId}, PERMISSION = #{permission}, update_id = #{updateId}, update_dt = CURRENT_TIMESTAMP
+		WHERE id = #{id}
+	</update>
+
+	<delete id="deleteAccessControl">
+		UPDATE ZTHH_ACCESSCONTROL SET del_yn = 'Y', update_dt = CURRENT_TIMESTAMP WHERE id = #{id}
+	</delete>
+
+	<select id="getAccessControlListById" parameterType="string" resultType="com.eun.tutorial.dto.main.AccessControlDTO">
+		SELECT USER_ID, ROLE_ID, RELATION, RESOURCE_ID, PERMISSION, id, del_yn, create_id, create_dt, update_id, update_dt FROM ZTHH_ACCESSCONTROL
+		WHERE id = #{id}
+		ORDER BY update_dt, create_dt
+	</select>
+
+	<select id="getAccessControlListByResource" parameterType="string" resultType="int"> 
+		SELECT count(*) FROM zthh_accessControl 
+		WHERE resource_id=#{resourceId} 
+		AND permission='UD' 
+		AND del_yn='N' 
+		AND ( user_id = #{loginId}
+		OR (SELECT ROLE FROM zthm_user WHERE username=#{loginId}) LIKE '%'||ROLE_ID||'%'
+		)
+	</select>
+
+</mapper>

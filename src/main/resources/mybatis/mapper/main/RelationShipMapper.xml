@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eun.tutorial.mapper.main.RelationShipMapper">
+
+	<select id="selectRelationShipList" resultType="com.eun.tutorial.dto.main.RelationShipDTO">
+		SELECT RELATION, FROM_USER, TO_USER, id, del_yn, create_id, create_dt, update_id, update_dt FROM ZTHH_RELATIONSHIP where del_yn='N' ORDER BY update_dt, create_dt
+	</select>
+
+	<insert id="insertRelationShip">
+		INSERT INTO ZTHH_RELATIONSHIP (RELATION, FROM_USER, TO_USER, id, del_yn, create_id, create_dt, update_id, update_dt)
+		VALUES (#{relation}, #{fromUser}, #{toUser}, #{id}, 'N', #{createId}, CURRENT_TIMESTAMP, #{updateId}, CURRENT_TIMESTAMP)
+	</insert>
+
+	<update id="updateRelationShip">
+		UPDATE ZTHH_RELATIONSHIP
+		SET RELATION = #{relation}, FROM_USER = #{fromUser}, TO_USER = #{toUser}, update_id = #{updateId}, update_dt = CURRENT_TIMESTAMP
+		WHERE id = #{id}
+	</update>
+
+	<delete id="deleteRelationShip">
+		UPDATE ZTHH_RELATIONSHIP SET del_yn = 'Y', update_dt = CURRENT_TIMESTAMP WHERE id = #{id}
+	</delete>
+
+	<select id="getRelationShipListById" parameterType="string" resultType="com.eun.tutorial.dto.main.RelationShipDTO">
+		SELECT RELATION, FROM_USER, TO_USER, id, del_yn, create_id, create_dt, update_id, update_dt FROM ZTHH_RELATIONSHIP
+		WHERE id = #{id}
+		ORDER BY update_dt, create_dt
+	</select>
+
+</mapper>

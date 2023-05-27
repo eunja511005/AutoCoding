@@ -209,7 +209,11 @@ $(document).ready(function() {
     		.then((willDelete) => {
     		  if (willDelete) {
     			    var id = $(this).data('id');
-	                $.ajax({
+    			    
+    			    callAjax("/posts/delete/"+ id, "DELETE", null, deleteCallback);
+    			    
+    			    
+	                /*$.ajax({
 	                    url: '/posts/delete/'+ id,
 	                    type: 'DELETE',
 	                    beforeSend : function(xhr){   
@@ -230,7 +234,7 @@ $(document).ready(function() {
 	                    error : function (jqXHR){
 	                		console.log(jqXHR);  // 응답 메시지
 	                	}
-	                });
+	                });*/
     		  } else {
     		    
     		  }
@@ -325,7 +329,7 @@ $(document).ready(function() {
   		  if (willDelete) {
   			  var commentId = $(this).data("commentid");
 
-	  	      $.ajax({
+  			  $.ajax({
 	  	    	  url: '/posts/comment/'+ commentId,
 	  	          type: 'DELETE',
 	  	          beforeSend : function(xhr){   
@@ -368,8 +372,8 @@ $(document).ready(function() {
       }
     });
     
-    initSelectBox('modalVisibility', '/commonCode/VISIBILITY', true);
-    initSelectBox('modalPostType', '/commonCode/POSTTYPE', true);
+    initSelectBox('modalVisibility', '/commonCode/VISIBILITY', false);
+    initSelectBox('modalPostType', '/commonCode/POSTTYPE', false);
     initSelectBox('postType', '/commonCode/POSTTYPE', true);
     
 });
@@ -597,4 +601,19 @@ function checkLoginStatus() {
 			console.error(xhr);
 		}
 	});
+}
+
+function deleteCallback(response){
+	debugger;
+	if(response.redirectUrl != undefined && response.redirectUrl != ""){
+		table.ajax.reload();
+	}else{
+		swal({
+  		  title: response.result,
+  		  text: "You are not authorized to delete this content.",
+  		  icon: "warning",
+  		  button: "OK",
+  		})	      	                    		
+	}
+	
 }

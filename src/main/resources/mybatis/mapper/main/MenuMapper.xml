@@ -3,7 +3,7 @@
 <mapper namespace="com.eun.tutorial.mapper.main.MenuMapper">
 
 	<select id="selectMenuList" resultType="com.eun.tutorial.dto.main.MenuDTO">
-		SELECT CATEGORY, MENU_LEVEL, MENU_NAME, MENU_ID, MENU_PATH, MENU_ICON, MENU_ORDER, PARENT_MENU_ID, id, del_yn, create_id, create_dt, update_id, update_dt FROM ZTHH_MENU where del_yn='N' ORDER BY menu_level, menu_order
+		SELECT CATEGORY, MENU_LEVEL, MENU_NAME, MENU_ID, MENU_PATH, MENU_ICON, MENU_ORDER, PARENT_MENU_ID, id, del_yn, create_id, create_dt, update_id, update_dt FROM ZTHH_MENU where del_yn='N' ORDER BY CATEGORY, menu_level, menu_order
 	</select>
 
 	<insert id="insertMenu">

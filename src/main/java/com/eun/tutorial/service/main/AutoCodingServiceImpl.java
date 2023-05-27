@@ -30,8 +30,8 @@ public class AutoCodingServiceImpl implements AutoCodingService {
 		
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if(authentication == null || authentication instanceof AnonymousAuthenticationToken) {
-			autocodingFieldDTO.setCreateId("anonumous");
-			autocodingFieldDTO.setUpdateId("anonumous");
+			autocodingFieldDTO.setCreateId("anonymous");
+			autocodingFieldDTO.setUpdateId("anonymous");
 		}else {
 			PrincipalDetails userDetailsImpl = (PrincipalDetails) authentication.getPrincipal();
 			autocodingFieldDTO.setCreateId(userDetailsImpl.getName());

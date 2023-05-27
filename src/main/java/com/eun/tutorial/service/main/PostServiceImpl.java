@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.eun.tutorial.aspect.annotation.CheckAuthorization;
 import com.eun.tutorial.dto.main.CommentDTO;
 import com.eun.tutorial.dto.main.PostDTO;
 import com.eun.tutorial.dto.main.PostSearchDTO;
@@ -47,7 +49,7 @@ public class PostServiceImpl implements PostService {
 		
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if(authentication == null || authentication instanceof AnonymousAuthenticationToken) {
-			params.put("loginId", "anonumous");
+			params.put("loginId", "anonymous");
 		}else {
 			PrincipalDetails userDetailsImpl = (PrincipalDetails) authentication.getPrincipal();
 			params.put("loginId", userDetailsImpl.getName());
@@ -63,7 +65,7 @@ public class PostServiceImpl implements PostService {
 		
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if(authentication == null || authentication instanceof AnonymousAuthenticationToken) {
-			params.put("loginId", "anonumous");
+			params.put("loginId", "anonymous");
 		}else {
 			PrincipalDetails userDetailsImpl = (PrincipalDetails) authentication.getPrincipal();
 			params.put("loginId", userDetailsImpl.getName());
@@ -103,10 +105,11 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
+	@CheckAuthorization
 	public Map<String, Object> delete(String id) {
 		Map<String, Object> res = new HashMap<>();
 		postMapper.delete(id);
-		res.put("result", "delete success");
+		res.put("success", true);
 		res.put("redirectUrl", "/posts/list");
 		return res;
 	}

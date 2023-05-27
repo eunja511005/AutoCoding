@@ -33,7 +33,7 @@
 	            OR p.create_id = #{loginId})
 	            AND (visibility &gt;= (
 		            SELECT
-					    CASE WHEN record_count = 0 THEN '9R' ELSE relation || 'R' END AS result
+					    CASE WHEN record_count = 0 THEN 9 ELSE relation END AS result
 					FROM
 					    (
 					        SELECT
@@ -108,7 +108,7 @@
 	            OR p.create_id = #{loginId})
 	            AND (visibility &gt;= (
 		            SELECT
-					    CASE WHEN record_count = 0 THEN '9R' ELSE relation || 'R' END AS result
+					    CASE WHEN record_count = 0 THEN 9 ELSE relation END AS result
 					FROM
 					    (
 					        SELECT

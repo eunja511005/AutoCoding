@@ -90,7 +90,8 @@ public class PostController {
 	public @ResponseBody Map<String, Object> getUserProfile(@RequestBody PostDTO postDTO){
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if(authentication == null || authentication instanceof AnonymousAuthenticationToken) {
-			postDTO.setCreateId("anonumous");
+			postDTO.setCreateId("anonymous");
+			postDTO.setVisibility("8");
 		}else {
 			PrincipalDetails userDetailsImpl = (PrincipalDetails) authentication.getPrincipal();
 			postDTO.setCreateId(userDetailsImpl.getName());

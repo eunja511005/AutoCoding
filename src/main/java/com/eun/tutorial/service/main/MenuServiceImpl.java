@@ -89,7 +89,11 @@ public class MenuServiceImpl implements MenuService {
 			menuName = messageSource.getMessage(menu.getMenuId(), null, Locale.KOREA);
 		}else {
 			PrincipalDetails userDetailsImpl = (PrincipalDetails) authentication.getPrincipal();
-        	menuName = messageSource.getMessage(menu.getMenuId(), null, new Locale(userDetailsImpl.getLanguage()));
+			String language = "ko";
+        	if(!StringUtils.isBlank(userDetailsImpl.getLanguage())) {
+        		language = userDetailsImpl.getLanguage();
+        	}
+        	menuName = messageSource.getMessage(menu.getMenuId(), null, new Locale(language));
 		}
 
 		if (menu.getMenuLevel() == 1 && menu.getMenuOrder() == 1) {

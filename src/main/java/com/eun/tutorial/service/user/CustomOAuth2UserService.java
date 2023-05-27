@@ -58,6 +58,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 									        	.email(attributes.getEmail())
 									        	.picture(attributes.getPicture())
 									        	.role("ROLE_USER")
+									        	.language("ko")
 									        	.build();
         	userDao.addUser(userInfoDTO);
         }else { // 이미지가 업데이트 되었을 수도 있으므로 merge 해주는게 맞을거 같음
