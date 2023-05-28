@@ -22,19 +22,20 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleException(Exception ex){
         log.error("handleException",ex);
         
-        
-        String errorMessage = org.apache.tika.utils.ExceptionUtils.getStackTrace(ex);
-
-        if(errorMessage.length()>2000) {
-        	errorMessage = errorMessage.substring(0, 2000);
-        }
-        
-        zthhErrorService.save(ZthhErrorDTO.builder()
-                                .errorMessage("GlobalExceptionHandler Error : " + errorMessage)
-                                .build()
-        );
-        
         if (ex.getCause() instanceof CustomException) {
+//        	String errorMessage = org.apache.tika.utils.ExceptionUtils.getStackTrace(ex);
+            String errorMessage = org.apache.tika.utils.ExceptionUtils.getStackTrace(ex.getCause());
+
+            if(errorMessage.length()>2000) {
+            	errorMessage = errorMessage.substring(0, 2000);
+            }
+            
+            zthhErrorService.save(ZthhErrorDTO.builder()
+                                    .errorMessage("GlobalExceptionHandler Error : " + errorMessage)
+                                    .build()
+            );
+        	
+        	
             // CustomException 클래스의 인스턴스인 경우 처리 로직
             CustomException customEx = (CustomException) ex.getCause();
             int errorCode = customEx.getErrorCode();
@@ -43,6 +44,18 @@ public class GlobalExceptionHandler {
             	ErrorResponse response = new ErrorResponse(ErrorCode.NO_AUTHORIZATION);
             	return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
             }
+        }else {
+//        	String errorMessage = org.apache.tika.utils.ExceptionUtils.getStackTrace(ex.getCause());
+            String errorMessage = org.apache.tika.utils.ExceptionUtils.getStackTrace(ex);
+
+            if(errorMessage.length()>2000) {
+            	errorMessage = errorMessage.substring(0, 2000);
+            }
+            
+            zthhErrorService.save(ZthhErrorDTO.builder()
+                                    .errorMessage("GlobalExceptionHandler Error : " + errorMessage)
+                                    .build()
+            );
         }
         
         ErrorResponse response = new ErrorResponse(ErrorCode.INTER_SERVER_ERROR);

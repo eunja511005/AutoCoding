@@ -14,6 +14,28 @@ import com.eun.tutorial.util.StringUtils;
 
 @Service
 public class CodeGenerator {
+	
+	String copyWrite = "/**\n"
+			+ " * This software is protected by copyright laws and international copyright treaties.\n"
+			+ " * The ownership and intellectual property rights of this software belong to the @autoCoding.\n"
+			+ " * Unauthorized reproduction, distribution, modification, sale, or commercial use of this software is strictly prohibited\n"
+			+ " * and may result in legal consequences.\n"
+			+ " * This software is licensed to the user and must be used in accordance with the terms of the license.\n"
+			+ " * Under no circumstances should the source code or design of this software be disclosed or leaked.\n"
+			+ " * The @autoCoding shall not be liable for any loss or damages.\n"
+			+ " * Please read the license and usage permissions carefully before using.\n"
+			+ " */\n\n";
+	
+	String copyWriteXml = "<!-- \n"
+			+ "    This software is protected by copyright laws and international copyright treaties.\n"
+			+ "    The ownership and intellectual property rights of this software belong to the @autoCoding.\n"
+			+ "    Unauthorized reproduction, distribution, modification, sale, or commercial use of this software is strictly prohibited\n"
+			+ "    and may result in legal consequences.\n"
+			+ "    This software is licensed to the user and must be used in accordance with the terms of the license.\n"
+			+ "    Under no circumstances should the source code or design of this software be disclosed or leaked.\n"
+			+ "    The @autoCoding shall not be liable for any loss or damages.\n"
+			+ "    Please read the license and usage permissions carefully before using.\n"
+			+ "-->\n\n";
 
     public AutoCodingDTO generateDTOClass(List<Field> fields, String subject) {
     	AutoCodingDTO autoCodingDTO = new AutoCodingDTO();
@@ -23,6 +45,7 @@ public class CodeGenerator {
     	
         StringBuilder builder = new StringBuilder();
         
+        builder.append(copyWrite);
         builder.append("package com.eun.tutorial.dto.main;\n");
         builder.append("\n");
         builder.append("import java.time.LocalDateTime;\n");
@@ -67,6 +90,7 @@ public class CodeGenerator {
     	
         StringBuilder builder = new StringBuilder();
         
+        builder.append(copyWrite);
         builder.append("package com.eun.tutorial.controller.main;\n");
         builder.append("\n");
         
@@ -164,6 +188,8 @@ public class CodeGenerator {
     	
         StringBuilder builder = new StringBuilder();
         
+        builder.append(copyWrite);
+        
         // Generate the package statement
         builder.append("package com.eun.tutorial.service.main;\n\n");
 
@@ -204,6 +230,8 @@ public class CodeGenerator {
     	String className = capitalizedSubject+"ServiceImpl";
     	
         StringBuilder builder = new StringBuilder();
+        
+        builder.append(copyWrite);
         
         // Generate the package statement
         builder.append("package com.eun.tutorial.service.main;\n\n");
@@ -280,6 +308,8 @@ public class CodeGenerator {
     	
         StringBuilder builder = new StringBuilder();
         
+        builder.append(copyWrite);
+        
         // Generate the package statement
         builder.append("package com.eun.tutorial.mapper.main;\n\n");
 
@@ -328,6 +358,7 @@ public class CodeGenerator {
         String formattedFieldNames = getFormattedFieldNames(fields);
         
         StringBuilder content = new StringBuilder();
+        content.append(copyWriteXml);
         content.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
         content.append("<!DOCTYPE mapper PUBLIC \"-//mybatis.org//DTD Mapper 3.0//EN\" \"http://mybatis.org/dtd/mybatis-3-mapper.dtd\">\n");
         content.append("<mapper namespace=\"%s\">\n\n");
@@ -380,6 +411,7 @@ public class CodeGenerator {
     	AutoCodingDTO autoCodingDTO = new AutoCodingDTO();
         
         StringBuilder content = new StringBuilder();
+        content.append(copyWriteXml);
         content.append("DROP TABLE zthh_"+subject+";\n");
         content.append("CREATE TABLE zthh_"+subject+" (\n");
         content.append("\tid VARCHAR2(255),\n");
@@ -427,6 +459,7 @@ public class CodeGenerator {
         String tableheader = getTableHeader(fields);
         
         StringBuilder content = new StringBuilder();
+        content.append(copyWriteXml);
         content.append("<div class=\"container-fluid px-4\">\n");
         content.append("\t<div class=\"d-flex justify-content-between align-items-center mb-4\">\n");
         content.append("\t\t<h1 class=\"mt-4\">%s</h1>\n");
@@ -524,6 +557,7 @@ public class CodeGenerator {
         String editField = getEditField(fields);
         
         StringBuilder content = new StringBuilder();
+        content.append(copyWrite);
         content.append("var csrfheader = $(\"meta[name='_csrf_header']\").attr(\"content\");\n");
         content.append("var csrftoken = $(\"meta[name='_csrf']\").attr(\"content\");\n");
         content.append("var table;\n");

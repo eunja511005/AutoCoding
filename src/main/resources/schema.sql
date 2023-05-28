@@ -59,6 +59,7 @@ CREATE TABLE zthh_error
 (
     id             VARCHAR2(30),
     error_message   VARCHAR2(4000),
+    solution_message   VARCHAR2(4000),
     create_id      VARCHAR2(30),
     create_time    date,
     update_id      VARCHAR2(30),
@@ -68,6 +69,7 @@ CREATE TABLE zthh_error
 COMMENT ON TABLE zthh_error IS '에러 테이블';
 COMMENT ON COLUMN zthh_error.id IS '에러 ID';
 COMMENT ON COLUMN zthh_error.error_message IS '에러 메세지';
+COMMENT ON COLUMN zthh_error.solution_message IS '해결 메세지';
 COMMENT ON COLUMN zthh_error.create_id IS '생성자';
 COMMENT ON COLUMN zthh_error.create_time IS '생성시간';
 COMMENT ON COLUMN zthh_error.update_id IS '수정자';
@@ -342,4 +344,18 @@ CREATE TABLE zthh_accessControl (
 	update_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
 	CONSTRAINT pk_zthh_accessControl PRIMARY KEY (id)
 );
+
+DROP TABLE zthh_errorHist;
+CREATE TABLE zthh_errorHist (
+	id VARCHAR2(255),
+	ERROR_MSG VARCHAR2(4000),
+	SOLUTION_MSG VARCHAR2(4000),
+	del_yn CHAR(1),
+	create_id VARCHAR2(50),
+	create_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
+	update_id VARCHAR2(50),
+	update_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
+	CONSTRAINT pk_zthh_errorHist PRIMARY KEY (id)
+);
+
 **/

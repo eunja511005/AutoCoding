@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eun.tutorial.mapper.main.ErrorHistMapper">
+
+	<select id="selectErrorHistList" resultType="com.eun.tutorial.dto.main.ErrorHistDTO">
+		SELECT ERROR_MSG, SOLUTION_MSG, id, del_yn, create_id, create_dt, update_id, update_dt FROM ZTHH_ERRORHIST where del_yn='N' ORDER BY update_dt, create_dt
+	</select>
+
+	<insert id="insertErrorHist">
+		INSERT INTO ZTHH_ERRORHIST (ERROR_MSG, SOLUTION_MSG, id, del_yn, create_id, create_dt, update_id, update_dt)
+		VALUES (#{errorMsg}, #{solutionMsg}, #{id}, 'N', #{createId}, CURRENT_TIMESTAMP, #{updateId}, CURRENT_TIMESTAMP)
+	</insert>
+
+	<update id="updateErrorHist">
+		UPDATE ZTHH_ERRORHIST
+		SET ERROR_MSG = #{errorMsg}, SOLUTION_MSG = #{solutionMsg}, update_id = #{updateId}, update_dt = CURRENT_TIMESTAMP
+		WHERE id = #{id}
+	</update>
+
+	<delete id="deleteErrorHist">
+		DELETE FROM ZTHH_ERRORHIST WHERE id = #{id}
+	</delete>
+
+	<select id="getErrorHistListById" parameterType="string" resultType="com.eun.tutorial.dto.main.ErrorHistDTO">
+		SELECT ERROR_MSG, SOLUTION_MSG, id, del_yn, create_id, create_dt, update_id, update_dt FROM ZTHH_ERRORHIST
+		WHERE id = #{id}
+		ORDER BY update_dt, create_dt
+	</select>
+
+</mapper>
