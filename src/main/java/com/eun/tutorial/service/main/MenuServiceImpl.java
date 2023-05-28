@@ -13,6 +13,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.eun.tutorial.aspect.annotation.CheckAuthorization;
+import com.eun.tutorial.aspect.annotation.CreatePermission;
 import com.eun.tutorial.dto.main.MenuDTO;
 import com.eun.tutorial.mapper.main.MenuMapper;
 import com.eun.tutorial.service.user.PrincipalDetails;
@@ -33,16 +35,20 @@ public class MenuServiceImpl implements MenuService {
 	}
 
 	@Override
+	@CreatePermission
 	public int saveMenu(MenuDTO menuDTO) {
-		if (StringUtils.isBlank(menuDTO.getId())) {
-			menuDTO.setId("menu_" + UUID.randomUUID());
-			return menuMapper.insertMenu(menuDTO);
-		} else {
-			return menuMapper.updateMenu(menuDTO);
-		}
+		menuDTO.setId("menu_" + UUID.randomUUID());
+		return menuMapper.insertMenu(menuDTO);
+	}
+	
+	@Override
+	@CheckAuthorization
+	public int updateMenu(MenuDTO menuDTO) {
+		return menuMapper.updateMenu(menuDTO);
 	}
 
 	@Override
+	@CheckAuthorization
 	public int deleteMenu(String id) {
 		return menuMapper.deleteMenu(id);
 	}

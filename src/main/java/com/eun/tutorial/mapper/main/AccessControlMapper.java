@@ -14,4 +14,5 @@ public interface AccessControlMapper {
 	int deleteAccessControl(String id);
 	AccessControlDTO getAccessControlListById(String id);
 	int getAccessControlListByResource(String resourceId, String loginId);
+	int deleteByResourceIdUserId(String resourceId, String loginId);
 }

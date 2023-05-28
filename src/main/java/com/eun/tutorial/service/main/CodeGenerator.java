@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import com.eun.tutorial.aspect.annotation.CheckAuthorization;
+import com.eun.tutorial.aspect.annotation.CreatePermission;
 import com.eun.tutorial.dto.main.AutoCodingDTO;
 import com.eun.tutorial.dto.main.Field;
 import com.eun.tutorial.util.OracleTypeConverter;
@@ -82,7 +84,9 @@ public class CodeGenerator {
         builder.append("import org.springframework.web.servlet.ModelAndView;\n\n");
         builder.append("import com.eun.tutorial.dto.main.ApiResponse;\n");
         builder.append("import com.eun.tutorial.dto.main.%sDTO;\n");
-        builder.append("import com.eun.tutorial.service.main.%sService;\n\n");
+        builder.append("import com.eun.tutorial.service.main.%sService;\n");
+        builder.append("import com.eun.tutorial.util.StringUtils;\n");
+        builder.append("\n");
         builder.append("import lombok.AllArgsConstructor;\n");
         builder.append("import lombok.extern.slf4j.Slf4j;\n\n");
 
@@ -118,8 +122,13 @@ public class CodeGenerator {
 
         builder.append("\t@PostMapping(\"/save\")\n");
         builder.append("\tpublic @ResponseBody ApiResponse save%s(@RequestBody %sDTO %sDTO) {\n");
-        builder.append("\t\t%sService.save%s(%sDTO);\n");
-        builder.append("\t\treturn new ApiResponse<>(true, \"Success message\", null);\n");
+        builder.append("\t\tif (StringUtils.isBlank(%sDTO.getId())) {\n");
+        builder.append("\t\t\t%sService.save%s(%sDTO);\n");
+        builder.append("\t\t\treturn new ApiResponse<>(true, \"Success save\", null);\n");
+        builder.append("\t\t} else {\n");
+        builder.append("\t\t\t%sService.update%s(%sDTO);\n");
+        builder.append("\t\t\treturn new ApiResponse<>(true, \"Success update\", null);\n");        
+        builder.append("\t\t}\n");
         builder.append("\t}\n\n");
 
         builder.append("\t@DeleteMapping(\"/{id}\")\n");
@@ -138,7 +147,7 @@ public class CodeGenerator {
         		subject, //GetMapping
         		capitalizedSubject, capitalizedSubject, subject, capitalizedSubject, //PostMapping
         		capitalizedSubject, subject, subject, capitalizedSubject, subject, subject, //PostMapping 
-        		capitalizedSubject, capitalizedSubject, subject, subject, capitalizedSubject, subject, //PostMapping
+        		capitalizedSubject, capitalizedSubject, subject, subject, subject, capitalizedSubject, subject, subject, capitalizedSubject, subject,//PostMapping
         		capitalizedSubject, subject, capitalizedSubject, subject); //DeleteMapping
         
         autoCodingDTO.setSourceName(className+".java");
@@ -168,6 +177,7 @@ public class CodeGenerator {
         // Generate the method signatures
         builder.append("\tList<%sDTO> get%sList();\n");
         builder.append("\tint save%s(%sDTO %sDTO);\n");
+        builder.append("\tint update%s(%sDTO %sDTO);\n");
         builder.append("\tint delete%s(String id);\n");
         builder.append("\t%sDTO get%sListById(String id);\n");
 
@@ -177,7 +187,9 @@ public class CodeGenerator {
         		capitalizedSubject, className, 
         		capitalizedSubject, capitalizedSubject, 
         		capitalizedSubject, capitalizedSubject, subject,
-        		capitalizedSubject, capitalizedSubject, capitalizedSubject);
+        		capitalizedSubject, capitalizedSubject, subject,
+        		capitalizedSubject, 
+        		capitalizedSubject, capitalizedSubject);
         
         autoCodingDTO.setSourceName(className+".java");
         autoCodingDTO.setSourceCode(result);
@@ -200,6 +212,9 @@ public class CodeGenerator {
         builder.append("import java.util.List;\n");
         builder.append("import java.util.UUID;\n\n");
         builder.append("import org.springframework.stereotype.Service;\n\n");
+        
+        builder.append("import com.eun.tutorial.aspect.annotation.CheckAuthorization;\n");
+        builder.append("import com.eun.tutorial.aspect.annotation.CreatePermission;\n");
         builder.append("import com.eun.tutorial.dto.main.%sDTO;\n");
         builder.append("import com.eun.tutorial.mapper.main.%sMapper;\n\n");
         builder.append("import com.eun.tutorial.util.StringUtils;\n\n");
@@ -219,15 +234,18 @@ public class CodeGenerator {
         builder.append("\t\treturn %sMapper.select%sList();\n");
         builder.append("\t}\n\n");
         builder.append("\t@Override\n");
+        builder.append("\t@CreatePermission\n");
         builder.append("\tpublic int save%s(%sDTO %sDTO) {\n");
-        builder.append("\t\tif (StringUtils.isBlank(%sDTO.getId())) {\n");
-        builder.append("\t\t\t%sDTO.setId(\"%s_\"+UUID.randomUUID());\n");
-        builder.append("\t\t\treturn %sMapper.insert%s(%sDTO);\n");
-        builder.append("\t\t} else {\n");
-        builder.append("\t\t\treturn %sMapper.update%s(%sDTO);\n");
-        builder.append("\t\t}\n");
+        builder.append("\t\t%sDTO.setId(\"%s_\"+UUID.randomUUID());\n");
+        builder.append("\t\treturn %sMapper.insert%s(%sDTO);\n");
         builder.append("\t}\n\n");
         builder.append("\t@Override\n");
+        builder.append("\t@CheckAuthorization\n");
+        builder.append("\tpublic int update%s(%sDTO %sDTO) {\n");
+        builder.append("\t\treturn %sMapper.update%s(%sDTO);\n");
+        builder.append("\t}\n\n");
+        builder.append("\t@Override\n");
+        builder.append("\t@CheckAuthorization\n");
         builder.append("\tpublic int delete%s(String id) {\n");
         builder.append("\t\treturn %sMapper.delete%s(id);\n");
         builder.append("\t}\n\n");
@@ -243,7 +261,8 @@ public class CodeGenerator {
         		className, capitalizedSubject, //class 
         		capitalizedSubject, subject, //injection
         		capitalizedSubject, capitalizedSubject, subject, capitalizedSubject, //get
-        		capitalizedSubject, capitalizedSubject, subject, subject, subject, subject, subject, capitalizedSubject, subject, subject, capitalizedSubject, subject,  //save
+        		capitalizedSubject, capitalizedSubject, subject, subject, subject, subject, capitalizedSubject, subject, //save
+        		capitalizedSubject, capitalizedSubject, subject, subject, capitalizedSubject, subject, //update
         		capitalizedSubject, subject, capitalizedSubject, //delete
         		capitalizedSubject, capitalizedSubject, subject, capitalizedSubject); //getById
         
@@ -438,7 +457,7 @@ public class CodeGenerator {
         content.append(formFields);
       	content.append("\t\t\t\t\t\t\t\t<div class=\"col-md text-center\">\n");
       	content.append("\t\t\t\t\t\t\t\t\t<button type=\"submit\" class=\"btn btn-outline-primary\"><i class=\"fas fa-save\"></i></button>\n");
-      	content.append("\t\t\t\t\t\t\t\t\t<button type=\"reset\" class=\"btn btn-outline-secondary\"><i class=\"fas fa-undo\"></i></button>\n");
+      	content.append("\t\t\t\t\t\t\t\t\t<button type=\"reset\" class=\"btn btn-outline-secondary\" id=\"clear-btn\"><i class=\"fas fa-undo\"></i></button>\n");
       	content.append("\t\t\t\t\t\t\t\t</div>\n");
         content.append("\t\t\t\t\t\t\t</form>\n");
         content.append("\t\t\t\t\t\t</div>\n");

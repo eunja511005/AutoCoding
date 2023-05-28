@@ -190,12 +190,9 @@ function callAjax(url, method, data, successCallback){
 		    }
 		},
 		error: function(error) {
-			console.log(error.responseJSON.status);
-			console.log(error.responseJSON.code);
-			console.log(error.responseJSON.message);
 	  	    swal({
-	    		  title: "Error",
-	    		  text: "Please check browser console",
+	    		  title: error.responseJSON.status + ", " +error.responseJSON.code,
+	    		  text: error.responseJSON.message,
 	    		  icon: "warning",
 	    		  button: "OK",
 	    	})

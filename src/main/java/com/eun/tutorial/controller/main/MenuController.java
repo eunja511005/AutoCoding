@@ -16,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.eun.tutorial.dto.main.ApiResponse;
 import com.eun.tutorial.dto.main.MenuDTO;
 import com.eun.tutorial.service.main.MenuService;
+import com.eun.tutorial.util.StringUtils;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,8 +50,13 @@ public class MenuController {
 
 	@PostMapping("/save")
 	public @ResponseBody ApiResponse saveMenu(@RequestBody MenuDTO menuDTO) {
-		menuService.saveMenu(menuDTO);
-		return new ApiResponse<>(true, "Success message", null);
+		if (StringUtils.isBlank(menuDTO.getId())) {
+			menuService.saveMenu(menuDTO);
+			return new ApiResponse<>(true, "Success save", null);
+		} else {
+			menuService.updateMenu(menuDTO);
+			return new ApiResponse<>(true, "Success update", null);
+		}
 	}
 
 	@DeleteMapping("/{id}")

@@ -73,7 +73,7 @@
 								</div>
 								<div class="col-md text-center">
 									<button type="submit" class="btn btn-outline-primary"><i class="fas fa-save"></i></button>
-									<button type="reset" class="btn btn-outline-secondary"><i class="fas fa-undo"></i></button>
+									<button type="reset" class="btn btn-outline-secondary" id="clear-btn"><i class="fas fa-undo"></i></button>
 								</div>
 							</form>
 						</div>

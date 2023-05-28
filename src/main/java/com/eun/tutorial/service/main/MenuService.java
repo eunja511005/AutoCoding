@@ -10,4 +10,5 @@ public interface MenuService {
 	int deleteMenu(String id);
 	MenuDTO getMenuListById(String id);
 	String generateMenuHtml();
+	int updateMenu(MenuDTO menuDTO);
 }

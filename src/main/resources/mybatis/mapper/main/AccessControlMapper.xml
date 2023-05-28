@@ -20,6 +20,10 @@
 	<delete id="deleteAccessControl">
 		UPDATE ZTHH_ACCESSCONTROL SET del_yn = 'Y', update_dt = CURRENT_TIMESTAMP WHERE id = #{id}
 	</delete>
+	
+	<delete id="deleteByResourceIdUserId">
+		DELETE FROM ZTHH_ACCESSCONTROL WHERE RESOURCE_ID = #{resourceId} AND USER_ID = #{loginId}
+	</delete>
 
 	<select id="getAccessControlListById" parameterType="string" resultType="com.eun.tutorial.dto.main.AccessControlDTO">
 		SELECT USER_ID, ROLE_ID, RELATION, RESOURCE_ID, PERMISSION, id, del_yn, create_id, create_dt, update_id, update_dt FROM ZTHH_ACCESSCONTROL

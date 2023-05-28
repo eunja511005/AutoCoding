@@ -33,6 +33,18 @@ public class GlobalExceptionHandler {
                                 .errorMessage("GlobalExceptionHandler Error : " + errorMessage)
                                 .build()
         );
+        
+        if (ex.getCause() instanceof CustomException) {
+            // CustomException 클래스의 인스턴스인 경우 처리 로직
+            CustomException customEx = (CustomException) ex.getCause();
+            int errorCode = customEx.getErrorCode();
+
+            if(errorCode==403) {
+            	ErrorResponse response = new ErrorResponse(ErrorCode.NO_AUTHORIZATION);
+            	return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
+            }
+        }
+        
         ErrorResponse response = new ErrorResponse(ErrorCode.INTER_SERVER_ERROR);
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
