@@ -37,7 +37,7 @@ public class ErrorHistServiceImpl implements ErrorHistService {
 	}
 
 	@Override
-	@CreatePermission
+	//@CreatePermission
 	public int saveErrorHist(ErrorHistDTO errorHistDTO) {
 		errorHistDTO.setId("errorHist_"+UUID.randomUUID());
 		return errorHistMapper.insertErrorHist(errorHistDTO);
