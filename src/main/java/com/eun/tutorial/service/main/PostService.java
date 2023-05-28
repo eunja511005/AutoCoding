@@ -21,5 +21,5 @@ public interface PostService {
 	Map<String, Object> findCommentsById(String id, Authentication authentication);
 	Map<String, Object> deleteComment(String id, Authentication authentication);
 	Map<String, Object> saveImage(MultipartFile file) throws IOException;
+	Map<String, Object> update(PostDTO postDTO);
 }
-

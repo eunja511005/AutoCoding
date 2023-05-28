@@ -97,7 +97,15 @@ public class PostController {
 			postDTO.setCreateId(userDetailsImpl.getName());
 		}
 		
-		return postService.save(postDTO);
+		
+		if(org.apache.tika.utils.StringUtils.isBlank(postDTO.getId())) {
+			return postService.save(postDTO);
+		}else {
+			return postService.update(postDTO);
+		}
+		
+		
+		
 	}
 	
     @PostMapping("/uploadImage")

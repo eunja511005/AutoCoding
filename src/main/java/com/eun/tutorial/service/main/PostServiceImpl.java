@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.eun.tutorial.aspect.annotation.CheckAuthorization;
+import com.eun.tutorial.aspect.annotation.CreatePermission;
 import com.eun.tutorial.dto.main.CommentDTO;
 import com.eun.tutorial.dto.main.PostDTO;
 import com.eun.tutorial.dto.main.PostSearchDTO;
@@ -75,32 +76,38 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
+	@CreatePermission
 	public Map<String, Object> save(PostDTO postDTO) {
 		Map<String, Object> res = new HashMap<>();
 
-		if(org.apache.tika.utils.StringUtils.isBlank(postDTO.getId())) {
-    		UUID uuid = UUID.randomUUID();
-    		String postId = "post_"+uuid;
-    		postDTO.setId(postId);
-    		
-            // 1. insert EMPTY_CLOB()
-        	postMapper.mergePost(postDTO);
-        	
-            // 2. update 실제 content
-        	postMapper.mergePost(postDTO);
-        	
-        	res.put("result", "A new forum has been created.");
-    	}else {
-            // 1. title, secret 업데이트
-    		postMapper.update(postDTO);
-        	
-            // 2. content 업데이트
-        	postMapper.mergePost(postDTO);
-        	
-        	res.put("result", "A forum has been changed.");
-    	}
-        
+		UUID uuid = UUID.randomUUID();
+		String postId = "post_" + uuid;
+		postDTO.setId(postId);
 
+		// 1. insert EMPTY_CLOB()
+		postMapper.mergePost(postDTO);
+
+		// 2. update 실제 content
+		postMapper.mergePost(postDTO);
+
+		res.put("result", "A new forum has been created.");
+
+		return res;
+	}
+	
+	@Override
+	@CheckAuthorization
+	public Map<String, Object> update(PostDTO postDTO) {
+		Map<String, Object> res = new HashMap<>();
+
+        // 1. title, secret 업데이트
+		postMapper.update(postDTO);
+    	
+        // 2. content 업데이트
+    	postMapper.mergePost(postDTO);
+    	
+    	res.put("result", "A forum has been changed.");
+        
 		return res;
 	}
 
