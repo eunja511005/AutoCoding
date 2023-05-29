@@ -16,6 +16,7 @@ import org.json.JSONObject;
 import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -35,9 +36,10 @@ import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.web.servlet.LocaleResolver;
 
 import com.eun.tutorial.dto.ZthhErrorDTO;
-import com.eun.tutorial.dto.ZthmCommonCodeMappingDTO;
+import com.eun.tutorial.dto.main.MenuControlDTO;
+import com.eun.tutorial.exception.CustomException;
 import com.eun.tutorial.service.ZthhErrorService;
-import com.eun.tutorial.service.ZthmCommonCodeMappingService;
+import com.eun.tutorial.service.main.MenuControlService;
 import com.eun.tutorial.service.user.CustomOAuth2UserService;
 import com.eun.tutorial.service.user.PrincipalDetails;
 import com.eun.tutorial.util.StringUtils;
@@ -52,7 +54,7 @@ import lombok.extern.slf4j.Slf4j;
 public class MyWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
 	
 	private final ZthhErrorService zthhErrorService;
-	private final ZthmCommonCodeMappingService zthmCommonCodeMappingService;
+	private final MenuControlService menuControlService;
 	private final CustomOAuth2UserService customOAuth2UserService;
 	private final LocaleResolver localeResolver;
 	
@@ -112,14 +114,22 @@ public class MyWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter
         /**
          * Action별 권한 체크
          */
-        List<ZthmCommonCodeMappingDTO> zthmCommonCodeMappingList = zthmCommonCodeMappingService.findByCodeMappingName("ACTION_ROLE");
-        for (ZthmCommonCodeMappingDTO zthmCommonCodeMappingDTO : zthmCommonCodeMappingList) {
-        	http.authorizeRequests().antMatchers(zthmCommonCodeMappingDTO.getFromCodeId()).hasRole(zthmCommonCodeMappingDTO.getToCodeId());
-		}
         
+        List<MenuControlDTO> menuControlList = menuControlService.getMenuControlList();
+        for (MenuControlDTO menuControlDTO : menuControlList) {
+        	if("GET".equals(menuControlDTO.getMethod())) {
+        		http.authorizeRequests().antMatchers(HttpMethod.GET, menuControlDTO.getUrl()).hasRole(menuControlDTO.getRoleId());
+        	}else if("POST".equals(menuControlDTO.getMethod())) {
+        		http.authorizeRequests().antMatchers(HttpMethod.POST, menuControlDTO.getUrl()).hasRole(menuControlDTO.getRoleId());
+        	}else if("DELETE".equals(menuControlDTO.getMethod())) {
+        		http.authorizeRequests().antMatchers(HttpMethod.DELETE, menuControlDTO.getUrl()).hasRole(menuControlDTO.getRoleId());
+        	}else {
+        		throw new CustomException(500, "No HTTP Method");
+        	}
+		} 
         
         http
-        .authorizeRequests() // 접근에 대한 인증 설정
+        	.authorizeRequests() // 접근에 대한 인증 설정
             .antMatchers("/signinInit", "/assets/**",
             		"/joinInit", "/join", "/js/**", "/img/**", "/css/**",
             		"/h2-console/**", "/error/**", "/favicon.ico", "/layout/test",

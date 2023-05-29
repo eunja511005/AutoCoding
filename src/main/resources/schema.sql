@@ -358,4 +358,18 @@ CREATE TABLE zthh_errorHist (
 	CONSTRAINT pk_zthh_errorHist PRIMARY KEY (id)
 );
 
+DROP TABLE zthh_menuControl;
+CREATE TABLE zthh_menuControl (
+	id VARCHAR2(255),
+	URL VARCHAR2(300),
+	METHOD VARCHAR2(30),
+	ROLE_ID VARCHAR2(300),
+	del_yn CHAR(1),
+	create_id VARCHAR2(50),
+	create_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
+	update_id VARCHAR2(50),
+	update_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
+	CONSTRAINT pk_zthh_menuControl PRIMARY KEY (id)
+);
+
 **/

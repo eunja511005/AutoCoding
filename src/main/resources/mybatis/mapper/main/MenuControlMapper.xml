@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eun.tutorial.mapper.main.MenuControlMapper">
+
+	<select id="selectMenuControlList" resultType="com.eun.tutorial.dto.main.MenuControlDTO">
+		SELECT URL, METHOD, ROLE_ID, id, del_yn, create_id, create_dt, update_id, update_dt FROM ZTHH_MENUCONTROL where del_yn='N' ORDER BY update_dt, create_dt
+	</select>
+
+	<insert id="insertMenuControl">
+		INSERT INTO ZTHH_MENUCONTROL (URL, METHOD, ROLE_ID, id, del_yn, create_id, create_dt, update_id, update_dt)
+		VALUES (#{url}, #{method}, #{roleId}, #{id}, 'N', #{createId}, CURRENT_TIMESTAMP, #{updateId}, CURRENT_TIMESTAMP)
+	</insert>
+
+	<update id="updateMenuControl">
+		UPDATE ZTHH_MENUCONTROL
+		SET URL = #{url}, METHOD = #{method}, ROLE_ID = #{roleId}, update_id = #{updateId}, update_dt = CURRENT_TIMESTAMP
+		WHERE id = #{id}
+	</update>
+
+	<delete id="deleteMenuControl">
+		UPDATE ZTHH_MENUCONTROL SET del_yn = 'Y', update_dt = CURRENT_TIMESTAMP WHERE id = #{id}
+	</delete>
+
+	<select id="getMenuControlListById" parameterType="string" resultType="com.eun.tutorial.dto.main.MenuControlDTO">
+		SELECT URL, METHOD, ROLE_ID, id, del_yn, create_id, create_dt, update_id, update_dt FROM ZTHH_MENUCONTROL
+		WHERE id = #{id}
+		ORDER BY update_dt, create_dt
+	</select>
+
+	<select id="getMenuControlByRoleId" parameterType="string" resultType="com.eun.tutorial.dto.main.MenuControlDTO">
+		SELECT URL, METHOD, ROLE_ID, id, del_yn, create_id, create_dt, update_id, update_dt FROM ZTHH_MENUCONTROL
+		WHERE ROLE_ID = #{roleId}
+		AND del_yn='N'
+	</select>
+
+</mapper>
