@@ -31,6 +31,7 @@ CREATE TABLE zthm_user
     username      VARCHAR2(30),
     password      VARCHAR2(100),
     email         VARCHAR2(100),
+    salt          RAW(24);
     role          VARCHAR2(200),
     picture       VARCHAR2(500),
     language      VARCHAR2(50),

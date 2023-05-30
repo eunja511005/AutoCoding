@@ -3,15 +3,14 @@ package com.eun.tutorial.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.eun.tutorial.controller.MyWebInitController;
 import com.eun.tutorial.dto.UserInfoDTO;
 import com.eun.tutorial.mapper.UserMapper;
+import com.eun.tutorial.util.EncryptionUtils;
+import com.eun.tutorial.util.SaltGenerator;
 
 import lombok.RequiredArgsConstructor;
 
@@ -20,15 +19,10 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 public class UserServiceImpl implements UserService {
 	private final UserMapper userDao;
+	private final EncryptionUtils encryptionUtils;
 	private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 	
 	@Autowired private BCryptPasswordEncoder passwordEncoder; // 시큐리티에서 빈(Bean) 생성할 예정
-	
-
-//	@Override
-//	public Collection<UserInfoDTO> getUsers() {
-//		return testDao.getUserLists();
-//	}
 
 	@Override
 	public UserInfoDTO addUser(UserInfoDTO userInfoDTO) {
@@ -36,6 +30,12 @@ public class UserServiceImpl implements UserService {
 		userInfoDTO.setUpdateId(userInfoDTO.getUsername());
 		userInfoDTO.setEnable(true);
 		userInfoDTO.setPassword(passwordEncoder.encode(userInfoDTO.getPassword()));
+		
+		
+		// 이메일 암호화 저장
+        String salt = SaltGenerator.generateRandomSalt();// 솔트 값 생성
+        String encryptedEmail = encryptionUtils.encrypt(userInfoDTO.getEmail(), salt);
+        userInfoDTO.setEmail(encryptedEmail);
 
 		int result = userDao.addUser(userInfoDTO);
 		return userInfoDTO;
