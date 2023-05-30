@@ -1,5 +1,6 @@
 package com.eun.tutorial.service.user;
 
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,7 +29,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         
         if(userInfoDTO != null) {
             //이메일 복호화
-            String decryptedEmail = encryptionUtils.decrypt(userInfoDTO.getEmail(), userInfoDTO.getSalt());
+        	String salt = Base64.getEncoder().encodeToString(userInfoDTO.getSalt());
+            String decryptedEmail = encryptionUtils.decrypt(userInfoDTO.getEmail(), salt);
             userInfoDTO.setEmail(decryptedEmail);
         	
         	return new PrincipalDetails(userInfoDTO);

@@ -1,5 +1,7 @@
 package com.eun.tutorial.service;
 
+import java.util.Base64;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +35,11 @@ public class UserServiceImpl implements UserService {
 		
 		
 		// 이메일 암호화 저장
-        String salt = SaltGenerator.generateRandomSalt();// 솔트 값 생성
+		byte[] generateSalt = SaltGenerator.generateRandomSalt();
+		String salt = Base64.getEncoder().encodeToString(generateSalt);
         String encryptedEmail = encryptionUtils.encrypt(userInfoDTO.getEmail(), salt);
         userInfoDTO.setEmail(encryptedEmail);
+        userInfoDTO.setSalt(generateSalt);
 
 		int result = userDao.addUser(userInfoDTO);
 		return userInfoDTO;

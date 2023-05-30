@@ -1,6 +1,7 @@
 package com.eun.tutorial.service.user;
 
 
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,6 +17,8 @@ import com.eun.tutorial.dto.OAuthAttributes;
 import com.eun.tutorial.dto.UserInfoDTO;
 import com.eun.tutorial.mapper.TestMapper;
 import com.eun.tutorial.mapper.UserMapper;
+import com.eun.tutorial.util.EncryptionUtils;
+import com.eun.tutorial.util.SaltGenerator;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -25,6 +28,7 @@ import lombok.SneakyThrows;
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 	private final TestMapper testDao;
 	private final UserMapper userDao;
+	private final EncryptionUtils encryptionUtils;
 
     @SneakyThrows
     @Override
@@ -48,30 +52,43 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
     private UserInfoDTO saveOrUpdate(OAuthAttributes attributes){
 		Map<String, Object> map = new HashMap<>();
 		map.put("username", attributes.getName()); // 가져온 데이터에 키와 벨류값을 지정
-        UserInfoDTO userInfoDTO = testDao.getUser(map);
+        UserInfoDTO userInfoDTO = userDao.getUser(map);
         
         if(userInfoDTO == null) {
+        	
+    		// 이메일 암호화 저장
+    		byte[] generateSalt = SaltGenerator.generateRandomSalt();
+    		String salt = Base64.getEncoder().encodeToString(generateSalt);
+            String encryptedEmail = encryptionUtils.encrypt(attributes.getEmail(), salt);
+        	
         	userInfoDTO = UserInfoDTO.builder().createId("OAuth2")
         									   	.updateId("OAuth2")
 									        	.isEnable(true)
 									        	.username(attributes.getName())
-									        	.email(attributes.getEmail())
+									        	.email(encryptedEmail)
+									        	.salt(generateSalt)
 									        	.picture(attributes.getPicture())
 									        	.role("ROLE_USER")
 									        	.language("ko")
 									        	.build();
         	userDao.addUser(userInfoDTO);
         }else { // 이미지가 업데이트 되었을 수도 있으므로 merge 해주는게 맞을거 같음
+        	
+        	String salt = Base64.getEncoder().encodeToString(userInfoDTO.getSalt());
+        	String encryptedEmail = encryptionUtils.encrypt(attributes.getEmail(), salt);
+        	
         	userInfoDTO = UserInfoDTO.builder().createId("OAuth2")
 				   	.updateId("OAuth2")
 		        	.isEnable(true)
 		        	.username(attributes.getName())
-		        	.email(attributes.getEmail())
+		        	.email(encryptedEmail)
 		        	.picture(attributes.getPicture())
 		        	.role("ROLE_USER")
 		        	.build();
         	userDao.addUser(userInfoDTO);
         }
+        
+        userInfoDTO.setEmail(attributes.getEmail());
         
         return userInfoDTO;
         
