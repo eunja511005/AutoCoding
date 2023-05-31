@@ -113,6 +113,7 @@ function addLogoutEvent(){
 				        xhr.setRequestHeader(csrfheader, csrftoken);
 				      },
 				      success: function() {
+				    	  window.location.href = '/main'; // 로그아웃 성공 후 /main 페이지로 이동
 				    	  location.reload(); // 로그 아웃 성공후 csrf 토큰 리프레쉬를 위해 페이지 리로드
 				      }
 				    });
@@ -216,4 +217,49 @@ function loadNav(){
             console.log("Failed to load menu: " + error);
         }
     });
+}
+
+//이미지 파일을 압축하는 함수
+function compressImage(imageFile, maxSize, quality) {
+  return new Promise((resolve, reject) => {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+
+    const reader = new FileReader();
+    reader.readAsDataURL(imageFile);
+    reader.onload = function (e) {
+    const img = new Image();
+    img.src = e.target.result;
+    img.onload = function () {
+     	// Calculate new dimensions based on max size parameter
+    	let newWidth = img.width;
+    	let newHeight = img.height;
+    	if (newWidth > newHeight) {
+    	   if (newWidth > maxSize) {
+    	        newHeight *= maxSize / newWidth;
+    	        newWidth = maxSize;
+    	   }
+    	} else {
+    	   if (newHeight > maxSize) {
+    	        newWidth *= maxSize / newHeight;
+    	        newHeight = maxSize;
+    	      }
+    	}
+    	
+    	// 캔버스에 이미지를 그립니다.
+        canvas.width = newWidth;
+        canvas.height = newHeight;
+        ctx.drawImage(img, 0, 0, newWidth, newHeight);
+
+        // 캔버스에서 이미지 데이터를 가져옵니다.
+        canvas.toBlob((blob) => {
+        	console.log("Original Size:",imageFile.size);
+            console.log("Compressed image size:", blob.size);
+          // 압축된 이미지 파일을 반환합니다.
+          resolve(blob);
+        }, imageFile.type, quality);
+      }
+    };
+    reader.onerror = reject;
+  });
 }

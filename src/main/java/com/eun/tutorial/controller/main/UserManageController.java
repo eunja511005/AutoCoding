@@ -11,6 +11,7 @@
 
 package com.eun.tutorial.controller.main;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -20,12 +21,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.eun.tutorial.dto.main.ApiResponse;
 import com.eun.tutorial.dto.main.UserManageDTO;
 import com.eun.tutorial.service.main.UserManageService;
+import com.eun.tutorial.util.FileUtil;
 import com.eun.tutorial.util.StringUtils;
 
 import lombok.AllArgsConstructor;
@@ -38,6 +43,7 @@ import lombok.extern.slf4j.Slf4j;
 public class UserManageController {
 
 	private final UserManageService userManageService;
+	private final FileUtil fileUtil;
 
 	@GetMapping("/list")
 	public ModelAndView list() {
@@ -59,7 +65,8 @@ public class UserManageController {
 	}
 
 	@PostMapping("/save")
-	public @ResponseBody ApiResponse saveUserManage(@RequestBody UserManageDTO userManageDTO) {
+	public @ResponseBody ApiResponse saveUserManage(@RequestParam("file") MultipartFile file, UserManageDTO userManageDTO) throws IOException {
+		userManageDTO.setPicture(fileUtil.saveImage(file));
 		userManageService.mergeUser(userManageDTO);
 		return new ApiResponse<>(true, "Success save", null);
 	}

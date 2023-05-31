@@ -7,8 +7,8 @@
 	</select>
 
 	<insert id="insertUserManage">
-		INSERT INTO ZTHM_USER (USERNAME, PASSWORD, EMAIL, ROLE, PICTURE, ENABLE, create_id, create_time, update_id, update_time)
-		VALUES (#{username}, #{password}, #{email}, #{role}, #{picture}, #{isEnable}, #{createId}, to_char(CURRENT_DATE,'yyyymmddhh24miss'), #{updateId}, to_char(CURRENT_DATE,'yyyymmddhh24miss'))
+		INSERT INTO ZTHM_USER (USERNAME, PASSWORD, EMAIL, ROLE, PICTURE, SALT, ENABLE, create_id, create_time, update_id, update_time)
+		VALUES (#{username}, #{password}, #{email}, #{role}, #{picture}, #{salt}, #{isEnable}, #{createId}, to_char(CURRENT_DATE,'yyyymmddhh24miss'), #{updateId}, to_char(CURRENT_DATE,'yyyymmddhh24miss'))
 	</insert>
 
 	<update id="updateUserManage">

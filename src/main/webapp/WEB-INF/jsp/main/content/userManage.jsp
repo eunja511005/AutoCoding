@@ -32,52 +32,49 @@
 				<div class="container-fluid">
 					<div class="row">
 						<div class="col-12">
-							<form id="userManageForm" class="row g-2 align-items-center">
-								<div class="col-md">
-									<div class="form-floating">
-										<input type="text" class="form-control" id="username" name="username" placeholder="Enter username" required>
-										<label for="username">USERNAME</label>
-									</div>
-								</div>
-								<div class="col-md">
-									<div class="form-floating">
-										<input type="text" class="form-control" id="password" name="password" placeholder="Enter password" required>
-										<label for="password">PASSWORD</label>
-									</div>
-								</div>
-								<div class="col-md">
-									<div class="form-floating">
-										<input type="text" class="form-control" id="email" name="email" placeholder="Enter email" required>
-										<label for="email">EMAIL</label>
-									</div>
-								</div>
-								<div class="col-md">
-									<div class="form-floating">
-										<input type="text" class="form-control" id="role" name="role" placeholder="Enter role" required>
-										<label for="role">ROLE</label>
-									</div>
-								</div>
-								<div class="col-md">
-									<div class="form-floating">
-										<input type="text" class="form-control" id="picture" name="picture" placeholder="Enter picture" required>
-										<label for="picture">PICTURE</label>
-									</div>
-								</div>
-								<div class="col-md">
-									<div class="form-floating">
-										<div class="form-check">
-							              <input class="form-check-input" type="checkbox" id="enable" name="enable">
-							              <label class="form-check-label" for="enable">
-							                Enable
-							              </label>
-							            </div>
-									</div>
-								</div>
-								<div class="col-md text-center">
-									<button type="submit" class="btn btn-outline-primary"><i class="fas fa-save"></i></button>
-									<button type="reset" class="btn btn-outline-secondary" id="clear-btn"><i class="fas fa-undo"></i></button>
-								</div>
+							<form id="userManageForm" class="row g-3 align-items-center">
+							  <div class="col-md-6">
+							    <div class="form-floating">
+							      <input type="text" class="form-control" id="username" name="username" placeholder="Enter username" required>
+							      <label for="username">Username</label>
+							    </div>
+							  </div>
+							  <div class="col-md-6">
+							    <div class="form-floating">
+							      <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required>
+							      <label for="password">Password</label>
+							    </div>
+							  </div>
+							  <div class="col-md-6">
+							    <div class="form-floating">
+							      <input type="email" class="form-control" id="email" name="email" placeholder="Enter email" required>
+							      <label for="email">Email</label>
+							    </div>
+							  </div>
+							  <div class="col-md-6">
+							    <div class="form-floating">
+							      <input type="text" class="form-control" id="role" name="role" placeholder="Enter role" required>
+							      <label for="role">Role</label>
+							    </div>
+							  </div>
+							  <div class="col-md-6">
+							    <div class="d-flex">
+							      <input type="file" class="form-control" id=formFile name="file" accept="image/*" required>
+							      <img id="picture-preview" src="" alt="Picture Preview" style="max-height: 40px; margin-left: 10px; display: none;">
+							    </div>
+							  </div>
+							  <div class="col-md-6 d-flex align-items-center justify-content-center">
+							    <div class="form-check">
+							      <input class="form-check-input" type="checkbox" id="enable" name="enable">
+							      <label class="form-check-label" for="enable">Enable</label>
+							    </div>
+							  </div>
+							  <div class="col-12 text-center">
+							    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save</button>
+							    <button type="reset" class="btn btn-secondary" id="clear-btn"><i class="fas fa-undo"></i> Reset</button>
+							  </div>
 							</form>
+
 						</div>
 					</div>
 				</div>

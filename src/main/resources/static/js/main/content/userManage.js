@@ -19,12 +19,23 @@ $(document).ready(function() {
 
 	$('#userManageForm').on('submit', function(event) {
 		event.preventDefault();
+		debugger;
 		var formData = new FormData(this);
+		
+		const fileInput = $('#formFile')[0];
+		const file = fileInput.files[0];
+		if (file) {
+			const resizedImage = compressImage(file, 50, 1);
+			formData.append('file', resizedImage);
+		}
+		
 		saveUserManage(formData);
 	});
 
 	$('#clear-btn').on('click', function() {
 		$('#userManageForm input').val('');
+		$('#picture-preview').attr('src', '');
+		$('#picture-preview').hide();
 	});
 
 	function handleCollapseClick() {
@@ -33,6 +44,15 @@ $(document).ready(function() {
 	}
 
 	$('#newField, #searchField').click(handleCollapseClick);
+	
+	// 사진 선택 시 미리보기 업데이트
+	$('#formFile').change(function() {
+	  var reader = new FileReader();
+	  reader.onload = function(e) {
+	    $('#picture-preview').attr('src', e.target.result).show();
+	  };
+	  reader.readAsDataURL(this.files[0]);
+	});	
 });
 function initializeUserManageTable() {
 	table = $('#userManageTable').DataTable({
@@ -85,7 +105,26 @@ function initializeUserManageTable() {
 }
 
 function saveUserManage(formData) {
-	callAjax("/userManage/save", "POST", formData, saveCallback);
+	
+    $.ajax({
+        url: '/userManage/save',
+        type: 'POST',
+        data: formData,
+        contentType: false,
+        processData: false,
+        beforeSend : function(xhr){   
+			xhr.setRequestHeader(csrfheader, csrftoken);
+        },
+        success: function(response) {
+        	saveCallback(response);
+        },
+        error: function(response) {
+        	debugger;
+            alert(response.responseText);
+        }
+    });
+    
+	//callAjax("/userManage/save", "POST", formData, saveCallback);
 }
 
 function editUserManage(username) {
@@ -103,7 +142,16 @@ function editCallback(response){
 	//$('#password').val(response.data.password);
 	$('#email').val(response.data.email);
 	$('#role').val(response.data.role);
-	$('#picture').val(response.data.picture);
+	
+	// 응답 데이터에서 이미지 URL을 가져와서 파일 업로드 필드에 미리보기 추가
+	var pictureUrl = response.data.picture; // 응답 데이터에서 이미지 URL 가져오기
+	var $picturePreview = $('#picture-preview'); // 미리보기 이미지가 표시될 엘리먼트 선택
+	// 이미지 URL이 유효한 경우에만 미리보기 표시
+	if (pictureUrl) {
+	  $picturePreview.attr('src', pictureUrl);
+	  $picturePreview.show();
+	}
+	
 	$('#enable').prop('checked', response.data.enable);
 
 	$('#userManageForm').attr('data-mode', 'edit');
