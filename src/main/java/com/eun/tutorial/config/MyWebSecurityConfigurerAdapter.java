@@ -118,11 +118,23 @@ public class MyWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter
         List<MenuControlDTO> menuControlList = menuControlService.getMenuControlList();
         for (MenuControlDTO menuControlDTO : menuControlList) {
         	if("GET".equals(menuControlDTO.getMethod())) {
-        		http.authorizeRequests().antMatchers(HttpMethod.GET, menuControlDTO.getUrl()).hasRole(menuControlDTO.getRoleId());
+        		if(menuControlDTO.getRoleId().equals("Any")) {
+        			http.authorizeRequests().antMatchers(HttpMethod.GET, menuControlDTO.getUrl()).permitAll();
+        		}else {
+        			http.authorizeRequests().antMatchers(HttpMethod.GET, menuControlDTO.getUrl()).hasRole(menuControlDTO.getRoleId());
+        		}
         	}else if("POST".equals(menuControlDTO.getMethod())) {
-        		http.authorizeRequests().antMatchers(HttpMethod.POST, menuControlDTO.getUrl()).hasRole(menuControlDTO.getRoleId());
+        		if(menuControlDTO.getRoleId().equals("Any")) {
+        			http.authorizeRequests().antMatchers(HttpMethod.POST, menuControlDTO.getUrl()).permitAll();
+        		}else {
+        			http.authorizeRequests().antMatchers(HttpMethod.POST, menuControlDTO.getUrl()).hasRole(menuControlDTO.getRoleId());
+        		}
         	}else if("DELETE".equals(menuControlDTO.getMethod())) {
-        		http.authorizeRequests().antMatchers(HttpMethod.DELETE, menuControlDTO.getUrl()).hasRole(menuControlDTO.getRoleId());
+        		if(menuControlDTO.getRoleId().equals("Any")) {
+        			http.authorizeRequests().antMatchers(HttpMethod.DELETE, menuControlDTO.getUrl()).permitAll();
+        		}else {
+        			http.authorizeRequests().antMatchers(HttpMethod.DELETE, menuControlDTO.getUrl()).hasRole(menuControlDTO.getRoleId());
+        		}
         	}else {
         		throw new CustomException(500, "No HTTP Method");
         	}
@@ -176,6 +188,7 @@ public class MyWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter
                         
                         Map<String, String> res = new HashMap<>();
                         res.put("result", "login success");
+                        res.put("loginUser", auth.getName());
                         res.put("code", "200");
                         JSONObject json =  new JSONObject(res);
                         response.setContentType("application/json; charset=utf-8");
