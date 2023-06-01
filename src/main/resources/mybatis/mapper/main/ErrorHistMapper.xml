@@ -30,6 +30,7 @@
     <select id="getErrorCountByDate" resultType="java.util.Map">
         SELECT TO_CHAR(create_dt,'YYYY/MM/DD') AS error_date, COUNT(*) AS error_count
         FROM ZTHH_ERRORHIST
+        WHERE create_dt >= TRUNC(SYSDATE) - 6 
         GROUP BY TO_CHAR(create_dt,'YYYY/MM/DD')
         ORDER BY TO_CHAR(create_dt,'YYYY/MM/DD')
     </select>	
