@@ -12,6 +12,7 @@
 package com.eun.tutorial.service.main;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -58,6 +59,11 @@ public class ErrorHistServiceImpl implements ErrorHistService {
 	@Override
 	public ErrorHistDTO getErrorHistListById(String id) {
 		return errorHistMapper.getErrorHistListById(id);
+	}
+
+	@Override
+	public List<Map<String, Object>> getErrorData() {
+		return errorHistMapper.getErrorCountByDate();
 	}
 
 }

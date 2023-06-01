@@ -12,6 +12,7 @@
 package com.eun.tutorial.mapper.main;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -24,4 +25,5 @@ public interface ErrorHistMapper {
 	int updateErrorHist(ErrorHistDTO errorHistDTO);
 	int deleteErrorHist(String id);
 	ErrorHistDTO getErrorHistListById(String id);
+	List<Map<String, Object>> getErrorCountByDate();
 }

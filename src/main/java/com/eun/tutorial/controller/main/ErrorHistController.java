@@ -12,6 +12,7 @@
 package com.eun.tutorial.controller.main;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.eun.tutorial.dto.main.ApiResponse;
+import com.eun.tutorial.dto.main.AutocodingFieldDTO;
 import com.eun.tutorial.dto.main.ErrorHistDTO;
 import com.eun.tutorial.service.main.ErrorHistService;
 import com.eun.tutorial.util.StringUtils;
@@ -44,6 +46,15 @@ public class ErrorHistController {
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("jsp/main/content/errorHist");
 		return modelAndView;
+	}
+	
+	@GetMapping("/errorData")
+	public @ResponseBody ApiResponse getErrorData() {
+	    try {
+	        return new ApiResponse<List<Map<String, Object>>>(true, "Successfully retrieved the common code list.", errorHistService.getErrorData());
+	    } catch (Exception e) {
+	        return new ApiResponse<>(false, "Failed to retrieve the common code list.", null);
+	    }
 	}
 
 	@PostMapping("/list")
@@ -75,5 +86,7 @@ public class ErrorHistController {
 		errorHistService.deleteErrorHist(id);
 		return new ApiResponse<>(true, "Successfully deleted the errorHist data.", null);
 	}
+	
+	
 
 }

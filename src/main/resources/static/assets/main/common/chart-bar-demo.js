@@ -1,46 +1,39 @@
-// Set new default font family and font color to mimic Bootstrap's default styling
-Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
-Chart.defaults.global.defaultFontColor = '#292b2c';
-
-// Bar Chart Example
-var ctx = document.getElementById("myBarChart");
-var myLineChart = new Chart(ctx, {
-  type: 'bar',
-  data: {
-    labels: ["January", "February", "March", "April", "May", "June"],
-    datasets: [{
-      label: "Revenue",
-      backgroundColor: "rgba(2,117,216,1)",
-      borderColor: "rgba(2,117,216,1)",
-      data: [4215, 5312, 6251, 7841, 9821, 14984],
-    }],
-  },
-  options: {
-    scales: {
-      xAxes: [{
-        time: {
-          unit: 'month'
-        },
-        gridLines: {
-          display: false
-        },
-        ticks: {
-          maxTicksLimit: 6
-        }
-      }],
-      yAxes: [{
-        ticks: {
-          min: 0,
-          max: 15000,
-          maxTicksLimit: 5
-        },
-        gridLines: {
-          display: true
-        }
-      }],
-    },
-    legend: {
-      display: false
-    }
-  }
+$(document).ready(function() {
+	debugger;
+	callAjax("/errorHist/errorData", "GET", null, getBarCallback);
 });
+
+function getBarCallback(response){
+    var labels = [];
+    var data = [];
+
+    for (var i = 0; i < response.data.length; i++) {
+        var item = response.data[i];
+        labels.push(item.ERROR_DATE);
+        data.push(item.ERROR_COUNT);
+    }
+
+    var ctx = document.getElementById('myBarChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Error Count',
+                data: data,
+                borderColor: 'rgba(75, 192, 192, 1)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    stepSize: 1 // y축 간격 설정 (오류 갯수가 정수인 경우)
+                }
+            }
+        }
+    });
+
+}

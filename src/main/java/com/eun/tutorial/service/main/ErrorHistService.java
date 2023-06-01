@@ -12,6 +12,7 @@
 package com.eun.tutorial.service.main;
 
 import java.util.List;
+import java.util.Map;
 
 import com.eun.tutorial.dto.main.ErrorHistDTO;
 
@@ -21,4 +22,5 @@ public interface ErrorHistService {
 	int updateErrorHist(ErrorHistDTO errorHistDTO);
 	int deleteErrorHist(String id);
 	ErrorHistDTO getErrorHistListById(String id);
+	List<Map<String, Object>> getErrorData();
 }
