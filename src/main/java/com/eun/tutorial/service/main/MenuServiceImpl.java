@@ -76,9 +76,14 @@ public class MenuServiceImpl implements MenuService {
 	        }
 		}
 			
+		String preCategory = "";
 		for (MenuDTO menu : menus) {
 			if(menu.getMenuLevel()==1) {
+				if(!preCategory.equals(menu.getCategory())) { //첫번째 category에대해서만 category 그려 주도록
+					sb.append("\t<div class=\"sb-sidenav-menu-heading\">" + menu.getCategory() + "</div>\n");
+				}
 				generateMenuItemHtml(sb, menu, subMenuMap);
+				preCategory = menu.getCategory();
 			}
 		}
 
@@ -100,10 +105,6 @@ public class MenuServiceImpl implements MenuService {
         		language = userDetailsImpl.getLanguage();
         	}
         	menuName = messageSource.getMessage(menu.getMenuId(), null, new Locale(language));
-		}
-
-		if (menu.getMenuLevel() == 1 && menu.getMenuOrder() == 1) {
-			sb.append("\t<div class=\"sb-sidenav-menu-heading\">" + menu.getCategory() + "</div>\n");
 		}
 
 		if (subMenuList == null) {
