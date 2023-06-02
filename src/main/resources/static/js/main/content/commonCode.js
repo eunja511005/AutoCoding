@@ -40,6 +40,7 @@ $(document).ready(function() {
 	      { data: 'codeGroup' },
 	      { data: 'code' },
 	      { data: 'value' },
+	      { data: 'codeOrder' },
 	      {
 	        data: null,
 	        render: function(data, type, row, meta) {
@@ -111,6 +112,7 @@ $(document).ready(function() {
 	        $('#codeGroup').val(response.data.codeGroup);
 	        $('#code').val(response.data.code);
 	        $('#value').val(response.data.value);
+	        $('#codeOrder').val(response.data.codeOrder);
 
 	        // Set the edit mode flag
 	        $('#commonCodeForm').attr('data-mode', 'edit');

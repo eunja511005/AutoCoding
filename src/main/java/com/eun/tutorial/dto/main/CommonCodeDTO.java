@@ -9,6 +9,7 @@ public class CommonCodeDTO {
 	  private Long id;
 	  private String codeGroup;
 	  private String code;
+	  private int codeOrder;
 	  private String value;
 	  private LocalDateTime createdAt;
 	  private LocalDateTime updatedAt;

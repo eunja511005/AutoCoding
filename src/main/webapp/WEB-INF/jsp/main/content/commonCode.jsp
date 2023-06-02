@@ -8,25 +8,32 @@
     <div class="col-md-6">
       <form id="commonCodeForm">
         <div class="row my-4">
-          <div class="col-md-12">
+          <div class="col-md-6">
             <div class="form-floating">
               <input type="text" class="form-control" id="codeGroup" name="codeGroup" placeholder="Enter code group" required>
               <label for="codeGroup"><i class="fas fa-code-branch"></i> Code Group</label>
             </div>
           </div>
-        </div>
-        <div class="row my-4">
-          <input type="hidden" id="id" name="id">
           <div class="col-md-6">
             <div class="form-floating">
               <input type="text" class="form-control" id="code" name="code" placeholder="Enter code" required>
               <label for="code"><i class="fas fa-code"></i> Code</label>
             </div>
           </div>
+        </div>        
+        
+        <div class="row my-4">
+          <input type="hidden" id="id" name="id">
           <div class="col-md-6">
             <div class="form-floating">
               <input type="text" class="form-control" id="value" name="value" placeholder="Enter value" required>
               <label for="value"><i class="fas fa-pen"></i> Value</label>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-floating">
+              <input type="number" class="form-control" id="codeOrder" name="codeOrder" placeholder="Enter code" required>
+              <label for="code"><i class="fas fa-code"></i> Code Order</label>
             </div>
           </div>
         </div>
@@ -45,6 +52,7 @@
             <th>Code Group</th>
             <th>Code</th>
             <th>Value</th>
+            <th>Code Order</th>
 			<th>Edit</th>
 	        <th>Delete</th>
           </tr>
