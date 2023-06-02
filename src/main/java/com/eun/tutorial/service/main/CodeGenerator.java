@@ -617,6 +617,7 @@ public class CodeGenerator {
         content.append("\t\t\t\t},\n");
         content.append("\t\t\t},\n");
         content.append("\t\t],\n");
+        content.append("\t\torder: [], // 자동 정렬 비활성화\n");
         content.append("\t});\n");
         content.append("\n");
         
