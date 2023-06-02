@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class MenuDTO {
 	private String category;
 	private int menuLevel;
-	private String menuName;
+	private String menuAuth;
 	private String menuId;
 	private String menuPath;
 	private String menuIcon;

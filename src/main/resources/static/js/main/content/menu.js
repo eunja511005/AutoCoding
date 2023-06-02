@@ -22,6 +22,8 @@ $(document).ready(function() {
 	}
 
 	$('#newField, #searchField').click(handleCollapseClick);
+	
+	initSelectBox('menuAuth', '/commonCode/ROLE', false);
 });
 function initializeMenuTable() {
 	table = $('#menuTable').DataTable({
@@ -37,7 +39,7 @@ function initializeMenuTable() {
 		columns: [
 			{ data: 'category' },
 			{ data: 'menuLevel' },
-			{ data: 'menuName' },
+			{ data: 'menuAuth' },
 			{ data: 'menuId' },
 			{ data: 'menuPath' },
 			{ data: 'menuIcon' },
@@ -95,7 +97,7 @@ function editCallback(response){
 	$('#id').val(response.data.id);
 	$('#category').val(response.data.category);
 	$('#menuLevel').val(response.data.menuLevel);
-	$('#menuName').val(response.data.menuName);
+	$('#menuAuth').val(response.data.menuAuth);
 	$('#menuId').val(response.data.menuId);
 	$('#menuPath').val(response.data.menuPath);
 	$('#menuIcon').val(response.data.menuIcon);

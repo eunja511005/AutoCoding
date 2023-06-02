@@ -118,19 +118,19 @@ public class MyWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter
         List<MenuControlDTO> menuControlList = menuControlService.getMenuControlList();
         for (MenuControlDTO menuControlDTO : menuControlList) {
         	if("GET".equals(menuControlDTO.getMethod())) {
-        		if(menuControlDTO.getRoleId().equals("Any")) {
+        		if(menuControlDTO.getRoleId().equals("ANY")) {
         			http.authorizeRequests().antMatchers(HttpMethod.GET, menuControlDTO.getUrl()).permitAll();
         		}else {
         			http.authorizeRequests().antMatchers(HttpMethod.GET, menuControlDTO.getUrl()).hasRole(menuControlDTO.getRoleId());
         		}
         	}else if("POST".equals(menuControlDTO.getMethod())) {
-        		if(menuControlDTO.getRoleId().equals("Any")) {
+        		if(menuControlDTO.getRoleId().equals("ANY")) {
         			http.authorizeRequests().antMatchers(HttpMethod.POST, menuControlDTO.getUrl()).permitAll();
         		}else {
         			http.authorizeRequests().antMatchers(HttpMethod.POST, menuControlDTO.getUrl()).hasRole(menuControlDTO.getRoleId());
         		}
         	}else if("DELETE".equals(menuControlDTO.getMethod())) {
-        		if(menuControlDTO.getRoleId().equals("Any")) {
+        		if(menuControlDTO.getRoleId().equals("ANY")) {
         			http.authorizeRequests().antMatchers(HttpMethod.DELETE, menuControlDTO.getUrl()).permitAll();
         		}else {
         			http.authorizeRequests().antMatchers(HttpMethod.DELETE, menuControlDTO.getUrl()).hasRole(menuControlDTO.getRoleId());

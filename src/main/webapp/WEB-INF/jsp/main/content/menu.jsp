@@ -37,8 +37,8 @@
 								</div>
 								<div class="col-md">
 									<div class="form-floating">
-										<input type="text" class="form-control" id="menuName" name="menuName" placeholder="Enter menuName" required>
-										<label for="menuName">MENU_NAME</label>
+										<select class="form-select" id="menuAuth" name="menuAuth" required></select>
+										<label for="menuAuth">MENU_AUTH</label>
 									</div>
 								</div>
 								<div class="col-md">
@@ -98,7 +98,7 @@
 						<tr>
 							<th>CATEGORY</th>
 							<th>MENU_LEVEL</th>
-							<th>MENU_NAME</th>
+							<th>MENU_AUTH</th>
 							<th>MENU_ID</th>
 							<th>MENU_PATH</th>
 							<th>MENU_ICON</th>
