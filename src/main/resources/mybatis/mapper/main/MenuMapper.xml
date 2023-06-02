@@ -2,8 +2,17 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.eun.tutorial.mapper.main.MenuMapper">
 
-	<select id="selectMenuList" resultType="com.eun.tutorial.dto.main.MenuDTO">
+<!-- 	<select id="selectMenuList" resultType="com.eun.tutorial.dto.main.MenuDTO">
 		SELECT CATEGORY, MENU_LEVEL, MENU_NAME, MENU_ID, MENU_PATH, MENU_ICON, MENU_ORDER, PARENT_MENU_ID, id, del_yn, create_id, create_dt, update_id, update_dt FROM ZTHH_MENU where del_yn='N' ORDER BY CATEGORY, menu_level, menu_order
+	</select> -->
+
+	<select id="selectMenuList" resultType="com.eun.tutorial.dto.main.MenuDTO">
+		SELECT *
+			FROM zthh_menu
+			WHERE DEL_YN = 'N'
+			START WITH PARENT_MENU_ID = 'N/A'
+			CONNECT BY PARENT_MENU_ID = PRIOR MENU_ID
+			ORDER SIBLINGS BY MENU_ORDER
 	</select>
 
 	<insert id="insertMenu">

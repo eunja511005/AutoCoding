@@ -58,6 +58,7 @@ function initializeMenuTable() {
 				},
 			},
 		],
+		order: [], // 자동 정렬 비활성화
 	});
 
 	$('#menuTable tbody').on('click', '.edit-button', function() {
