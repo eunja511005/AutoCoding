@@ -90,7 +90,7 @@ public class MenuServiceImpl implements MenuService {
 					sb.append("\t<div class=\"sb-sidenav-menu-heading\">" + menu.getCategory() + "</div>\n");
 				}
 
-				generateMenuItemHtml(sb, menu, subMenuMap, locale);
+				generateMenuItemHtml(sb, menu, subMenuMap, locale, authorities);
 				preCategory = menu.getCategory();
 
 			}
@@ -124,7 +124,7 @@ public class MenuServiceImpl implements MenuService {
 	}
 
 	private void generateMenuItemHtml(StringBuilder sb, MenuDTO menu, Map<String, List<MenuDTO>> subMenuMap,
-			Locale locale) {
+			Locale locale, Collection<? extends GrantedAuthority> authorities) {
 		List<MenuDTO> subMenuList = subMenuMap.get(menu.getMenuId());
 
 		String menuName = messageSource.getMessage(menu.getMenuId(), null, locale);
@@ -165,7 +165,10 @@ public class MenuServiceImpl implements MenuService {
 						+ menu.getMenuId() + "\">\n");
 
 		for (MenuDTO subMenu : subMenuList) {
-			generateMenuItemHtml(sb, subMenu, subMenuMap, locale);// 재귀 함수 호출
+			
+			if(checkAuth(authorities, subMenu)) {
+				generateMenuItemHtml(sb, subMenu, subMenuMap, locale, authorities);// 재귀 함수 호출
+			}
 		}
 
 		sb.append("\t\t</nav>\n");
