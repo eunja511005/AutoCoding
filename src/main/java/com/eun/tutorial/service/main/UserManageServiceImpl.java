@@ -11,9 +11,13 @@
 
 package com.eun.tutorial.service.main;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.ResolverStyle;
 import java.util.Base64;
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,7 +28,6 @@ import com.eun.tutorial.dto.main.UserManageDTO;
 import com.eun.tutorial.mapper.main.UserManageMapper;
 import com.eun.tutorial.util.EncryptionUtils;
 import com.eun.tutorial.util.SaltGenerator;
-import com.eun.tutorial.util.StringUtils;
 
 import lombok.AllArgsConstructor;
 
@@ -47,6 +50,22 @@ public class UserManageServiceImpl implements UserManageService {
 	            //이메일 복호화
 	            String decryptedEmail = encryptionUtils.decrypt(userManageDTO.getEmail(), salt);
 				userManageDTO.setEmail(decryptedEmail);
+				
+				// DateTimeFormatter를 사용하여 String을 LocalDateTime으로 변환
+				if(userManageDTO.getLastLoginDt()!=null) {
+					
+			        // DateTimeFormatter를 사용하여 String을 LocalDateTime으로 변환
+			        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+			        LocalDateTime dateTime = LocalDateTime.parse(userManageDTO.getLastLoginDt(), formatter);
+
+			        // 한국 시간을 미국 시간으로 변경
+			        ZonedDateTime userZonedDateTime = ZonedDateTime.of(dateTime, ZoneId.of("Asia/Seoul"))
+//			        		.withZoneSameInstant(ZoneId.of("America/New_York"));
+			        		.withZoneSameInstant(ZoneId.of("Europe/London"));
+			        
+			    	formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH:mm");
+					userManageDTO.setLastLoginDt(userZonedDateTime.format(formatter));
+				}
 			}
 		}
 		return userManageDTOList;

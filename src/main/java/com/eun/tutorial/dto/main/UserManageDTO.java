@@ -11,8 +11,6 @@
 
 package com.eun.tutorial.dto.main;
 
-import java.time.LocalDateTime;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,6 +26,7 @@ public class UserManageDTO {
 	private String role;
 	private String picture;
 	private boolean isEnable;
+    private String lastLoginDt;
 	private String createId;
 	private String createTime;
 	private String updateId;

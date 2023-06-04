@@ -3,7 +3,7 @@
 <mapper namespace="com.eun.tutorial.mapper.main.UserManageMapper">
 
 	<select id="selectUserManageList" resultType="com.eun.tutorial.dto.main.UserManageDTO">
-		SELECT USERNAME, PASSWORD, EMAIL, SALT, ROLE, PICTURE, ENABLE, create_id, create_time, update_id, update_time FROM ZTHM_USER ORDER BY update_time, create_time
+		SELECT USERNAME, PASSWORD, EMAIL, SALT, ROLE, PICTURE, ENABLE, TO_CHAR(last_login_dt, 'YYYY-MM-DD HH24:MI:SS') AS last_login_dt, create_id, create_time, update_id, update_time FROM ZTHM_USER ORDER BY update_time, create_time
 	</select>
 
 	<insert id="insertUserManage">
@@ -22,7 +22,7 @@
 	</delete>
 
 	<select id="getUserManageListById" parameterType="string" resultType="com.eun.tutorial.dto.main.UserManageDTO">
-		SELECT USERNAME, PASSWORD, EMAIL, SALT, ROLE, PICTURE, ENABLE, create_id, create_time, update_id, update_time FROM ZTHM_USER
+		SELECT USERNAME, PASSWORD, EMAIL, SALT, ROLE, PICTURE, ENABLE, TO_CHAR(last_login_dt, 'YYYY-MM-DD HH24:MI:SS') AS last_login_dt, create_id, create_time, update_id, update_time FROM ZTHM_USER
 		WHERE username = #{username}
 		ORDER BY update_time, create_time
 	</select>

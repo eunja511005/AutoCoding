@@ -71,6 +71,12 @@ function initializeUserManageTable() {
 			{ data: 'role' },
 			{ data: 'picture' },
 			{ data: 'enable' },
+			{ data: 'lastLoginDt' },
+/*            { data: 'lastLoginDt',
+	            "render": function(data) {
+	            	return moment(data, "YYYY-MM-DDTHH:mm:ss").format("YYYY년 MM월 DD일 HH:mm");
+	            }
+            },	*/
 			{
 				data: null,
 				render: function(data, type, row, meta) {
@@ -86,6 +92,7 @@ function initializeUserManageTable() {
 				},
 			},
 		],
+		order: [], // 자동 정렬 비활성화
 	});
 
 	$('#userManageTable tbody').on('click', '.edit-button', function() {
