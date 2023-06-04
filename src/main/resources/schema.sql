@@ -36,6 +36,7 @@ CREATE TABLE zthm_user
     picture       VARCHAR2(500),
     language      VARCHAR2(50),
     enable        CHAR(1), 
+    last_login_dt TIMESTAMP(6),
     create_id     VARCHAR2(30),
     create_time   VARCHAR2(14),
     update_id     VARCHAR2(30),

@@ -8,4 +8,5 @@ import com.eun.tutorial.dto.UserInfoDTO;
 public interface UserService {
 //    Collection<UserInfoDTO> getUsers();
     UserInfoDTO addUser(UserInfoDTO userInfoDTO);
+    int updateLastLoginDt(String username);
 }

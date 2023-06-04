@@ -38,6 +38,7 @@ import org.springframework.web.servlet.LocaleResolver;
 import com.eun.tutorial.dto.ZthhErrorDTO;
 import com.eun.tutorial.dto.main.MenuControlDTO;
 import com.eun.tutorial.exception.CustomException;
+import com.eun.tutorial.service.UserService;
 import com.eun.tutorial.service.ZthhErrorService;
 import com.eun.tutorial.service.main.MenuControlService;
 import com.eun.tutorial.service.user.CustomOAuth2UserService;
@@ -57,12 +58,8 @@ public class MyWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter
 	private final MenuControlService menuControlService;
 	private final CustomOAuth2UserService customOAuth2UserService;
 	private final LocaleResolver localeResolver;
+	private final UserService userService;
 	
-    @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-    
     // logout -> login max session 1 오류 해결을 위해 추가
     @Bean
     public ServletListenerRegistrationBean<HttpSessionEventPublisher> httpSessionEventPublisher() {
@@ -185,6 +182,8 @@ public class MyWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter
                         Date date = new Date();
                         SimpleDateFormat formatter = new SimpleDateFormat("yyyy년 MM월 dd일 HH시 mm분 ss초");
                         log.info(" ### {}, Last login time : {} ", auth.getName(), formatter.format(date));
+                        
+                        userService.updateLastLoginDt(auth.getName());
                         
                         Map<String, String> res = new HashMap<>();
                         res.put("result", "login success");
