@@ -1,6 +1,7 @@
 package com.eun.tutorial.service.main;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -10,6 +11,7 @@ import java.util.UUID;
 import org.springframework.context.MessageSource;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -40,7 +42,7 @@ public class MenuServiceImpl implements MenuService {
 		menuDTO.setId("menu_" + UUID.randomUUID());
 		return menuMapper.insertMenu(menuDTO);
 	}
-	
+
 	@Override
 	@CheckAuthorization
 	public int updateMenu(MenuDTO menuDTO) {
@@ -66,46 +68,66 @@ public class MenuServiceImpl implements MenuService {
 
 	private String generateMenuHtml(List<MenuDTO> menus) {
 		StringBuilder sb = new StringBuilder();
-		
+
 		Map<String, List<MenuDTO>> subMenuMap = new HashMap<>();
-		
+
 		for (MenuDTO menu : menus) {
 			String parentMenuId = menu.getParentMenuId();
 			if (parentMenuId != null) {
-	            subMenuMap.computeIfAbsent(parentMenuId, k -> new ArrayList<>()).add(menu);
-	        }
+				subMenuMap.computeIfAbsent(parentMenuId, k -> new ArrayList<>()).add(menu);
+			}
 		}
-			
+
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Locale locale = getLocale(authentication);
+
+		Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
 		String preCategory = "";
 		for (MenuDTO menu : menus) {
-			if(menu.getMenuLevel()==1) {
-				if(!preCategory.equals(menu.getCategory())) { //첫번째 category에대해서만 category 그려 주도록
+			if (menu.getMenuLevel() == 1 && (checkAuth(authorities, menu))) {
+
+				if (!preCategory.equals(menu.getCategory())) { // 첫번째 category에대해서만 category 그려 주도록
 					sb.append("\t<div class=\"sb-sidenav-menu-heading\">" + menu.getCategory() + "</div>\n");
 				}
-				generateMenuItemHtml(sb, menu, subMenuMap);
+
+				generateMenuItemHtml(sb, menu, subMenuMap, locale);
 				preCategory = menu.getCategory();
+
 			}
 		}
 
 		return sb.toString();
 	}
 
-	private void generateMenuItemHtml(StringBuilder sb, MenuDTO menu, Map<String, List<MenuDTO>> subMenuMap) {
-		List<MenuDTO> subMenuList = subMenuMap.get(menu.getMenuId());
-		
-		String menuName = "";
-		
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		if(authentication == null || authentication instanceof AnonymousAuthenticationToken) {
-			menuName = messageSource.getMessage(menu.getMenuId(), null, Locale.KOREA);
-		}else {
+	private Locale getLocale(Authentication authentication) {
+		Locale locale;
+		if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
+			locale = Locale.KOREA;
+		} else {
 			PrincipalDetails userDetailsImpl = (PrincipalDetails) authentication.getPrincipal();
 			String language = "ko";
-        	if(!StringUtils.isBlank(userDetailsImpl.getLanguage())) {
-        		language = userDetailsImpl.getLanguage();
-        	}
-        	menuName = messageSource.getMessage(menu.getMenuId(), null, new Locale(language));
+			if (!StringUtils.isBlank(userDetailsImpl.getLanguage())) {
+				language = userDetailsImpl.getLanguage();
+			}
+			locale = new Locale(language);
 		}
+		return locale;
+	}
+
+	private boolean checkAuth(Collection<? extends GrantedAuthority> authorities, MenuDTO menu) {
+		
+		if(menu.getMenuAuth().equals("ROLE_ANY")) {
+			return true;
+		}
+		
+		return authorities.stream().anyMatch(authority -> authority.getAuthority().equals(menu.getMenuAuth()));
+	}
+
+	private void generateMenuItemHtml(StringBuilder sb, MenuDTO menu, Map<String, List<MenuDTO>> subMenuMap,
+			Locale locale) {
+		List<MenuDTO> subMenuList = subMenuMap.get(menu.getMenuId());
+
+		String menuName = messageSource.getMessage(menu.getMenuId(), null, locale);
 
 		if (subMenuList == null) {
 
@@ -132,17 +154,18 @@ public class MenuServiceImpl implements MenuService {
 		sb.append("\t</a>\n");
 
 		String parentMenuId = "";
-		if(!menu.getParentMenuId().equals("N/A")) {
+		if (!menu.getParentMenuId().equals("N/A")) {
 			parentMenuId = menu.getParentMenuId();
 		}
-		
+
 		sb.append("\t<div class=\"collapse\" id=\"collapse").append(menu.getMenuId())
 				.append("\" aria-labelledby=\"heading").append(menu.getMenuId())
-				.append("\" data-bs-parent=\"#sidenavAccordion"+parentMenuId+"\">\n")
-				.append("\t\t<nav class=\"sb-sidenav-menu-nested nav accordion\" id=\"sidenavAccordion"+menu.getMenuId()+"\">\n");
+				.append("\" data-bs-parent=\"#sidenavAccordion" + parentMenuId + "\">\n")
+				.append("\t\t<nav class=\"sb-sidenav-menu-nested nav accordion\" id=\"sidenavAccordion"
+						+ menu.getMenuId() + "\">\n");
 
 		for (MenuDTO subMenu : subMenuList) {
-			generateMenuItemHtml(sb, subMenu, subMenuMap);// 재귀 함수 호출
+			generateMenuItemHtml(sb, subMenu, subMenuMap, locale);// 재귀 함수 호출
 		}
 
 		sb.append("\t\t</nav>\n");
