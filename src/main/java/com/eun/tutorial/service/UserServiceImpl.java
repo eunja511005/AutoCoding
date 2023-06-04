@@ -22,9 +22,7 @@ import lombok.RequiredArgsConstructor;
 public class UserServiceImpl implements UserService {
 	private final UserMapper userDao;
 	private final EncryptionUtils encryptionUtils;
-	private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
-	
-	@Autowired private BCryptPasswordEncoder passwordEncoder; // 시큐리티에서 빈(Bean) 생성할 예정
+	private final BCryptPasswordEncoder passwordEncoder; // 시큐리티에서 빈(Bean) 생성할 예정
 
 	@Override
 	public UserInfoDTO addUser(UserInfoDTO userInfoDTO) {
@@ -43,6 +41,11 @@ public class UserServiceImpl implements UserService {
 
 		int result = userDao.addUser(userInfoDTO);
 		return userInfoDTO;
+	}
+
+	@Override
+	public int updateLastLoginDt(String username) {
+		return userDao.updateLastLoginDt(username);
 	}
 
 }
