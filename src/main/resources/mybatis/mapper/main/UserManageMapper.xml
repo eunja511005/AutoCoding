@@ -6,7 +6,8 @@
 		SELECT USERNAME, PASSWORD, EMAIL, SALT, ROLE, PICTURE, ENABLE, 
 		TO_CHAR(last_login_dt, 'YYYY-MM-DD HH24:MI:SS') AS last_login_dt, 
 		user_time_zone, date_time_formatter,
-		create_id, create_time, update_id, update_time 
+		create_id, TO_CHAR(TO_DATE(create_time, 'YYYYMMDDHH24MISS'), 'YYYY-MM-DD HH24:MI:SS') AS create_time, 
+		update_id, TO_CHAR(TO_DATE(update_time, 'YYYYMMDDHH24MISS'), 'YYYY-MM-DD HH24:MI:SS') AS update_time 
 		FROM ZTHM_USER ORDER BY update_time, create_time
 	</select>
 
@@ -29,7 +30,9 @@
 		SELECT USERNAME, PASSWORD, EMAIL, SALT, ROLE, PICTURE, ENABLE, 
 		TO_CHAR(last_login_dt, 'YYYY-MM-DD HH24:MI:SS') AS last_login_dt, 
 		user_time_zone, date_time_formatter,
-		create_id, create_time, update_id, update_time FROM ZTHM_USER
+		create_id, TO_CHAR(TO_DATE(create_time, 'YYYYMMDDHH24MISS'), 'YYYY-MM-DD HH24:MI:SS') AS create_time, 
+		update_id, TO_CHAR(TO_DATE(update_time, 'YYYYMMDDHH24MISS'), 'YYYY-MM-DD HH24:MI:SS') AS update_time 
+		FROM ZTHM_USER
 		WHERE username = #{username}
 		ORDER BY update_time, create_time
 	</select>
