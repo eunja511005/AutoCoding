@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.eun.tutorial.aspect.annotation.CheckAuthorization;
 import com.eun.tutorial.aspect.annotation.CreatePermission;
+import com.eun.tutorial.aspect.annotation.SetUserTimeZoneAndFormat;
 import com.eun.tutorial.dto.main.AutoCodingDTO;
 import com.eun.tutorial.dto.main.Field;
 import com.eun.tutorial.util.OracleTypeConverter;
@@ -70,9 +71,9 @@ public class CodeGenerator {
         builder.append("\tprivate String id;\n");
         builder.append("\tprivate boolean delYn;\n");
         builder.append("\tprivate String createId;\n");
-        builder.append("\tprivate LocalDateTime createDt;\n");
+        builder.append("\tprivate String createDt;\n");
         builder.append("\tprivate String updateId;\n");
-        builder.append("\tprivate LocalDateTime updateDt;\n");
+        builder.append("\tprivate String updateDt;\n");
 
         builder.append("}\n");
         
@@ -243,6 +244,7 @@ public class CodeGenerator {
         
         builder.append("import com.eun.tutorial.aspect.annotation.CheckAuthorization;\n");
         builder.append("import com.eun.tutorial.aspect.annotation.CreatePermission;\n");
+        builder.append("import com.eun.tutorial.aspect.annotation.SetUserTimeZoneAndFormat;\n");
         builder.append("import com.eun.tutorial.dto.main.%sDTO;\n");
         builder.append("import com.eun.tutorial.mapper.main.%sMapper;\n\n");
         builder.append("import com.eun.tutorial.util.StringUtils;\n\n");
@@ -258,6 +260,7 @@ public class CodeGenerator {
 
         // Generate the method implementations
         builder.append("\t@Override\n");
+        builder.append("\t@SetUserTimeZoneAndFormat\n");
         builder.append("\tpublic List<%sDTO> get%sList() {\n");
         builder.append("\t\treturn %sMapper.select%sList();\n");
         builder.append("\t}\n\n");
@@ -278,6 +281,7 @@ public class CodeGenerator {
         builder.append("\t\treturn %sMapper.delete%s(id);\n");
         builder.append("\t}\n\n");
         builder.append("\t@Override\n");
+        builder.append("\t@CreatePermission\n");
         builder.append("\tpublic %sDTO get%sListById(String id) {\n");
         builder.append("\t\treturn %sMapper.get%sListById(id);\n");
         builder.append("\t}\n\n");
@@ -784,6 +788,16 @@ public class CodeGenerator {
         StringBuilder fieldNames = new StringBuilder();
 
         for (Field field : fields) {
+        	
+        	if(field.getName().endsWith("_dt") || field.getName().endsWith("_time") || field.getName().endsWith("_at")) {
+        		fieldNames
+        		.append("TO_CHAR(")
+        		.append(field.getName())
+        		.append(", 'YYYY-MM-DD HH24:MI:SS') AS ")
+        		.append(field.getName())
+        		.append(", ");
+        	}
+        	
             fieldNames.append(field.getName()).append(", ");
         }
 
@@ -792,7 +806,7 @@ public class CodeGenerator {
             fieldNames.setLength(fieldNames.length() - 2);
         }
         
-        fieldNames.append(", id, del_yn, create_id, create_dt, update_id, update_dt");
+        fieldNames.append(", id, del_yn, create_id, TO_CHAR(create_dt, 'YYYY-MM-DD HH24:MI:SS') AS create_dt, update_id, TO_CHAR(update_dt, 'YYYY-MM-DD HH24:MI:SS') AS update_dt");
 
         return fieldNames.toString();
     }
