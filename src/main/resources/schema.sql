@@ -28,19 +28,21 @@ create table book (seq number(4), isbn VARCHAR2(255), name VARCHAR2(255), author
 drop table zthm_user;
 CREATE TABLE zthm_user
 (
-    username      VARCHAR2(30),
-    password      VARCHAR2(100),
-    email         VARCHAR2(100),
-    salt          RAW(24),
-    role          VARCHAR2(200),
-    picture       VARCHAR2(500),
-    language      VARCHAR2(50),
-    enable        CHAR(1), 
-    last_login_dt TIMESTAMP(6),
-    create_id     VARCHAR2(30),
-    create_time   VARCHAR2(14),
-    update_id     VARCHAR2(30),
-    update_time   VARCHAR2(14),
+    username            VARCHAR2(30),
+    password            VARCHAR2(100),
+    email               VARCHAR2(100),
+    salt                RAW(24),
+    role                VARCHAR2(200),
+    picture             VARCHAR2(500),
+    language            VARCHAR2(50),
+    enable              CHAR(1), 
+    last_login_dt       TIMESTAMP(6),
+    user_time_zone      VARCHAR2(100),
+	date_time_formatter VARCHAR2(100),
+    create_id           VARCHAR2(30),
+    create_time         VARCHAR2(14),
+    update_id           VARCHAR2(30),
+    update_time         VARCHAR2(14),
     CONSTRAINT PK_ZTHM_USER_USERNAME PRIMARY KEY (username)
 );
 COMMENT ON TABLE zthm_user IS '유저정보';

@@ -41,35 +41,50 @@ public class UserManageServiceImpl implements UserManageService {
 
 	@Override
 	public List<UserManageDTO> getUserManageList() {
-		List<UserManageDTO> userManageDTOList = userManageMapper.selectUserManageList();
-		for (UserManageDTO userManageDTO : userManageDTOList) {
-			if(userManageDTO.getEmail()!=null && userManageDTO.getSalt()!=null) {
-				
-				String salt = Base64.getEncoder().encodeToString(userManageDTO.getSalt());
-				
-	            //이메일 복호화
+	    List<UserManageDTO> userManageDTOList = userManageMapper.selectUserManageList();
+	    
+	    for (UserManageDTO userManageDTO : userManageDTOList) {
+	        if (userManageDTO.getEmail() != null && userManageDTO.getSalt() != null) {
+	            String salt = Base64.getEncoder().encodeToString(userManageDTO.getSalt());
+	            
+	            // 이메일 복호화
 	            String decryptedEmail = encryptionUtils.decrypt(userManageDTO.getEmail(), salt);
-				userManageDTO.setEmail(decryptedEmail);
-				
-				// DateTimeFormatter를 사용하여 String을 LocalDateTime으로 변환
-				if(userManageDTO.getLastLoginDt()!=null) {
-					
-			        // DateTimeFormatter를 사용하여 String을 LocalDateTime으로 변환
-			        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-			        LocalDateTime dateTime = LocalDateTime.parse(userManageDTO.getLastLoginDt(), formatter);
-
-			        // 한국 시간을 미국 시간으로 변경
-			        ZonedDateTime userZonedDateTime = ZonedDateTime.of(dateTime, ZoneId.of("Asia/Seoul"))
-//			        		.withZoneSameInstant(ZoneId.of("America/New_York"));
-			        		.withZoneSameInstant(ZoneId.of("Europe/London"));
-			        
-			    	formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH:mm");
-					userManageDTO.setLastLoginDt(userZonedDateTime.format(formatter));
-				}
-			}
-		}
-		return userManageDTOList;
+	            userManageDTO.setEmail(decryptedEmail);
+	            
+	            // 마지막 로그인 시간을 사용자의 지역 시간으로 변환
+	            if (userManageDTO.getLastLoginDt() != null && userManageDTO.getUserTimeZone() != null) {
+	                // 사용자가 정의한 형식 또는 기본 형식을 가져옴
+	                String formatterPattern = userManageDTO.getDateTimeFormatter() != null ?
+	                        userManageDTO.getDateTimeFormatter() : "yyyy년 MM월 dd일 HH:mm";
+	                
+	                // 마지막 로그인 시간을 변환하기 위한 DateTimeFormatter 설정
+	                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+	                LocalDateTime lastLoginDateTime = LocalDateTime.parse(userManageDTO.getLastLoginDt(), formatter);
+	                
+	                // 시스템의 타임존 설정
+	                ZoneId userZone = ZoneId.of(System.getProperty("user.timezone"));
+	                
+	                // 유저의 타임존 설정
+	                ZoneId userTimeZone = ZoneId.of(userManageDTO.getUserTimeZone());
+	                
+	                // 최종 로그인 시간을 시스템의 타임존으로 변환한 ZonedDateTime
+	                ZonedDateTime lastLoginZonedDateTime = lastLoginDateTime.atZone(userZone);
+	                
+	                // 최종 로그인 시간을 유저의 타임존으로 변환
+	                ZonedDateTime convertedZonedDateTime = lastLoginZonedDateTime.withZoneSameInstant(userTimeZone);
+	                
+	                // 변환된 시간을 지정된 형식으로 포맷팅
+	                String formattedDateTime = convertedZonedDateTime.format(DateTimeFormatter.ofPattern(formatterPattern));
+	                
+	                // 변환된 시간을 다시 userManageDTO에 설정
+	                userManageDTO.setLastLoginDt(formattedDateTime);
+	            }
+	        }
+	    }
+	    
+	    return userManageDTOList;
 	}
+
 
 	@Override
 	@CreatePermission

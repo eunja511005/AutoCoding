@@ -27,6 +27,8 @@ public class UserManageDTO {
 	private String picture;
 	private boolean isEnable;
     private String lastLoginDt;
+    private String userTimeZone;
+    private String dateTimeFormatter;
 	private String createId;
 	private String createTime;
 	private String updateId;
