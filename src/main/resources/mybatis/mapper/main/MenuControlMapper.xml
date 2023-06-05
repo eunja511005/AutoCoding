@@ -3,17 +3,17 @@
 <mapper namespace="com.eun.tutorial.mapper.main.MenuControlMapper">
 
 	<select id="selectMenuControlList" resultType="com.eun.tutorial.dto.main.MenuControlDTO">
-		SELECT URL, METHOD, ROLE_ID, id, del_yn, create_id, create_dt, update_id, update_dt FROM ZTHH_MENUCONTROL where del_yn='N' ORDER BY update_dt, create_dt
+		SELECT URL, METHOD, ROLE_ID, id, log_yn, del_yn, create_id, create_dt, update_id, update_dt FROM ZTHH_MENUCONTROL where del_yn='N' ORDER BY update_dt, create_dt
 	</select>
 
 	<insert id="insertMenuControl">
-		INSERT INTO ZTHH_MENUCONTROL (URL, METHOD, ROLE_ID, id, del_yn, create_id, create_dt, update_id, update_dt)
-		VALUES (#{url}, #{method}, #{roleId}, #{id}, 'N', #{createId}, CURRENT_TIMESTAMP, #{updateId}, CURRENT_TIMESTAMP)
+		INSERT INTO ZTHH_MENUCONTROL (URL, METHOD, ROLE_ID, id, log_yn, del_yn, create_id, create_dt, update_id, update_dt)
+		VALUES (#{url}, #{method}, #{roleId}, #{id}, #{logYn}, 'N', #{createId}, CURRENT_TIMESTAMP, #{updateId}, CURRENT_TIMESTAMP)
 	</insert>
 
 	<update id="updateMenuControl">
 		UPDATE ZTHH_MENUCONTROL
-		SET URL = #{url}, METHOD = #{method}, ROLE_ID = #{roleId}, update_id = #{updateId}, update_dt = CURRENT_TIMESTAMP
+		SET URL = #{url}, METHOD = #{method}, log_yn = #{logYn}, ROLE_ID = #{roleId}, update_id = #{updateId}, update_dt = CURRENT_TIMESTAMP
 		WHERE id = #{id}
 	</update>
 
@@ -22,13 +22,13 @@
 	</delete>
 
 	<select id="getMenuControlListById" parameterType="string" resultType="com.eun.tutorial.dto.main.MenuControlDTO">
-		SELECT URL, METHOD, ROLE_ID, id, del_yn, create_id, create_dt, update_id, update_dt FROM ZTHH_MENUCONTROL
+		SELECT URL, METHOD, ROLE_ID, id, log_yn, del_yn, create_id, create_dt, update_id, update_dt FROM ZTHH_MENUCONTROL
 		WHERE id = #{id}
 		ORDER BY update_dt, create_dt
 	</select>
 
 	<select id="getMenuControlByRoleId" parameterType="string" resultType="com.eun.tutorial.dto.main.MenuControlDTO">
-		SELECT URL, METHOD, ROLE_ID, id, del_yn, create_id, create_dt, update_id, update_dt FROM ZTHH_MENUCONTROL
+		SELECT URL, METHOD, ROLE_ID, id, log_yn, del_yn, create_id, create_dt, update_id, update_dt FROM ZTHH_MENUCONTROL
 		WHERE ROLE_ID = #{roleId}
 		AND del_yn='N'
 	</select>

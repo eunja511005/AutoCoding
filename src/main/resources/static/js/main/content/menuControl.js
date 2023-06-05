@@ -33,6 +33,8 @@ $(document).ready(function() {
 	}
 
 	$('#newField, #searchField').click(handleCollapseClick);
+	
+	initSelectBox('logYn', '/commonCode/YN', false);
 });
 function initializeMenuControlTable() {
 	table = $('#menuControlTable').DataTable({
@@ -48,6 +50,7 @@ function initializeMenuControlTable() {
 		columns: [
 			{ data: 'url' },
 			{ data: 'method' },
+			{ data: 'logYn' },
 			{ data: 'roleId' },
 			{
 				data: null,
@@ -64,6 +67,7 @@ function initializeMenuControlTable() {
 				},
 			},
 		],
+		order: [[0, 'asc']], // 자동 정렬 비활성화
 	});
 
 	$('#menuControlTable tbody').on('click', '.edit-button', function() {
@@ -100,6 +104,7 @@ function editCallback(response){
 	$('#id').val(response.data.id);
 	$('#url').val(response.data.url);
 	$('#method').val(response.data.method);
+	$('#logYn').val(response.data.logYn);
 	$('#roleId').val(response.data.roleId);
 
 	$('#menuControlForm').attr('data-mode', 'edit');

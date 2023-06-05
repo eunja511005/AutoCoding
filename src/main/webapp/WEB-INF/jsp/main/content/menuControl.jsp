@@ -48,6 +48,12 @@
 								</div>
 								<div class="col-md">
 									<div class="form-floating">
+										<select class="form-select" id="logYn" name="logYn" required></select>
+										<label for="logYn">LOG_YN</label>
+									</div>
+								</div>
+								<div class="col-md">
+									<div class="form-floating">
 										<input type="text" class="form-control" id="roleId" name="roleId" placeholder="Enter roleId" required>
 										<label for="roleId">ROLE_ID</label>
 									</div>
@@ -79,6 +85,7 @@
 						<tr>
 							<th>URL</th>
 							<th>METHOD</th>
+							<th>LOG_YN</th>
 							<th>ROLE_ID</th>
 							<th>Edit</th>
 							<th>Delete</th>
