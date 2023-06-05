@@ -79,6 +79,14 @@ public class PrincipalDetails implements UserDetails, OAuth2User{
     public String getLanguage() {
     	return userInfoDTO.getLanguage();
     }
+    
+    public String getUserTimeZone() {
+    	return userInfoDTO.getUserTimeZone();
+    }
+    
+    public String getDateTimeFormatter() {
+    	return userInfoDTO.getDateTimeFormatter();
+    }
 
 	@Override
 	public boolean isAccountNonExpired() {

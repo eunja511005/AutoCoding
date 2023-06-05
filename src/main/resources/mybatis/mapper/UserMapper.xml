@@ -6,13 +6,17 @@
 <mapper namespace="com.eun.tutorial.mapper.UserMapper">
 
   <select id="getBookLists" resultType="com.eun.tutorial.dto.UserInfoDTO">
-  	SELECT username, password, email, salt, role, picture, language, enable, last_login_dt,
+  	SELECT username, password, email, salt, role, picture, 
+  	       language, enable, last_login_dt,
+  	       user_time_zone, date_time_formatter,
   	       create_id, create_time, update_id, update_time
     FROM zthm_user
   </select>
   
   <select id="getUser" parameterType="hashMap" resultType="com.eun.tutorial.dto.UserInfoDTO">
-  	SELECT username, password, email, salt, role, picture, language, enable, last_login_dt,
+  	SELECT username, password, email, salt, role, picture, 
+  	       language, enable, last_login_dt,
+  	       user_time_zone, date_time_formatter,
   	       create_id, create_time, update_id, update_time
   	FROM zthm_user 
   	WHERE username = #{username}

@@ -26,6 +26,8 @@ public class UserInfoDTO implements Serializable {
     private String language;
     private boolean isEnable;
     private String lastLoginDt;
+    private String userTimeZone;
+    private String dateTimeFormatter;
     private String createId;
     private String createTime;
     private String updateId;

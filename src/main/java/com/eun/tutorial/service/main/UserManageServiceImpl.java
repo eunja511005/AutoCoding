@@ -19,6 +19,8 @@ import java.time.format.ResolverStyle;
 import java.util.Base64;
 import java.util.List;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +28,7 @@ import com.eun.tutorial.aspect.annotation.CheckAuthorization;
 import com.eun.tutorial.aspect.annotation.CreatePermission;
 import com.eun.tutorial.dto.main.UserManageDTO;
 import com.eun.tutorial.mapper.main.UserManageMapper;
+import com.eun.tutorial.service.user.PrincipalDetails;
 import com.eun.tutorial.util.EncryptionUtils;
 import com.eun.tutorial.util.SaltGenerator;
 
@@ -43,6 +46,10 @@ public class UserManageServiceImpl implements UserManageService {
 
 	@Override
 	public List<UserManageDTO> getUserManageList() {
+		
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		PrincipalDetails userDetailsImpl = (PrincipalDetails) authentication.getPrincipal();
+		
 	    List<UserManageDTO> userManageDTOList = userManageMapper.selectUserManageList();
 	    
 	    for (UserManageDTO userManageDTO : userManageDTOList) {
@@ -54,10 +61,10 @@ public class UserManageServiceImpl implements UserManageService {
 	            userManageDTO.setEmail(decryptedEmail);
 	            
 	            // 마지막 로그인 시간을 사용자의 지역 시간으로 변환
-	            if (userManageDTO.getLastLoginDt() != null && userManageDTO.getUserTimeZone() != null) {
+	            if (userManageDTO.getLastLoginDt() != null && userDetailsImpl.getUserTimeZone() != null) {
 	                // 사용자가 정의한 형식 또는 기본 형식을 가져옴
-	                String formatterPattern = userManageDTO.getDateTimeFormatter() != null ?
-	                        userManageDTO.getDateTimeFormatter() : "yyyy년 MM월 dd일 HH:mm";
+	                String formatterPattern = userDetailsImpl.getDateTimeFormatter() != null ?
+	                		userDetailsImpl.getDateTimeFormatter() : "yyyy년 MM월 dd일 HH:mm";
 	                
 	                // 마지막 로그인 시간을 변환하기 위한 DateTimeFormatter 설정
 	                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -68,7 +75,7 @@ public class UserManageServiceImpl implements UserManageService {
 	                log.debug("##### SYSTEM TIME ZONE : {}", userZone);
 	                
 	                // 유저의 타임존 설정
-	                ZoneId userTimeZone = ZoneId.of(userManageDTO.getUserTimeZone());
+	                ZoneId userTimeZone = ZoneId.of(userDetailsImpl.getUserTimeZone());
 	                log.debug("##### USER TIME ZONE : {}", userTimeZone);
 	                
 	                // 최종 로그인 시간을 시스템의 타임존으로 변환한 ZonedDateTime
