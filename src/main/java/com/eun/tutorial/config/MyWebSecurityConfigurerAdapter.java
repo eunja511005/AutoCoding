@@ -237,6 +237,7 @@ public class MyWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter
                         	}
                         	
                         	localeResolver.setLocale(request, response, new Locale(language));
+                        	userService.updateLastLoginDt(auth.getName());
                         }
 						
 						log.info("userInfo {}", auth.getPrincipal().toString());
