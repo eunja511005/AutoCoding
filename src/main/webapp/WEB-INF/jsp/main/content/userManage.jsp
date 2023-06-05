@@ -98,7 +98,6 @@
 							<th>USERNAME</th>
 							<th>EMAIL</th>
 							<th>ROLE</th>
-							<th>PICTURE</th>
 							<th>ENABLE</th>
 							<th>LastLoginDT</th>
 							<th>Edit</th>

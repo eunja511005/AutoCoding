@@ -69,7 +69,6 @@ function initializeUserManageTable() {
 			{ data: 'username' },
 			{ data: 'email' },
 			{ data: 'role' },
-			{ data: 'picture' },
 			{ data: 'enable' },
 			{ data: 'lastLoginDt' },
 /*            { data: 'lastLoginDt',
@@ -92,7 +91,7 @@ function initializeUserManageTable() {
 				},
 			},
 		],
-		order: [], // 자동 정렬 비활성화
+		order: [[4, 'desc']], // 자동 정렬 비활성화
 	});
 
 	$('#userManageTable tbody').on('click', '.edit-button', function() {
