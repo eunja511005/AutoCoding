@@ -30,9 +30,11 @@ import com.eun.tutorial.util.EncryptionUtils;
 import com.eun.tutorial.util.SaltGenerator;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class UserManageServiceImpl implements UserManageService {
 
 	private final UserManageMapper userManageMapper;
@@ -63,18 +65,23 @@ public class UserManageServiceImpl implements UserManageService {
 	                
 	                // 시스템의 타임존 설정
 	                ZoneId userZone = ZoneId.of(System.getProperty("user.timezone"));
+	                log.debug("##### SYSTEM TIME ZONE : {}", userZone);
 	                
 	                // 유저의 타임존 설정
 	                ZoneId userTimeZone = ZoneId.of(userManageDTO.getUserTimeZone());
+	                log.debug("##### USER TIME ZONE : {}", userTimeZone);
 	                
 	                // 최종 로그인 시간을 시스템의 타임존으로 변환한 ZonedDateTime
 	                ZonedDateTime lastLoginZonedDateTime = lastLoginDateTime.atZone(userZone);
+	                log.debug("##### AS_IS_TIME : {}", lastLoginZonedDateTime.toString());
 	                
 	                // 최종 로그인 시간을 유저의 타임존으로 변환
 	                ZonedDateTime convertedZonedDateTime = lastLoginZonedDateTime.withZoneSameInstant(userTimeZone);
+	                log.debug("##### TO_BE_TIME : {}", convertedZonedDateTime.toString());
 	                
 	                // 변환된 시간을 지정된 형식으로 포맷팅
 	                String formattedDateTime = convertedZonedDateTime.format(DateTimeFormatter.ofPattern(formatterPattern));
+	                log.debug("##### Format_TIME : {}", formattedDateTime);
 	                
 	                // 변환된 시간을 다시 userManageDTO에 설정
 	                userManageDTO.setLastLoginDt(formattedDateTime);
