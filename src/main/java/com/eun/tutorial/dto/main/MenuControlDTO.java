@@ -26,6 +26,7 @@ public class MenuControlDTO {
 	private String roleId;
 	private String id;
 	private String logYn;
+	private String logDataYn;
 	private boolean delYn;
 	private String createId;
 	private LocalDateTime createDt;

@@ -12,6 +12,7 @@
 package com.eun.tutorial.service.main;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -20,8 +21,6 @@ import com.eun.tutorial.aspect.annotation.CheckAuthorization;
 import com.eun.tutorial.aspect.annotation.CreatePermission;
 import com.eun.tutorial.dto.main.MenuControlDTO;
 import com.eun.tutorial.mapper.main.MenuControlMapper;
-
-import com.eun.tutorial.util.StringUtils;
 
 import lombok.AllArgsConstructor;
 
@@ -63,6 +62,11 @@ public class MenuControlServiceImpl implements MenuControlService {
 	@Override
 	public List<MenuControlDTO> getMenuControlByRoleId(String roleId) {
 		return menuControlMapper.getMenuControlByRoleId(roleId);
+	}
+
+	@Override
+	public Map<String, String> getLogYnByUrlAndMethod(String url, String method) {
+		return menuControlMapper.getLogYnByUrlAndMethod(url, method);
 	}
 
 }

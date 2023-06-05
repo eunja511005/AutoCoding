@@ -12,6 +12,7 @@
 package com.eun.tutorial.mapper.main;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -25,4 +26,5 @@ public interface MenuControlMapper {
 	int deleteMenuControl(String id);
 	MenuControlDTO getMenuControlListById(String id);
 	List<MenuControlDTO> getMenuControlByRoleId(String roleId);
+	Map<String, String> getLogYnByUrlAndMethod(String url, String method);
 }

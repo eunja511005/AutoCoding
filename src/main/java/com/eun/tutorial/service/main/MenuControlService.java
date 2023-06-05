@@ -12,6 +12,7 @@
 package com.eun.tutorial.service.main;
 
 import java.util.List;
+import java.util.Map;
 
 import com.eun.tutorial.dto.main.MenuControlDTO;
 
@@ -22,4 +23,5 @@ public interface MenuControlService {
 	int deleteMenuControl(String id);
 	MenuControlDTO getMenuControlListById(String id);
 	List<MenuControlDTO> getMenuControlByRoleId(String roleId);
+	Map<String, String> getLogYnByUrlAndMethod(String url, String method);
 }

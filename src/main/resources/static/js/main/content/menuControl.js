@@ -35,6 +35,7 @@ $(document).ready(function() {
 	$('#newField, #searchField').click(handleCollapseClick);
 	
 	initSelectBox('logYn', '/commonCode/YN', false);
+	initSelectBox('logDataYn', '/commonCode/YN', false);
 });
 function initializeMenuControlTable() {
 	table = $('#menuControlTable').DataTable({
@@ -51,7 +52,9 @@ function initializeMenuControlTable() {
 			{ data: 'url' },
 			{ data: 'method' },
 			{ data: 'logYn' },
+			{ data: 'logDataYn' },
 			{ data: 'roleId' },
+			{ data: 'createId' },
 			{
 				data: null,
 				render: function(data, type, row, meta) {
@@ -105,6 +108,7 @@ function editCallback(response){
 	$('#url').val(response.data.url);
 	$('#method').val(response.data.method);
 	$('#logYn').val(response.data.logYn);
+	$('#logDataYn').val(response.data.logDataYn);
 	$('#roleId').val(response.data.roleId);
 
 	$('#menuControlForm').attr('data-mode', 'edit');
