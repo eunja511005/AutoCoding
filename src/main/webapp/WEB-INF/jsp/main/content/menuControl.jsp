@@ -60,9 +60,9 @@
 								</div>
 								<div class="col-md">
 									<div class="form-floating">
-										<input type="text" class="form-control" id="roleId" name="roleId" placeholder="Enter roleId" required>
+										<select class="form-select" id="roleId" name="roleId" required></select>
 										<label for="roleId">ROLE_ID</label>
-									</div>
+									</div>									
 								</div>
 								<div class="col-md text-center">
 									<button type="submit" class="btn btn-outline-primary"><i class="fas fa-save"></i></button>
@@ -94,7 +94,7 @@
 							<th>LOG_YN</th>
 							<th>LOG_DATA_YN</th>
 							<th>ROLE_ID</th>
-							<th>CREATE_ID</th>
+							<th>UPDATE_ID</th>
 							<th>Edit</th>
 							<th>Delete</th>
 						</tr>

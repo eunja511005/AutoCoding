@@ -36,6 +36,7 @@ $(document).ready(function() {
 	
 	initSelectBox('logYn', '/commonCode/YN', false);
 	initSelectBox('logDataYn', '/commonCode/YN', false);
+	initSelectBox('roleId', '/commonCode/ROLE_NOPREFIX', false);
 });
 function initializeMenuControlTable() {
 	table = $('#menuControlTable').DataTable({
@@ -54,7 +55,7 @@ function initializeMenuControlTable() {
 			{ data: 'logYn' },
 			{ data: 'logDataYn' },
 			{ data: 'roleId' },
-			{ data: 'createId' },
+			{ data: 'updateId' },
 			{
 				data: null,
 				render: function(data, type, row, meta) {
