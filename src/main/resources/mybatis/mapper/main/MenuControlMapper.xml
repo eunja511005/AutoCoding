@@ -38,6 +38,7 @@
 		WHERE URL = #{url} 
 		AND METHOD = #{method}
 		AND del_yn='N'
+		FOR UPDATE
 	</select>
 
 </mapper>
