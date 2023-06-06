@@ -15,12 +15,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.eun.tutorial.aspect.annotation.CheckAuthorization;
 import com.eun.tutorial.aspect.annotation.CreatePermission;
 import com.eun.tutorial.dto.main.MenuControlDTO;
 import com.eun.tutorial.mapper.main.MenuControlMapper;
+import com.eun.tutorial.service.user.PrincipalDetails;
 
 import lombok.AllArgsConstructor;
 
@@ -28,6 +32,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class MenuControlServiceImpl implements MenuControlService {
 
+	private static final String ANONYMOUS = "anonymous";
 	private final MenuControlMapper menuControlMapper;
 
 	@Override
@@ -39,12 +44,31 @@ public class MenuControlServiceImpl implements MenuControlService {
 	@CreatePermission
 	public int saveMenuControl(MenuControlDTO menuControlDTO) {
 		menuControlDTO.setId("menuControl_"+UUID.randomUUID());
+		
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if(authentication == null || authentication instanceof AnonymousAuthenticationToken) {
+			menuControlDTO.setCreateId(ANONYMOUS);
+			menuControlDTO.setUpdateId(ANONYMOUS);
+		}else {
+			PrincipalDetails userDetailsImpl = (PrincipalDetails) authentication.getPrincipal();
+			menuControlDTO.setCreateId(userDetailsImpl.getName());
+			menuControlDTO.setUpdateId(userDetailsImpl.getName());
+		}
+		
 		return menuControlMapper.insertMenuControl(menuControlDTO);
 	}
 
 	@Override
 	@CheckAuthorization
 	public int updateMenuControl(MenuControlDTO menuControlDTO) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if(authentication == null || authentication instanceof AnonymousAuthenticationToken) {
+			menuControlDTO.setUpdateId(ANONYMOUS);
+		}else {
+			PrincipalDetails userDetailsImpl = (PrincipalDetails) authentication.getPrincipal();
+			menuControlDTO.setUpdateId(userDetailsImpl.getName());
+		}
+		
 		return menuControlMapper.updateMenuControl(menuControlDTO);
 	}
 
