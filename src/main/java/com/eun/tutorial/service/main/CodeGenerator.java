@@ -49,8 +49,6 @@ public class CodeGenerator {
         builder.append(copyWrite);
         builder.append("package com.eun.tutorial.dto.main;\n");
         builder.append("\n");
-        builder.append("import java.time.LocalDateTime;\n");
-        builder.append("\n");
         builder.append("import lombok.AllArgsConstructor;\n");
         builder.append("import lombok.Data;\n");
         builder.append("import lombok.NoArgsConstructor;\n");
@@ -357,7 +355,8 @@ public class CodeGenerator {
     	String className = capitalizedSubject+"Mapper";
         String namespace = "com.eun.tutorial.mapper.main." + capitalizedSubject + "Mapper";
         String tableName = "ZTHH_"+subject.toUpperCase();
-        String fieldNames = getFieldNames(fields);
+        String selectFieldNames = getSelectFieldNames(fields);
+        String insertFieldNames = getInsertFieldNames(fields);
         String wrappedFieldNames = getWrappedFieldNames(fields);
         String formattedFieldNames = getFormattedFieldNames(fields);
         
@@ -395,11 +394,11 @@ public class CodeGenerator {
         
         String result = String.format(content.toString(), 
         		namespace, 
-        		capitalizedSubject, capitalizedSubject, fieldNames, tableName, //select
-        		capitalizedSubject, tableName, fieldNames, wrappedFieldNames, //insert
+        		capitalizedSubject, capitalizedSubject, selectFieldNames, tableName, //select
+        		capitalizedSubject, tableName, insertFieldNames, wrappedFieldNames, //insert
         		capitalizedSubject, tableName, formattedFieldNames,//update
         		capitalizedSubject, tableName, //delete
-        		capitalizedSubject, capitalizedSubject, fieldNames, tableName); //selectById
+        		capitalizedSubject, capitalizedSubject, selectFieldNames, tableName); //selectById
 
         autoCodingDTO.setSourceName(className+".xml");
         autoCodingDTO.setSourceCode(result);
@@ -783,8 +782,25 @@ public class CodeGenerator {
         char firstChar = Character.toUpperCase(input.charAt(0));
         return firstChar + input.substring(1);
     }
+	
+    public String getInsertFieldNames(List<Field> fields) {
+        StringBuilder fieldNames = new StringBuilder();
+
+        for (Field field : fields) {
+            fieldNames.append(field.getName()).append(", ");
+        }
+
+        // Remove the trailing comma if there are any fields
+        if (fieldNames.length() > 0) {
+            fieldNames.setLength(fieldNames.length() - 2);
+        }
+        
+        fieldNames.append(", id, del_yn, create_id, create_dt, update_id, update_dt");
+
+        return fieldNames.toString();
+    }
     
-    public String getFieldNames(List<Field> fields) {
+    public String getSelectFieldNames(List<Field> fields) {
         StringBuilder fieldNames = new StringBuilder();
 
         for (Field field : fields) {
