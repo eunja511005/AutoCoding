@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eun.tutorial.mapper.main.UserRequestHistoryMapper">
+
+	<select id="selectUserRequestHistoryList" resultType="com.eun.tutorial.dto.main.UserRequestHistoryDTO">
+		SELECT URL, METHOD, REQ_USER, REQ_IP, id, del_yn, create_id, TO_CHAR(create_dt, 'YYYY-MM-DD HH24:MI:SS') AS create_dt, update_id, TO_CHAR(update_dt, 'YYYY-MM-DD HH24:MI:SS') AS update_dt FROM ZTHH_USERREQUESTHISTORY where del_yn='N' ORDER BY update_dt, create_dt
+	</select>
+
+	<insert id="insertUserRequestHistory">
+		INSERT INTO ZTHH_USERREQUESTHISTORY (URL, METHOD, REQ_USER, REQ_IP, REQ_DATA, RES_DATA, id, del_yn, create_id, create_dt, update_id, update_dt)
+		VALUES (#{url}, #{method}, #{reqUser}, #{reqIp}, #{reqData}, #{resData}, #{id}, 'N', #{createId}, CURRENT_TIMESTAMP, #{updateId}, CURRENT_TIMESTAMP)
+	</insert>
+
+	<update id="updateUserRequestHistory">
+		UPDATE ZTHH_USERREQUESTHISTORY
+		SET URL = #{url}, METHOD = #{method}, REQ_USER = #{reqUser}, REQ_IP = #{reqIp}, REQ_DATA = #{reqData}, RES_DATA = #{resData}, update_id = #{updateId}, update_dt = CURRENT_TIMESTAMP
+		WHERE id = #{id}
+	</update>
+
+	<delete id="deleteUserRequestHistory">
+		UPDATE ZTHH_USERREQUESTHISTORY SET del_yn = 'Y', update_dt = CURRENT_TIMESTAMP WHERE id = #{id}
+	</delete>
+
+	<select id="getUserRequestHistoryListById" parameterType="string" resultType="com.eun.tutorial.dto.main.UserRequestHistoryDTO">
+		SELECT REQ_DATA, RES_DATA, id FROM ZTHH_USERREQUESTHISTORY
+		WHERE id = #{id}
+		ORDER BY update_dt, create_dt
+	</select>
+
+</mapper>
