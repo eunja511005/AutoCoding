@@ -66,4 +66,9 @@ public class ErrorHistServiceImpl implements ErrorHistService {
 		return errorHistMapper.getErrorCountByDate();
 	}
 
+	@Override
+	public int delete(int deleteDay) {
+		return errorHistMapper.delete(deleteDay);
+	}
+
 }

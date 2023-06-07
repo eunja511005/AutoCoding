@@ -23,4 +23,5 @@ public interface ErrorHistService {
 	int deleteErrorHist(String id);
 	ErrorHistDTO getErrorHistListById(String id);
 	List<Map<String, Object>> getErrorData();
+	int delete(int deleteDay);
 }

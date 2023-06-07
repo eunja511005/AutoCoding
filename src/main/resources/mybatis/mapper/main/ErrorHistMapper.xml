@@ -20,6 +20,14 @@
 	<delete id="deleteErrorHist">
 		DELETE FROM ZTHH_ERRORHIST WHERE id = #{id}
 	</delete>
+	
+	<delete id="delete" parameterType="int"> 
+	  <![CDATA[
+	    DELETE FROM ZTHH_ERRORHIST 
+	    where CREATE_TIME < CURRENT_DATE - #{deleteDay, jdbcType=INTEGER, javaType=int}
+	    and SOLUTION_MSG IS null
+	   ]]>
+	</delete>    	
 
 	<select id="getErrorHistListById" parameterType="string" resultType="com.eun.tutorial.dto.main.ErrorHistDTO">
 		SELECT ERROR_MSG, SOLUTION_MSG, id, del_yn, create_id, create_dt, update_id, update_dt FROM ZTHH_ERRORHIST
@@ -30,7 +38,7 @@
     <select id="getErrorCountByDate" resultType="java.util.Map">
         SELECT TO_CHAR(create_dt,'YYYY/MM/DD') AS error_date, COUNT(*) AS error_count
         FROM ZTHH_ERRORHIST
-        WHERE create_dt >= TRUNC(SYSDATE) - 5 
+        WHERE create_dt >= TRUNC(SYSDATE) - 6 
         GROUP BY TO_CHAR(create_dt,'YYYY/MM/DD')
         ORDER BY TO_CHAR(create_dt,'YYYY/MM/DD')
     </select>	

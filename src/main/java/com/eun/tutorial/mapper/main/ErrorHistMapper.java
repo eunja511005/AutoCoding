@@ -26,4 +26,5 @@ public interface ErrorHistMapper {
 	int deleteErrorHist(String id);
 	ErrorHistDTO getErrorHistListById(String id);
 	List<Map<String, Object>> getErrorCountByDate();
+	int delete(int deleteDay);
 }

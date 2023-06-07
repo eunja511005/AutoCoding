@@ -8,6 +8,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.eun.tutorial.service.ZthhErrorService;
+import com.eun.tutorial.service.main.ErrorHistService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +19,8 @@ import lombok.extern.slf4j.Slf4j;
 @EnableAsync
 public class BatchScheduler {
 	
-	private final ZthhErrorService zthhErrorService;
+//	private final ZthhErrorService zthhErrorService;
+	private final ErrorHistService errorHistService;
 
     /**
      * Cron 표현식을 사용한 작업 예약
@@ -36,7 +38,7 @@ public class BatchScheduler {
     	String formatedNow = sdf1.format(now);
         log.info(jobName+" started - {}", formatedNow);
         
-        int re = zthhErrorService.delete(3);
+        int re = errorHistService.delete(7);
         
         log.info("Deleted Count - {}", re);
 	}
