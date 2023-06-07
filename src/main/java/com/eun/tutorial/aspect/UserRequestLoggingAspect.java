@@ -63,8 +63,8 @@ public class UserRequestLoggingAspect {
 			} else {
 				MenuControlDTO menuControlDTO = new MenuControlDTO();
 				menuControlDTO.setId("menuControl_" + UUID.randomUUID());
-				menuControlDTO.setLogYn(logYn);
-				menuControlDTO.setLogDataYn(logDataYn);
+				menuControlDTO.setLogYn("Y");
+				menuControlDTO.setLogDataYn("N");
 				menuControlDTO.setMethod(method);
 				menuControlDTO.setRoleId("ANY");
 				menuControlDTO.setUrl(url);
