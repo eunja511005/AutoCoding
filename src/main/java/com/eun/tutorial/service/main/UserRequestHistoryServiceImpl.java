@@ -17,13 +17,10 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.eun.tutorial.aspect.annotation.CheckAuthorization;
-import com.eun.tutorial.aspect.annotation.CreatePermission;
+import com.eun.tutorial.aspect.annotation.SetCreateAndUpdateId;
 import com.eun.tutorial.aspect.annotation.SetUserTimeZoneAndFormat;
 import com.eun.tutorial.dto.main.UserRequestHistoryDTO;
 import com.eun.tutorial.mapper.main.UserRequestHistoryMapper;
-
-import com.eun.tutorial.util.StringUtils;
 
 import lombok.AllArgsConstructor;
 
@@ -40,12 +37,14 @@ public class UserRequestHistoryServiceImpl implements UserRequestHistoryService 
 	}
 
 	@Override
+	@SetCreateAndUpdateId
 	public int saveUserRequestHistory(UserRequestHistoryDTO userRequestHistoryDTO) {
 		userRequestHistoryDTO.setId("userRequestHistory_"+UUID.randomUUID());
 		return userRequestHistoryMapper.insertUserRequestHistory(userRequestHistoryDTO);
 	}
 
 	@Override
+	@SetCreateAndUpdateId
 	public int updateUserRequestHistory(UserRequestHistoryDTO userRequestHistoryDTO) {
 		return userRequestHistoryMapper.updateUserRequestHistory(userRequestHistoryDTO);
 	}

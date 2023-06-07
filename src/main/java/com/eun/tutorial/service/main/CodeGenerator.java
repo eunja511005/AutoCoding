@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.eun.tutorial.aspect.annotation.CheckAuthorization;
 import com.eun.tutorial.aspect.annotation.CreatePermission;
+import com.eun.tutorial.aspect.annotation.SetCreateAndUpdateId;
 import com.eun.tutorial.aspect.annotation.SetUserTimeZoneAndFormat;
 import com.eun.tutorial.dto.main.AutoCodingDTO;
 import com.eun.tutorial.dto.main.Field;
@@ -243,6 +244,7 @@ public class CodeGenerator {
         builder.append("import com.eun.tutorial.aspect.annotation.CheckAuthorization;\n");
         builder.append("import com.eun.tutorial.aspect.annotation.CreatePermission;\n");
         builder.append("import com.eun.tutorial.aspect.annotation.SetUserTimeZoneAndFormat;\n");
+        builder.append("import com.eun.tutorial.aspect.annotation.SetCreateAndUpdateId;\n");
         builder.append("import com.eun.tutorial.dto.main.%sDTO;\n");
         builder.append("import com.eun.tutorial.mapper.main.%sMapper;\n\n");
         builder.append("import com.eun.tutorial.util.StringUtils;\n\n");
@@ -263,12 +265,14 @@ public class CodeGenerator {
         builder.append("\t\treturn %sMapper.select%sList();\n");
         builder.append("\t}\n\n");
         builder.append("\t@Override\n");
+        builder.append("\t@SetCreateAndUpdateId\n");
         builder.append("\t@CreatePermission\n");
         builder.append("\tpublic int save%s(%sDTO %sDTO) {\n");
         builder.append("\t\t%sDTO.setId(\"%s_\"+UUID.randomUUID());\n");
         builder.append("\t\treturn %sMapper.insert%s(%sDTO);\n");
         builder.append("\t}\n\n");
         builder.append("\t@Override\n");
+        builder.append("\t@SetCreateAndUpdateId\n");
         builder.append("\t@CheckAuthorization\n");
         builder.append("\tpublic int update%s(%sDTO %sDTO) {\n");
         builder.append("\t\treturn %sMapper.update%s(%sDTO);\n");
