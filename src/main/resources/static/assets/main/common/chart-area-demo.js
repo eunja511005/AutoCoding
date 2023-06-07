@@ -5,7 +5,7 @@ $(document).ready(function() {
     document.querySelector('#updateTime2 span').textContent = getCurrentTime();
     document.querySelector('#updateTime3 span').textContent = getCurrentTime();
     
-	callAjax("/errorHist/errorData", "GET", null, getLineCallback);
+	callAjax("/userRequestHistory/requestData", "GET", null, getLineCallback);
 });
 
 function getLineCallback(response){
@@ -14,8 +14,8 @@ function getLineCallback(response){
 
     for (var i = 0; i < response.data.length; i++) {
         var item = response.data[i];
-        labels.push(item.ERROR_DATE);
-        data.push(item.ERROR_COUNT);
+        labels.push(item.REQUEST_DATE);
+        data.push(item.REQUEST_COUNT);
     }
 
     var ctx = document.getElementById('myAreaChart').getContext('2d');
@@ -24,7 +24,7 @@ function getLineCallback(response){
         data: {
             labels: labels,
             datasets: [{
-                label: 'Error Count',
+                label: 'Request Count',
                 data: data,
                 borderColor: 'rgba(75, 192, 192, 1)',
                 backgroundColor: 'rgba(75, 192, 192, 0.2)',

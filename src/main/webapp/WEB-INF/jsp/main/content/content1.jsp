@@ -14,7 +14,7 @@
     <div class="card mb-4">
         <div class="card-header">
             <i class="fas fa-chart-area me-1"></i>
-            Area Chart Example
+            Area Chart - Requests
         </div>
         <div class="card-body"><canvas id="myAreaChart" width="100%" height="30"></canvas></div>
         <div class="card-footer small text-muted" id="updateTime1">Updated at <span></span></div>
@@ -24,7 +24,7 @@
             <div class="card mb-4">
                 <div class="card-header">
                     <i class="fas fa-chart-bar me-1"></i>
-                    Bar Chart Example
+                    Bar Chart - Errors
                 </div>
                 <div class="card-body"><canvas id="myBarChart" width="100%" height="50"></canvas></div>
                 <div class="card-footer small text-muted" id="updateTime2">Updated at <span></span></div>
@@ -34,7 +34,7 @@
             <div class="card mb-4">
                 <div class="card-header">
                     <i class="fas fa-chart-pie me-1"></i>
-                    Pie Chart Example
+                    Pie Chart - Ratio
                 </div>
                 <div class="card-body"><canvas id="myPieChart" width="100%" height="50"></canvas></div>
                 <div class="card-footer small text-muted" id="updateTime3">Updated at <span></span></div>

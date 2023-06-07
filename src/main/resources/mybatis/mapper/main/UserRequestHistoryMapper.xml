@@ -26,5 +26,20 @@
 		WHERE id = #{id}
 		ORDER BY update_dt, create_dt
 	</select>
+	
+    <select id="getUserRequestHistoryCountByDate" resultType="java.util.Map">
+        SELECT TO_CHAR(create_dt,'YYYY/MM/DD') AS request_date, COUNT(*) AS request_count
+        FROM ZTHH_USERREQUESTHISTORY
+        WHERE create_dt >= TRUNC(SYSDATE) - 6 
+        GROUP BY TO_CHAR(create_dt,'YYYY/MM/DD')
+        ORDER BY TO_CHAR(create_dt,'YYYY/MM/DD')
+    </select>		
+	
+    <select id="getUserRequestHistoryCountByCount" resultType="java.util.Map">
+        SELECT url AS REQUEST_URL, count(*) AS REQUEST_COUNT 
+        FROM ZTHH_USERREQUESTHISTORY
+        group BY URL
+        ORDER BY REQUEST_COUNT desc
+    </select>		
 
 </mapper>

@@ -12,6 +12,7 @@
 package com.eun.tutorial.mapper.main;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -24,4 +25,6 @@ public interface UserRequestHistoryMapper {
 	int updateUserRequestHistory(UserRequestHistoryDTO userRequestHistoryDTO);
 	int deleteUserRequestHistory(String id);
 	UserRequestHistoryDTO getUserRequestHistoryListById(String id);
+	List<Map<String, Object>> getUserRequestHistoryCountByDate();
+	List<Map<String, Object>> getUserRequestHistoryCountByCount();
 }

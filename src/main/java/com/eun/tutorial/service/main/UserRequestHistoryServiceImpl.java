@@ -12,6 +12,7 @@
 package com.eun.tutorial.service.main;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -59,5 +60,16 @@ public class UserRequestHistoryServiceImpl implements UserRequestHistoryService 
 	public UserRequestHistoryDTO getUserRequestHistoryListById(String id) {
 		return userRequestHistoryMapper.getUserRequestHistoryListById(id);
 	}
+	
+	@Override
+	public List<Map<String, Object>> getUserRequestHistoryCountByDate() {
+		return userRequestHistoryMapper.getUserRequestHistoryCountByDate();
+	}
+
+	@Override
+	public List<Map<String, Object>> getUserRequestHistoryCountByCount() {
+		return userRequestHistoryMapper.getUserRequestHistoryCountByCount();
+	}
+	
 
 }

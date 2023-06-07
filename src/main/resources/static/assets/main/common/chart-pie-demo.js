@@ -1,6 +1,6 @@
 $(document).ready(function() {
 	debugger;
-	callAjax("/errorHist/errorData", "GET", null, getPieCallback);
+	callAjax("/userRequestHistory/requestDataAnlyze", "GET", null, getPieCallback);
 });
 
 function getPieCallback(response){
@@ -9,8 +9,8 @@ function getPieCallback(response){
 
     for (var i = 0; i < response.data.length; i++) {
         var item = response.data[i];
-        labels.push(item.ERROR_DATE);
-        data.push(item.ERROR_COUNT);
+        labels.push(item.REQUEST_URL);
+        data.push(item.REQUEST_COUNT);
     }
 
     var ctx = document.getElementById('myPieChart');

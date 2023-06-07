@@ -12,6 +12,7 @@
 package com.eun.tutorial.service.main;
 
 import java.util.List;
+import java.util.Map;
 
 import com.eun.tutorial.dto.main.UserRequestHistoryDTO;
 
@@ -21,4 +22,6 @@ public interface UserRequestHistoryService {
 	int updateUserRequestHistory(UserRequestHistoryDTO userRequestHistoryDTO);
 	int deleteUserRequestHistory(String id);
 	UserRequestHistoryDTO getUserRequestHistoryListById(String id);
+	List<Map<String, Object>> getUserRequestHistoryCountByDate();
+	List<Map<String, Object>> getUserRequestHistoryCountByCount();
 }

@@ -12,6 +12,7 @@
 package com.eun.tutorial.controller.main;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -75,5 +76,22 @@ public class UserRequestHistoryController {
 		userRequestHistoryService.deleteUserRequestHistory(id);
 		return new ApiResponse<>(true, "Successfully deleted the userRequestHistory data.", null);
 	}
-
+	
+	@GetMapping("/requestData")
+	public @ResponseBody ApiResponse getRequestData() {
+	    try {
+	        return new ApiResponse<List<Map<String, Object>>>(true, "Successfully retrieved the common code list.", userRequestHistoryService.getUserRequestHistoryCountByDate());
+	    } catch (Exception e) {
+	        return new ApiResponse<>(false, "Failed to retrieve the common code list.", null);
+	    }
+	}
+	
+	@GetMapping("/requestDataAnlyze")
+	public @ResponseBody ApiResponse getRequestDataAnlyze() {
+		try {
+			return new ApiResponse<List<Map<String, Object>>>(true, "Successfully retrieved the common code list.", userRequestHistoryService.getUserRequestHistoryCountByCount());
+		} catch (Exception e) {
+			return new ApiResponse<>(false, "Failed to retrieve the common code list.", null);
+		}
+	}
 }
