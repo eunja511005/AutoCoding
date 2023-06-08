@@ -44,8 +44,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public int updateLastLoginDt(String username) {
-		return userDao.updateLastLoginDt(username);
+	public int updateLastLoginDt(String username, String sessionID) {
+		return userDao.updateLastLoginDt(username, sessionID);
 	}
 
 }
