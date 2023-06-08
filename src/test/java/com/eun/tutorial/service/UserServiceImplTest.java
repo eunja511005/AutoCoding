@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.eun.tutorial.dto.UserInfoDTO;
 import com.eun.tutorial.mapper.UserMapper;
+import com.eun.tutorial.util.AuthUtils;
 import com.eun.tutorial.util.EncryptionUtils;
 
 @RunWith(SpringRunner.class)
@@ -41,7 +42,7 @@ class UserServiceImplTest {
         String username = "autoCoding";
 
         // Call the method to be tested
-        int result = userService.updateLastLoginDt(username);
+        int result = userService.updateLastLoginDt(username, AuthUtils.getSessionId());
         
         // Retrieve the updated last login time from the database
 		Map<String, Object> map = new HashMap<>();
