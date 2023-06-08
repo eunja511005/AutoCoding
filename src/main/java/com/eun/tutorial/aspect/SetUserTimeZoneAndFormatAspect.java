@@ -44,7 +44,7 @@ public class SetUserTimeZoneAndFormatAspect {
     private void performDateTimeConversion(Object dto) {
 		PrincipalDetails userDetailsImpl = AuthUtils.getPrincipalDetails();
     	
-		if(userDetailsImpl!=null) {
+		if(userDetailsImpl == null) {
 			return;
 		}
 		
