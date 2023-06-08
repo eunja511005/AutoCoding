@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import com.eun.tutorial.dto.main.AccessControlDTO;
 import com.eun.tutorial.mapper.main.AccessControlMapper;
+import com.eun.tutorial.util.AuthUtils;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,8 +28,7 @@ public class CreateACLAspect {
 
 	@Around("@annotation(com.eun.tutorial.aspect.annotation.CreatePermission) && args(dto)")
 	public Object addUDPermission(ProceedingJoinPoint joinPoint, Object dto) throws Throwable {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		String loginId = authentication.getName();
+		String loginId = AuthUtils.getLoginUser();
 
 		Object result = joinPoint.proceed();
 

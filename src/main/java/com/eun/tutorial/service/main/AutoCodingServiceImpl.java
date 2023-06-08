@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.eun.tutorial.dto.main.AutocodingFieldDTO;
 import com.eun.tutorial.mapper.main.AutoCodingMapper;
 import com.eun.tutorial.service.user.PrincipalDetails;
+import com.eun.tutorial.util.AuthUtils;
 import com.eun.tutorial.util.StringUtils;
 
 import lombok.AllArgsConstructor;
@@ -27,16 +28,9 @@ public class AutoCodingServiceImpl implements AutoCodingService {
 
 	@Override
 	public int saveAutoCoding(AutocodingFieldDTO autocodingFieldDTO) {
-		
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		if(authentication == null || authentication instanceof AnonymousAuthenticationToken) {
-			autocodingFieldDTO.setCreateId("anonymous");
-			autocodingFieldDTO.setUpdateId("anonymous");
-		}else {
-			PrincipalDetails userDetailsImpl = (PrincipalDetails) authentication.getPrincipal();
-			autocodingFieldDTO.setCreateId(userDetailsImpl.getName());
-			autocodingFieldDTO.setUpdateId(userDetailsImpl.getName());
-		}
+		String loginUser = AuthUtils.getLoginUser();
+		autocodingFieldDTO.setCreateId(loginUser);
+		autocodingFieldDTO.setUpdateId(loginUser);
 		
         if (StringUtils.isBlank(autocodingFieldDTO.getId())) {
         	autocodingFieldDTO.setId("autocoding_"+UUID.randomUUID());

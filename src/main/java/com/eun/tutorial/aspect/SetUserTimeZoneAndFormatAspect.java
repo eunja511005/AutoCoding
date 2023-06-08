@@ -10,12 +10,10 @@ import java.util.List;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
-import com.eun.tutorial.mapper.main.AccessControlMapper;
 import com.eun.tutorial.service.user.PrincipalDetails;
+import com.eun.tutorial.util.AuthUtils;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,9 +42,12 @@ public class SetUserTimeZoneAndFormatAspect {
 	}
 
     private void performDateTimeConversion(Object dto) {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		PrincipalDetails userDetailsImpl = (PrincipalDetails) authentication.getPrincipal();
+		PrincipalDetails userDetailsImpl = AuthUtils.getPrincipalDetails();
     	
+		if(userDetailsImpl!=null) {
+			return;
+		}
+		
         Field[] fields = dto.getClass().getDeclaredFields();
         for (Field field : fields) {
             if (field.getName().endsWith("Dt") || field.getName().endsWith("Time") || field.getName().endsWith("At")) {
@@ -86,7 +87,7 @@ public class SetUserTimeZoneAndFormatAspect {
                         field.set(dto, formattedDateTime);
                     }
                 } catch (IllegalAccessException e) {
-                    e.printStackTrace();
+                    log.error("Error accessing field", e);
                 } finally {
                     field.setAccessible(false); // Reset the field accessibility back to its original state
                 }

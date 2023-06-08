@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import com.eun.tutorial.exception.CustomException;
 import com.eun.tutorial.mapper.main.AccessControlMapper;
+import com.eun.tutorial.util.AuthUtils;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,16 +29,15 @@ public class AuthorizationAspect {
 
     @Around("@annotation(com.eun.tutorial.aspect.annotation.CheckAuthorization) && args(dto)")
     public Object authorize(ProceedingJoinPoint joinPoint, Object dto) throws Throwable {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         
-        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        Collection<? extends GrantedAuthority> authorities = AuthUtils.getAuthorities();
         boolean hasRoleSys = authorities.stream()
                 .anyMatch(authority -> authority.getAuthority().equals("ROLE_SYS"));
 
         if (hasRoleSys) {
         	return joinPoint.proceed();
         } else {
-            String loginId = authentication.getName();
+            String loginId = AuthUtils.getLoginUser();
             
             String resourceId = "";
             if (dto instanceof String) {//delete

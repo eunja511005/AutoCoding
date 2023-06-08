@@ -21,6 +21,7 @@ import com.eun.tutorial.dto.main.MenuControlDTO;
 import com.eun.tutorial.dto.main.UserRequestHistoryDTO;
 import com.eun.tutorial.service.main.MenuControlService;
 import com.eun.tutorial.service.main.UserRequestHistoryService;
+import com.eun.tutorial.util.AuthUtils;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -74,11 +75,10 @@ public class UserRequestLoggingAspect {
 			}
 
 			if (logYn.equals("Y")) {
-				Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
 				// 요청 정보 추출
 				String ip = request.getRemoteAddr();
-				String user = authentication.getName();
+				String user = AuthUtils.getLoginUser();
 				String requestData = Arrays.toString(joinPoint.getArgs());
 
 				// 요청 정보 로깅

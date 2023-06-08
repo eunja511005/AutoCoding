@@ -22,9 +22,11 @@ import org.springframework.stereotype.Service;
 
 import com.eun.tutorial.aspect.annotation.CheckAuthorization;
 import com.eun.tutorial.aspect.annotation.CreatePermission;
+import com.eun.tutorial.aspect.annotation.SetCreateAndUpdateId;
 import com.eun.tutorial.dto.main.MenuControlDTO;
 import com.eun.tutorial.mapper.main.MenuControlMapper;
 import com.eun.tutorial.service.user.PrincipalDetails;
+import com.eun.tutorial.util.AuthUtils;
 
 import lombok.AllArgsConstructor;
 
@@ -42,33 +44,16 @@ public class MenuControlServiceImpl implements MenuControlService {
 
 	@Override
 	@CreatePermission
+	@SetCreateAndUpdateId
 	public int saveMenuControl(MenuControlDTO menuControlDTO) {
-		menuControlDTO.setId("menuControl_"+UUID.randomUUID());
-		
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		if(authentication == null || authentication instanceof AnonymousAuthenticationToken) {
-			menuControlDTO.setCreateId(ANONYMOUS);
-			menuControlDTO.setUpdateId(ANONYMOUS);
-		}else {
-			PrincipalDetails userDetailsImpl = (PrincipalDetails) authentication.getPrincipal();
-			menuControlDTO.setCreateId(userDetailsImpl.getName());
-			menuControlDTO.setUpdateId(userDetailsImpl.getName());
-		}
-		
+		menuControlDTO.setId("menuControl_"+UUID.randomUUID());	
 		return menuControlMapper.insertMenuControl(menuControlDTO);
 	}
 
 	@Override
 	@CheckAuthorization
+	@SetCreateAndUpdateId
 	public int updateMenuControl(MenuControlDTO menuControlDTO) {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		if(authentication == null || authentication instanceof AnonymousAuthenticationToken) {
-			menuControlDTO.setUpdateId(ANONYMOUS);
-		}else {
-			PrincipalDetails userDetailsImpl = (PrincipalDetails) authentication.getPrincipal();
-			menuControlDTO.setUpdateId(userDetailsImpl.getName());
-		}
-		
 		return menuControlMapper.updateMenuControl(menuControlDTO);
 	}
 

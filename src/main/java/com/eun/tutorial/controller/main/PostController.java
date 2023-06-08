@@ -28,6 +28,7 @@ import com.eun.tutorial.dto.main.PostDTO;
 import com.eun.tutorial.dto.main.PostSearchDTO;
 import com.eun.tutorial.service.main.PostService;
 import com.eun.tutorial.service.user.PrincipalDetails;
+import com.eun.tutorial.util.AuthUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -87,24 +88,18 @@ public class PostController {
 	
     
 	@PostMapping("/save")
-	public @ResponseBody Map<String, Object> getUserProfile(@RequestBody PostDTO postDTO){
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		if(authentication == null || authentication instanceof AnonymousAuthenticationToken) {
-			postDTO.setCreateId("anonymous");
+	public @ResponseBody Map<String, Object> savePosts(@RequestBody PostDTO postDTO){
+		String loginUser = AuthUtils.getLoginUser();
+		postDTO.setCreateId(loginUser);
+		if("anonymous".equals(loginUser)) {
 			postDTO.setVisibility("8");
-		}else {
-			PrincipalDetails userDetailsImpl = (PrincipalDetails) authentication.getPrincipal();
-			postDTO.setCreateId(userDetailsImpl.getName());
 		}
-		
 		
 		if(org.apache.tika.utils.StringUtils.isBlank(postDTO.getId())) {
 			return postService.save(postDTO);
 		}else {
 			return postService.update(postDTO);
 		}
-		
-		
 		
 	}
 	

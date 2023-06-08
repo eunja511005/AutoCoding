@@ -20,6 +20,7 @@ import com.eun.tutorial.aspect.annotation.CreatePermission;
 import com.eun.tutorial.dto.main.MenuDTO;
 import com.eun.tutorial.mapper.main.MenuMapper;
 import com.eun.tutorial.service.user.PrincipalDetails;
+import com.eun.tutorial.util.AuthUtils;
 import com.eun.tutorial.util.StringUtils;
 
 import lombok.AllArgsConstructor;
@@ -78,10 +79,9 @@ public class MenuServiceImpl implements MenuService {
 			}
 		}
 
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		Locale locale = getLocale(authentication);
+		Locale locale = AuthUtils.getLocale();
 
-		Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+		Collection<? extends GrantedAuthority> authorities = AuthUtils.getAuthorities();
 		String preCategory = "";
 		for (MenuDTO menu : menus) {
 			if (menu.getMenuLevel() == 1 && (checkAuth(authorities, menu))) {
@@ -97,21 +97,6 @@ public class MenuServiceImpl implements MenuService {
 		}
 
 		return sb.toString();
-	}
-
-	private Locale getLocale(Authentication authentication) {
-		Locale locale;
-		if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
-			locale = Locale.KOREA;
-		} else {
-			PrincipalDetails userDetailsImpl = (PrincipalDetails) authentication.getPrincipal();
-			String language = "ko";
-			if (!StringUtils.isBlank(userDetailsImpl.getLanguage())) {
-				language = userDetailsImpl.getLanguage();
-			}
-			locale = new Locale(language);
-		}
-		return locale;
 	}
 
 	private boolean checkAuth(Collection<? extends GrantedAuthority> authorities, MenuDTO menu) {
