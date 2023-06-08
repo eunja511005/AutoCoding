@@ -62,10 +62,12 @@ class MenuServiceImplTest {
 		Authentication authentication = Mockito.mock(Authentication.class);
 		setUserDetailsMock(authentication);
 		setRoleMOck(authentication);
+		
+		Mockito.when(authentication.isAuthenticated()).thenReturn(true);
 
 		SecurityContext securityContext = createSecurityContext(authentication);
 		SecurityContextHolder.setContext(securityContext);
-
+		
 		// Act
 		String actualMenu = menuService.generateMenuHtml();
 		
