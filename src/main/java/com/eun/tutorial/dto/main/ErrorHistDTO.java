@@ -11,8 +11,6 @@
 
 package com.eun.tutorial.dto.main;
 
-import java.time.LocalDateTime;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,9 +22,13 @@ public class ErrorHistDTO {
 	private String errorMsg;
 	private String solutionMsg;
 	private String id;
+	private String category;
+	private String severity;
+	private String status;
+	private String responsiblePerson;
 	private boolean delYn;
 	private String createId;
-	private LocalDateTime createDt;
+	private String createDt;
 	private String updateId;
-	private LocalDateTime updateDt;
+	private String updateDt;
 }

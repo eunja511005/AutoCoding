@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
 
 import com.eun.tutorial.aspect.annotation.CheckAuthorization;
 import com.eun.tutorial.aspect.annotation.CreatePermission;
+import com.eun.tutorial.aspect.annotation.SetCreateAndUpdateId;
+import com.eun.tutorial.aspect.annotation.SetUserTimeZoneAndFormat;
 import com.eun.tutorial.dto.main.ErrorHistDTO;
 import com.eun.tutorial.mapper.main.ErrorHistMapper;
 
@@ -33,12 +35,13 @@ public class ErrorHistServiceImpl implements ErrorHistService {
 	private final ErrorHistMapper errorHistMapper;
 
 	@Override
+	@SetUserTimeZoneAndFormat
 	public List<ErrorHistDTO> getErrorHistList() {
 		return errorHistMapper.selectErrorHistList();
 	}
 
 	@Override
-	//@CreatePermission
+	@SetCreateAndUpdateId
 	public int saveErrorHist(ErrorHistDTO errorHistDTO) {
 		errorHistDTO.setId("errorHist_"+UUID.randomUUID());
 		return errorHistMapper.insertErrorHist(errorHistDTO);
@@ -46,6 +49,7 @@ public class ErrorHistServiceImpl implements ErrorHistService {
 
 	@Override
 	@CheckAuthorization
+	@SetCreateAndUpdateId
 	public int updateErrorHist(ErrorHistDTO errorHistDTO) {
 		return errorHistMapper.updateErrorHist(errorHistDTO);
 	}

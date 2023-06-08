@@ -32,7 +32,12 @@ $(document).ready(function() {
 		$cardBody.slideToggle();
 	}
 
-	$('#newField, #searchField').click(handleCollapseClick);
+	$('#solutionField, #searchField, #errorField').click(handleCollapseClick);
+	
+	initSelectBox('category', '/commonCode/ERROR_CATEGORY', false);
+	initSelectBox('severity', '/commonCode/ERROR_SEVERITY', false);
+	initSelectBox('status', '/commonCode/ERROR_STATUS', false);
+	initSelectBox('responsiblePerson', '/commonCode/ERROR_PIC', false);
 });
 function initializeErrorHistTable() {
 	table = $('#errorHistTable').DataTable({
@@ -46,7 +51,19 @@ function initializeErrorHistTable() {
 			dataSrc: '',
 		},
 		columns: [
-			{ data: 'errorMsg' },
+			{ data: 'category' },
+			{ data: 'severity' },
+			{ data: 'status' },
+			{ data: 'responsiblePerson' },
+			{ data: 'createDt' },
+			{ data: 'errorMsg',
+			   render: function(data, type, row, meta) {
+				  if (type === 'display' && data.length > 30) {
+				    return data.substr(0, 30) + '...';
+				  }
+				  return data;
+				}
+			 },
 			{ data: 'solutionMsg' },
 			{
 				data: null,
@@ -63,6 +80,7 @@ function initializeErrorHistTable() {
 				},
 			},
 		],
+		order: [4, 'desc'], // 자동 정렬 비활성화
 	});
 
 	$('#errorHistTable tbody').on('click', '.edit-button', function() {
@@ -97,8 +115,8 @@ function deleteErrorHist(id) {
 
 function editCallback(response){
 	$('#id').val(response.data.id);
-	$('#errorMsg').val(response.data.errorMsg);
-	$('#solutionMsg').val(response.data.solutionMsg);
+	$('#errorMsg').text(response.data.errorMsg);
+	$('#solutionMsg').text(response.data.solutionMsg);
 
 	$('#errorHistForm').attr('data-mode', 'edit');
 }

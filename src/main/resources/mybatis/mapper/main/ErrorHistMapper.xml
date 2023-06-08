@@ -3,7 +3,13 @@
 <mapper namespace="com.eun.tutorial.mapper.main.ErrorHistMapper">
 
 	<select id="selectErrorHistList" resultType="com.eun.tutorial.dto.main.ErrorHistDTO">
-		SELECT ERROR_MSG, SOLUTION_MSG, id, del_yn, create_id, create_dt, update_id, update_dt FROM ZTHH_ERRORHIST where del_yn='N' ORDER BY update_dt, create_dt
+		SELECT ERROR_MSG, SOLUTION_MSG, id, category, severity, status, 
+		responsible_person, del_yn, create_id, 
+		TO_CHAR(create_dt, 'YYYY-MM-DD HH24:MI:SS') AS create_dt, 
+		update_id, 
+		TO_CHAR(update_dt, 'YYYY-MM-DD HH24:MI:SS') AS update_dt 
+		FROM ZTHH_ERRORHIST where del_yn='N' 
+		ORDER BY update_dt, create_dt
 	</select>
 
 	<insert id="insertErrorHist">
@@ -12,8 +18,13 @@
 	</insert>
 
 	<update id="updateErrorHist">
-		UPDATE ZTHH_ERRORHIST
-		SET ERROR_MSG = #{errorMsg}, SOLUTION_MSG = #{solutionMsg}, update_id = #{updateId}, update_dt = CURRENT_TIMESTAMP
+		UPDATE ZTHH_ERRORHIST SET 
+			SOLUTION_MSG = #{solutionMsg}, 
+			category = #{category}, 
+			severity = #{severity}, 
+			status = #{status}, 
+			responsible_person = #{responsiblePerson}, 
+			update_dt = CURRENT_TIMESTAMP
 		WHERE id = #{id}
 	</update>
 

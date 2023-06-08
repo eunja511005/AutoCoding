@@ -18,40 +18,63 @@
 		<li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
 		<li class="breadcrumb-item active">ErrorHist</li>
 	</ol>
+	
+	<div class="card mb-4" style="max-height: none;">
+	   <div class="card-header" id="errorField">
+	        <i class="fas fa-times-circle"></i> ERROR_MSG
+	   </div>	
+	   <div class="card-body">
+		    <div class="form-control form-control-plaintext" id="errorMsg" name="errorMsg" style="overflow: auto;" readonly></div>
+	   </div>
+	</div>		
 
 	<div class="card mb-4">
-		<div class="card-header" id="fieldHeading">
-			<h1 class="mb-0">
-				<button id="newField" class="btn btn-link" type="button" aria-expanded="true" aria-controls="fieldCollapse">
-					New ErrorHist
-				</button>
-			</h1>
+		<div class="card-header" id="solutionField">
+	        <i class="fas fa-check"></i> SOLUTION
 		</div>
-		<div id="fieldCollapse" class="collapse show" aria-labelledby="fieldHeading">
-			<div class="card-body">
-				<div class="container-fluid">
-					<div class="row">
-						<div class="col-12">
-							<form id="errorHistForm" class="row g-2 align-items-center">
-								<input type="hidden" id="id" name="id">
-								<div class="col-md">
-									<div class="form-floating">
-										<input type="text" class="form-control" id="errorMsg" name="errorMsg" placeholder="Enter errorMsg" required>
-										<label for="errorMsg">ERROR_MSG</label>
-									</div>
+		<div class="card-body">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-12">
+						<form id="errorHistForm" class="row g-2 align-items-center">
+						  <input type="hidden" id="id" name="id">
+						  
+							<div class="col-md-1 col-lg-2">
+								<div class="form-floating">
+									<select class="form-select" id="category" name="category" required></select>
+									<label for="category">CATEGORY</label>
 								</div>
-								<div class="col-md">
-									<div class="form-floating">
-										<input type="text" class="form-control" id="solutionMsg" name="solutionMsg" placeholder="Enter solutionMsg" required>
-										<label for="solutionMsg">SOLUTION_MSG</label>
-									</div>
+							</div>
+							<div class="col-md-1 col-lg-1">
+								<div class="form-floating">
+									<select class="form-select" id="severity" name="severity" required></select>
+									<label for="severity">SEVERITY</label>
 								</div>
-								<div class="col-md text-center">
-									<button type="submit" class="btn btn-outline-primary"><i class="fas fa-save"></i></button>
-									<button type="reset" class="btn btn-outline-secondary" id="clear-btn"><i class="fas fa-undo"></i></button>
-								</div>
-							</form>
-						</div>
+							</div>
+							<div class="col-md-1 col-lg-1">
+								<div class="form-floating">
+									<select class="form-select" id="status" name="status" required></select>
+									<label for="status">STATUS</label>
+								</div>									
+							</div>						  
+							<div class="col-md-1 col-lg-2">
+								<div class="form-floating">
+									<select class="form-select" id="responsiblePerson" name="responsiblePerson" required></select>
+									<label for="responsiblePerson">PIC</label>
+								</div>									
+							</div>						  
+						  
+						  <div class="col-md-6 col-lg-5">
+						    <div class="form-floating">
+						      <textarea class="form-control" id="solutionMsg" name="solutionMsg" rows="5" style="resize: none; max-height: 80vh;"></textarea>
+						    </div>
+						  </div>
+						  
+						  <div class="col-md-2 col-lg-1 text-end">
+						    <button type="submit" class="btn btn-outline-primary"><i class="fas fa-save"></i></button>
+						    <button type="reset" class="btn btn-outline-secondary" id="clear-btn"><i class="fas fa-undo"></i></button>
+						  </div>
+						</form>
 					</div>
 				</div>
 			</div>
@@ -59,28 +82,27 @@
 	</div>
 
 	<div class="card mb-4" style="width:100%">
-		<div class="card-header" id="fieldHeading">
-			<h1 class="mb-0">
-				<button id="searchField" class="btn btn-link" type="button" aria-expanded="true" aria-controls="fieldCollapse">
-					Search ErrorHist
-				</button>
-			</h1>
+		<div class="card-header" id="searchField">
+	        <i class="fas fa-border-all"></i> ErrorHist Lists
 		</div>
-		<div id="fieldCollapse" class="collapse show" aria-labelledby="fieldHeading">
-			<div class="card-body" style="width:100%">
-				<table id="errorHistTable" class="table table-hover" style="width:100%">
-					<thead>
-						<tr>
-							<th>ERROR_MSG</th>
-							<th>SOLUTION_MSG</th>
-							<th>Edit</th>
-							<th>Delete</th>
-						</tr>
-					</thead>
-					<tbody>
-					</tbody>
-				</table>
-			</div>
+		<div class="card-body" style="width:100%">
+			<table id="errorHistTable" class="table table-hover" style="width:100%">
+				<thead>
+					<tr>
+						<th>CATEGORY</th>
+						<th>SEVERITY</th>
+						<th>STATUS</th>
+						<th>PIC</th>
+						<th>CREATED_DT</th>
+						<th>ERROR_MSG</th>
+						<th>SOLUTION_MSG</th>
+						<th>Edit</th>
+						<th>Delete</th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
 		</div>
 	</div>
 
