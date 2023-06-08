@@ -127,7 +127,7 @@ public class UserRequestLoggingAspect {
 
 			UserRequestHistoryDTO userRequestHistoryDTO = userRequestHistoryThreadLocal.get();
 			userRequestHistoryDTO.setResData(responseData);
-			userRequestHistoryService.saveUserRequestHistory(userRequestHistoryDTO);
+			//userRequestHistoryService.saveUserRequestHistory(userRequestHistoryDTO);
 		}
 
 		logDataYnThreadLocal.remove();

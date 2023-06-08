@@ -43,6 +43,7 @@ import com.eun.tutorial.service.ZthhErrorService;
 import com.eun.tutorial.service.main.MenuControlService;
 import com.eun.tutorial.service.user.CustomOAuth2UserService;
 import com.eun.tutorial.service.user.PrincipalDetails;
+import com.eun.tutorial.util.AuthUtils;
 import com.eun.tutorial.util.StringUtils;
 
 import lombok.RequiredArgsConstructor;
@@ -183,7 +184,7 @@ public class MyWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter
                         SimpleDateFormat formatter = new SimpleDateFormat("yyyy년 MM월 dd일 HH시 mm분 ss초");
                         log.info(" ### {}, Last login time : {} ", auth.getName(), formatter.format(date));
                         
-                        userService.updateLastLoginDt(auth.getName());
+                        userService.updateLastLoginDt(auth.getName(), AuthUtils.getSessionId());
                         
                         Map<String, String> res = new HashMap<>();
                         res.put("result", "login success");
@@ -237,7 +238,7 @@ public class MyWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter
                         	}
                         	
                         	localeResolver.setLocale(request, response, new Locale(language));
-                        	userService.updateLastLoginDt(auth.getName());
+                        	userService.updateLastLoginDt(auth.getName(), AuthUtils.getSessionId());
                         }
 						
 						log.info("userInfo {}", auth.getPrincipal().toString());

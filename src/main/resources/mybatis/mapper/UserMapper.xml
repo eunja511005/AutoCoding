@@ -7,7 +7,7 @@
 
   <select id="getBookLists" resultType="com.eun.tutorial.dto.UserInfoDTO">
   	SELECT username, password, email, salt, role, picture, 
-  	       language, enable, last_login_dt,
+  	       language, enable, last_login_dt, sessionID,
   	       user_time_zone, date_time_formatter,
   	       create_id, create_time, update_id, update_time
     FROM zthm_user
@@ -15,7 +15,7 @@
   
   <select id="getUser" parameterType="hashMap" resultType="com.eun.tutorial.dto.UserInfoDTO">
   	SELECT username, password, email, salt, role, picture, 
-  	       language, enable, last_login_dt,
+  	       language, enable, last_login_dt, sessionID,
   	       user_time_zone, date_time_formatter,
   	       create_id, create_time, update_id, update_time
   	FROM zthm_user 
@@ -51,7 +51,8 @@
   </insert> 
   
   <update id="updateLastLoginDt"> 
-  		UPDATE ZTHM_USER SET last_login_dt=CURRENT_TIMESTAMP
+  		UPDATE ZTHM_USER SET last_login_dt=CURRENT_TIMESTAMP,
+  		sessionID = #{sessionID}
         WHERE username = #{username}
   </update>    
 

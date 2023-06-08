@@ -37,6 +37,7 @@ CREATE TABLE zthm_user
     language            VARCHAR2(50),
     enable              CHAR(1), 
     last_login_dt       TIMESTAMP(6),
+    sessionID           VARCHAR2(256),
     user_time_zone      VARCHAR2(100),
 	date_time_formatter VARCHAR2(100),
     create_id           VARCHAR2(30),

@@ -3,13 +3,12 @@ package com.eun.tutorial.util;
 import java.util.Collection;
 import java.util.Locale;
 
-import org.hamcrest.core.IsInstanceOf;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
 import com.eun.tutorial.service.user.PrincipalDetails;
 
@@ -66,4 +65,18 @@ public class AuthUtils {
 			return new Locale(language);
 		}
 	}
+	
+	public static String getSessionId() {
+	    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+	    if (authentication != null) {
+	        Object details = authentication.getDetails();
+	        if (details instanceof WebAuthenticationDetails) {
+	            WebAuthenticationDetails webDetails = (WebAuthenticationDetails) details;
+	            return webDetails.getSessionId();
+	        }
+	    }
+	    return null;
+	}
+	
+	
 }

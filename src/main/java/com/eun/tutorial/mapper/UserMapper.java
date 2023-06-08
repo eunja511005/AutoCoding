@@ -10,5 +10,5 @@ import com.eun.tutorial.dto.UserInfoDTO;
 public interface UserMapper {
     UserInfoDTO getUser(Map<String, Object> map);
     int addUser(UserInfoDTO userInfoDTO);
-    int updateLastLoginDt(String username);
+    int updateLastLoginDt(String username, String sessionID);
 }
