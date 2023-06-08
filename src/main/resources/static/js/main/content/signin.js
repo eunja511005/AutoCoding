@@ -36,15 +36,23 @@
                         		});
                         } else {
                         	swal({
-                      		  title: "Unauthorized",
-                      		  text: "Error : "+response.result,
+                      		  title: "Warning",
+                      		  text: response.result,
                       		  icon: "warning",
-                      		  button: "OK",
+                      		  buttons: {
+                      		    confirm: "OK",
+                      		    logout: "Logout",
+                      		  },
                       		}) 
                       		.then((result) => {
-                      		  if (result) {
-                      			  window.location.href = "/signout";
-                      		  }
+	                      		if (result === "logout") {
+	                      			// 로그아웃 처리 후 리디렉션
+	                      			window.location.href = "/signout";
+	                      			window.location.href = "/";
+	                      		} else {
+	                      			// 사용자가 확인 버튼을 클릭하거나 대화상자를 닫은 경우 아무 작업 없음
+	                      			window.location.href = "/";
+	                      		}                      			
                       		});
                         }
                     	
