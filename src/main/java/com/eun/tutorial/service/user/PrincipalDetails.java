@@ -87,6 +87,14 @@ public class PrincipalDetails implements UserDetails, OAuth2User{
     public String getDateTimeFormatter() {
     	return userInfoDTO.getDateTimeFormatter();
     }
+    
+	public void setSessionId(String sessionId) {
+		userInfoDTO.setSessionId(sessionId);
+	}
+    
+    public String getSessionId() {
+    	return userInfoDTO.getSessionId();
+    }
 
 	@Override
 	public boolean isAccountNonExpired() {
@@ -107,5 +115,5 @@ public class PrincipalDetails implements UserDetails, OAuth2User{
 	public boolean isEnabled() {
 		return userInfoDTO.isEnable();
 	}
-
+	
 }
