@@ -1,5 +1,7 @@
 package com.eun.tutorial.aspect;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.UUID;
@@ -11,11 +13,10 @@ import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.servlet.HandlerMapping;
 
 import com.eun.tutorial.dto.main.MenuControlDTO;
 import com.eun.tutorial.dto.main.UserRequestHistoryDTO;
@@ -35,6 +36,7 @@ public class UserRequestLoggingAspect {
 	private final MenuControlService menuControlService;
 	private final UserRequestHistoryService userRequestHistoryService;
 	private ThreadLocal<UserRequestHistoryDTO> userRequestHistoryThreadLocal = new ThreadLocal<>();
+	private ThreadLocal<String> logYnThreadLocal = new ThreadLocal<>();
 	private ThreadLocal<String> logDataYnThreadLocal = new ThreadLocal<>();
 
 	// Pointcut: 모든 Controller의 메서드에 적용
@@ -73,7 +75,7 @@ public class UserRequestLoggingAspect {
 				menuControlDTO.setUpdateId("UserRequestLoggingAspect.java");
 				menuControlService.saveMenuControl(menuControlDTO);
 			}
-
+			
 			if (logYn.equals("Y")) {
 
 				// 요청 정보 추출
@@ -92,8 +94,9 @@ public class UserRequestLoggingAspect {
 				userRequestHistoryDTO.setReqIp(ip);
 				userRequestHistoryDTO.setReqUser(user);
 
+				log.info("Request Data by joinPoint.getArgs(): {}", requestData);
+
 				if (logDataYn.equals("Y")) {
-					log.info("Request Data: {}", requestData);
 					
 					if(!requestData.equals("[]")) {
 						if (requestData.length() > 2000) {
@@ -101,10 +104,12 @@ public class UserRequestLoggingAspect {
 						}
 						userRequestHistoryDTO.setReqData(requestData);
 					}
-					logDataYnThreadLocal.set(logDataYn);
-					userRequestHistoryThreadLocal.set(userRequestHistoryDTO);
 				}
 			}
+			
+			logYnThreadLocal.set(logYn);
+			logDataYnThreadLocal.set(logDataYn);
+			userRequestHistoryThreadLocal.set(userRequestHistoryDTO);
 		}
 	}
 
@@ -112,11 +117,13 @@ public class UserRequestLoggingAspect {
 	@AfterReturning(pointcut = "controllerPointcut()", returning = "result")
 	public void logResponse(JoinPoint joinPoint, Object result) {
 
+		String logYn = logYnThreadLocal.get();
 		String logDataYn = logDataYnThreadLocal.get();
 
+		String responseData = "";
 		if (logDataYn != null && logDataYn.equals("Y")) {
 			// 응답 정보 추출
-			String responseData = result != null ? result.toString() : "";
+			responseData = result != null ? result.toString() : "";
 
 			// 응답 정보 로깅
 			log.info("Response Data: {}", responseData);
@@ -124,12 +131,16 @@ public class UserRequestLoggingAspect {
 			if (responseData.length() > 2000) {
 				responseData = responseData.substring(0, 2000);
 			}
-
-			UserRequestHistoryDTO userRequestHistoryDTO = userRequestHistoryThreadLocal.get();
-			userRequestHistoryDTO.setResData(responseData);
+		}
+		
+		UserRequestHistoryDTO userRequestHistoryDTO = userRequestHistoryThreadLocal.get();
+		userRequestHistoryDTO.setResData(responseData);
+		
+		if(logYn != null && logYn.equals("Y")) {
 			userRequestHistoryService.saveUserRequestHistory(userRequestHistoryDTO);
 		}
 
+		logYnThreadLocal.remove();
 		logDataYnThreadLocal.remove();
 		userRequestHistoryThreadLocal.remove();
 	}

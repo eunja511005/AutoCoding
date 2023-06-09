@@ -35,7 +35,7 @@
 	<delete id="delete" parameterType="int"> 
 	  <![CDATA[
 	    DELETE FROM ZTHH_ERRORHIST 
-	    where CREATE_TIME < CURRENT_DATE - #{deleteDay, jdbcType=INTEGER, javaType=int}
+	    where CREATE_DT < CURRENT_DATE - #{deleteDay, jdbcType=INTEGER, javaType=int}
 	    and SOLUTION_MSG IS null
 	   ]]>
 	</delete>    	
