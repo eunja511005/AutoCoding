@@ -60,6 +60,7 @@ public class MyWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter
 	private final CustomOAuth2UserService customOAuth2UserService;
 	private final LocaleResolver localeResolver;
 	private final UserService userService;
+	private final SessionRegistry sessionRegistry;
 	
     // logout -> login max session 1 오류 해결을 위해 추가
     @Bean
@@ -82,7 +83,7 @@ public class MyWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter
          * javascript에서 CSRF 토큰을 사용하가 위해 httpOnlyFalse()로 지정
          */
         http.csrf()
-        	.ignoringAntMatchers("/h2/**")
+        	.ignoringAntMatchers("/h2/**", "/api/**")
         	.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
     	
         /**
@@ -102,7 +103,7 @@ public class MyWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter
                 .maximumSessions(1)
                 .maxSessionsPreventsLogin(true)
                 .expiredUrl("/sessionExpire.html")
-                .sessionRegistry(sessionRegistry());
+                .sessionRegistry(sessionRegistry);
         
         /**
          * 2.h2-console에서 iframe을 사용하는데 이때 X-Frame-Options 에러가 발생하지 않도록 설정(sameorigin일 경우만 허용)
@@ -143,7 +144,10 @@ public class MyWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter
             .antMatchers("/signinInit", "/assets/**",
             		"/joinInit", "/join", "/js/**", "/img/**", "/css/**",
             		"/h2-console/**", "/error/**", "/favicon.ico", "/layout/test",
-            		"/main/**", "/content1", "/content2", "/content3", "/posts/**", "/login-status", "/commonCode/**", "/menu/loadMenu", "/", "/signout", "/signin").permitAll() // 누구나 접근 허용
+            		"/main/**", "/content1", "/content2", "/content3", "/posts/**", 
+            		"/login-status", "/commonCode/**", "/menu/loadMenu", "/", 
+            		"/api/**",
+            		"/signout", "/signin").permitAll() // 누구나 접근 허용
             .anyRequest().authenticated()
             .and()
             .exceptionHandling()
@@ -172,6 +176,11 @@ public class MyWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter
                         if (auth != null && auth.isAuthenticated()) {
                         	PrincipalDetails userDetailsImpl = (PrincipalDetails) auth.getPrincipal();
                         	
+                            // 세션 레지스트리에 등록
+                            sessionRegistry.registerNewSession(request.getSession().getId(), userDetailsImpl);
+                            userService.updateLastLoginDt(auth.getName(), request.getSession().getId());
+                        	
+                            // locale 설정
                         	String language = "ko";
                         	if(!StringUtils.isBlank(userDetailsImpl.getLanguage())) {
                         		language = userDetailsImpl.getLanguage();
@@ -184,7 +193,7 @@ public class MyWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter
                         SimpleDateFormat formatter = new SimpleDateFormat("yyyy년 MM월 dd일 HH시 mm분 ss초");
                         log.info(" ### {}, Last login time : {} ", auth.getName(), formatter.format(date));
                         
-                        userService.updateLastLoginDt(auth.getName(), AuthUtils.getSessionId());
+                        //userService.updateLastLoginDt(auth.getName(), AuthUtils.getSessionId());
                         
                         Map<String, String> res = new HashMap<>();
                         res.put("result", "login success");
@@ -232,6 +241,10 @@ public class MyWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter
                         if (auth != null && auth.isAuthenticated()) {
                         	PrincipalDetails userDetailsImpl = (PrincipalDetails) auth.getPrincipal();
                         	
+                        	// 세션 레지스트리에 등록
+                            sessionRegistry.registerNewSession(request.getSession().getId(), userDetailsImpl);
+                            userService.updateLastLoginDt(auth.getName(), request.getSession().getId());
+                        	
                         	String language = "ko";
                         	if(!StringUtils.isBlank(userDetailsImpl.getLanguage())) {
                         		language = userDetailsImpl.getLanguage();
@@ -265,10 +278,5 @@ public class MyWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter
                     .deleteCookies("JSESSIONID", "SESSION")
                     .permitAll();        
         
-    }
-
-    @Bean
-    public SessionRegistry sessionRegistry(){
-        return new SessionRegistryImpl();
     }
 }
