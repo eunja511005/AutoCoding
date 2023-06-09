@@ -25,8 +25,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.session.SessionRegistry;
-import org.springframework.security.core.session.SessionRegistryImpl;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
@@ -61,6 +59,7 @@ public class MyWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter
 	private final LocaleResolver localeResolver;
 	private final UserService userService;
 	private final SessionRegistry sessionRegistry;
+	private final CustomLogoutHandler customLogoutHandler;
 	
     // logout -> login max session 1 오류 해결을 위해 추가
     @Bean
@@ -102,7 +101,7 @@ public class MyWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter
 //                .invalidSessionUrl("/invalidSession.html")
                 .maximumSessions(1)
                 .maxSessionsPreventsLogin(true)
-                .expiredUrl("/sessionExpire.html")
+                .expiredUrl("/sessionExpire")
                 .sessionRegistry(sessionRegistry);
         
         /**
@@ -147,7 +146,7 @@ public class MyWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter
             		"/main/**", "/content1", "/content2", "/content3", "/posts/**", 
             		"/login-status", "/commonCode/**", "/menu/loadMenu", "/", 
             		"/api/**",
-            		"/signout", "/signin").permitAll() // 누구나 접근 허용
+            		"/signout", "/signin", "/signout2", "/sessionExpire").permitAll() // 누구나 접근 허용
             .anyRequest().authenticated()
             .and()
             .exceptionHandling()
@@ -274,6 +273,7 @@ public class MyWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter
 		        	.logout()
 		            .logoutUrl("/signout")
                     .logoutSuccessUrl("/main")
+                    .addLogoutHandler(customLogoutHandler)
                     .invalidateHttpSession(true)
                     .deleteCookies("JSESSIONID", "SESSION")
                     .permitAll();        

@@ -40,18 +40,24 @@
                       		  text: response.result,
                       		  icon: "warning",
                       		  buttons: {
-                      		    confirm: "OK",
-                      		    logout: "Logout",
+                      		    confirm: "Cancel",
+                      		    logout: "Delete Previous Session",
                       		  },
                       		}) 
                       		.then((result) => {
 	                      		if (result === "logout") {
-	                      			// 로그아웃 처리 후 리디렉션
-	                      			window.location.href = "/signout";
-	                      		} else {
-	                      			// 사용자가 확인 버튼을 클릭하거나 대화상자를 닫은 경우 아무 작업 없음
-	                      			window.location.href = "/main";
-	                      		}                      			
+	                      			
+	                      		  callAjax("/signout2", "POST", myFormData, function(response) {
+	                      		      if (response.success) {
+	                                  	swal({
+	                              		  title: "Success",
+	                              		  text: "The previous session has been successfully deleted. Please log in again.",
+	                              		  icon: "success",
+	                              		  button: "OK",
+	                              		})
+	                      			  }
+	                      		  });
+	                      		}                  			
                       		});
                         }
                     	

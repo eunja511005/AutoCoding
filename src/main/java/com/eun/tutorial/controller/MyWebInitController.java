@@ -17,10 +17,11 @@ import org.apache.tika.Tika;
 import org.apache.tika.mime.MediaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.session.SessionInformation;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Controller;
@@ -29,6 +30,7 @@ import org.springframework.util.MimeTypeUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -36,9 +38,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.eun.tutorial.dto.UserInfoDTO;
 import com.eun.tutorial.dto.ZthhFileAttachDTO;
+import com.eun.tutorial.mapper.UserMapper;
 import com.eun.tutorial.service.UserService;
 import com.eun.tutorial.service.ZthhFileAttachService;
 import com.eun.tutorial.service.user.PrincipalDetails;
+import com.eun.tutorial.util.AuthUtils;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -52,13 +56,13 @@ public class MyWebInitController {
 	private static final Logger logger = LoggerFactory.getLogger(MyWebInitController.class);
 	private final UserService userService;
 	private final ZthhFileAttachService zthhFileAttachService;
-	
+    private final SessionRegistry sessionRegistry;
+    private final BCryptPasswordEncoder passwordEncoder;
+    private final UserMapper userMapper;
+    private final LogoutHandler logoutHandler;
+    
     @Value("${spring.servlet.multipart.location}")
     private String multiPathPath;
-	
-	@Autowired private BCryptPasswordEncoder passwordEncoder; // 시큐리티에서 빈(Bean) 생성할 예정
-	
-	@Autowired private LogoutHandler logoutHandler;
 	
 	@GetMapping("/")
 	public ModelAndView main() {
@@ -229,6 +233,40 @@ public class MyWebInitController {
         // 2. 로그인 페이지로 이동
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("jsp/main/common/main");
+
+        return modelAndView;
+    }
+    
+    @PostMapping("/signout2")
+    public @ResponseBody Map<String, Boolean> performLogout2(@RequestBody Map<String, Object> reqMap) {
+    	Map<String, Boolean> resMap = new HashMap<>();
+    	
+    	Map<String, Object> map = new HashMap<>();
+        map.put("username", reqMap.get("username")); 
+        UserInfoDTO user = userMapper.getUser(map);
+        
+        if (user != null && passwordEncoder.matches((String)reqMap.get("password"), user.getPassword())) {
+        	// 인증 성공시 세션 삭제
+            List<SessionInformation> sessions = sessionRegistry.getAllSessions(new PrincipalDetails(user), true);
+            userService.updateLastLoginDt(AuthUtils.getLoginUser(), "");
+            
+            for (SessionInformation session : sessions) {
+                session.expireNow();
+            }
+            
+            resMap.put("success", true);
+            return resMap;
+        } else {
+            resMap.put("success", false);
+            return resMap;
+        }
+    }
+    
+    // 자동 로그아웃 안 될때 사용
+    @GetMapping("/sessionExpire")
+    public ModelAndView sessionExpire(HttpServletRequest request, HttpServletResponse response) {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("jsp/error/sessionExpire");
 
         return modelAndView;
     }
