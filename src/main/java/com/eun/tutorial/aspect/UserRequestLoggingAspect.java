@@ -1,9 +1,7 @@
 package com.eun.tutorial.aspect;
 
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.util.Arrays;
-import java.util.Map;
+import java.util.List;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,7 +14,6 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import org.springframework.web.servlet.HandlerMapping;
 
 import com.eun.tutorial.dto.main.MenuControlDTO;
 import com.eun.tutorial.dto.main.UserRequestHistoryDTO;
@@ -57,23 +54,17 @@ public class UserRequestLoggingAspect {
 			String url = request.getRequestURI();
 			String method = request.getMethod();
 
-			String logYn = "N";
-			String logDataYn = "N";
-			Map<String, String> logYnMap = menuControlService.getLogYnByUrlAndMethod(url, method);
-			if (logYnMap != null) {
-				logYn = logYnMap.get("LOG_YN");
-				logDataYn = logYnMap.get("LOG_DATA_YN");
-			} else {
-				MenuControlDTO menuControlDTO = new MenuControlDTO();
-				menuControlDTO.setId("menuControl_" + UUID.randomUUID());
-				menuControlDTO.setLogYn("Y");
-				menuControlDTO.setLogDataYn("N");
-				menuControlDTO.setMethod(method);
-				menuControlDTO.setRoleId("ANY");
-				menuControlDTO.setUrl(url);
-				menuControlDTO.setCreateId("UserRequestLoggingAspect.java");
-				menuControlDTO.setUpdateId("UserRequestLoggingAspect.java");
-				menuControlService.saveMenuControl(menuControlDTO);
+			String logYn;
+			String logDataYn;
+			MenuControlDTO matchMenuControlDTO = getMenuControlDTO(url, method);
+			
+			if (matchMenuControlDTO==null) {
+				logYn = "Y";
+				logDataYn = "N";
+				saveMenuControl(url, method, logYn, logDataYn);
+			}else {
+				logYn = matchMenuControlDTO.getLogYn();
+				logDataYn = matchMenuControlDTO.getLogDataYn();
 			}
 			
 			if (logYn.equals("Y")) {
@@ -96,14 +87,11 @@ public class UserRequestLoggingAspect {
 
 				log.info("Request Data by joinPoint.getArgs(): {}", requestData);
 
-				if (logDataYn.equals("Y")) {
-					
-					if(!requestData.equals("[]")) {
-						if (requestData.length() > 2000) {
-							requestData = requestData.substring(0, 2000);
-						}
-						userRequestHistoryDTO.setReqData(requestData);
+				if (logDataYn.equals("Y") && (!requestData.equals("[]"))) {
+					if (requestData.length() > 2000) {
+						requestData = requestData.substring(0, 2000);
 					}
+					userRequestHistoryDTO.setReqData(requestData);
 				}
 			}
 			
@@ -111,6 +99,41 @@ public class UserRequestLoggingAspect {
 			logDataYnThreadLocal.set(logDataYn);
 			userRequestHistoryThreadLocal.set(userRequestHistoryDTO);
 		}
+	}
+
+	private MenuControlDTO getMenuControlDTO(String url, String method) {
+	    List<MenuControlDTO> menuControlDTOList = menuControlService.getMenuControlList();
+
+	    for (MenuControlDTO menuControlDTO : menuControlDTOList) {
+	        if (menuControlDTO.getMethod().equals(method)) {
+	            if (menuControlDTO.getUrl().endsWith("*")) {
+	                String prefix = menuControlDTO.getUrl().substring(0, menuControlDTO.getUrl().length() - 1);
+	                if (url.startsWith(prefix)) {
+	                    return menuControlDTO;
+	                }
+	            } else {
+	                if (url.equals(menuControlDTO.getUrl())) {
+	                    return menuControlDTO;
+	                }
+	            }
+	        }
+	    }
+
+	    return null;
+	}
+
+
+	private void saveMenuControl(String url, String method, String logYn, String logDataYn) {
+		MenuControlDTO menuControlDTO = new MenuControlDTO();
+		menuControlDTO.setId("menuControl_" + UUID.randomUUID());
+		menuControlDTO.setLogYn(logYn);
+		menuControlDTO.setLogDataYn(logDataYn);
+		menuControlDTO.setMethod(method);
+		menuControlDTO.setRoleId("ANY");
+		menuControlDTO.setUrl(url);
+		menuControlDTO.setCreateId("UserRequestLoggingAspect.java");
+		menuControlDTO.setUpdateId("UserRequestLoggingAspect.java");
+		menuControlService.saveMenuControl(menuControlDTO);
 	}
 
 	// AfterReturning advice: 메서드 실행 후에 응답 정보 로깅
