@@ -72,5 +72,19 @@ public class MenuController {
         
         return ResponseEntity.ok().body(menuHtml);
     }
+    
+	@GetMapping("/mapping")
+	public ModelAndView mappingList() {
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("jsp/main/content/menuMapping");
+		return modelAndView;
+	}
+    
+    @GetMapping("/mapping/{role}")
+    public ResponseEntity<String> getMapping(@PathVariable String role) {
+    	String menuMappingHtml = menuService.getMenuAuthByRole(role);
+        
+        return ResponseEntity.ok().body(menuMappingHtml);
+    }
 }
 

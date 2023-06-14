@@ -36,6 +36,12 @@ public class MenuServiceImpl implements MenuService {
 	public List<MenuDTO> getMenuList() {
 		return menuMapper.selectMenuList();
 	}
+	
+	@Override
+	public String getMenuAuthByRole(String role) {
+		List<MenuDTO> menuDTOList = menuMapper.getMenuAuthByRole(role);
+		return generateMenuHtmlRecursive(menuDTOList, "N/A");
+	}
 
 	@Override
 	@CreatePermission
@@ -66,6 +72,39 @@ public class MenuServiceImpl implements MenuService {
 		List<MenuDTO> menus = menuMapper.selectMenuList();
 		return generateMenuHtml(menus);
 	}
+	
+    private String generateMenuHtmlRecursive(List<MenuDTO> menuDTOList, String parentMenuId) {
+        StringBuilder htmlBuilder = new StringBuilder();
+
+        for (MenuDTO menuDTO : menuDTOList) {
+            if (menuDTO.getParentMenuId().equals(parentMenuId)) {
+                String menuId = menuDTO.getMenuId();
+                String menuAuth = menuDTO.getMenuAuth();
+                int menuLevel = menuDTO.getMenuLevel();
+
+                htmlBuilder.append("<li class=\"list-group-item\">\n");
+                htmlBuilder.append("<div class=\"custom-control custom-checkbox\">\n");
+                htmlBuilder.append("<input type=\"checkbox\" class=\"custom-control-input\" id=\"").append(menuId).append("\"");
+                if ("Y".equals(menuAuth)) {
+                    htmlBuilder.append(" checked");
+                }
+                htmlBuilder.append(">\n");
+                htmlBuilder.append("<label class=\"custom-control-label\" for=\"").append(menuId).append("\">").append(menuId).append("</label>\n");
+                htmlBuilder.append("</div>\n");
+
+                // 하위 메뉴가 있는 경우 재귀 호출
+                if (menuLevel < 4) {
+                    htmlBuilder.append("<ul class=\"list-group collapse\" id=\"").append(menuId).append("Menu\">\n");
+                    htmlBuilder.append(generateMenuHtmlRecursive(menuDTOList, menuId));
+                    htmlBuilder.append("</ul>\n");
+                }
+
+                htmlBuilder.append("</li>\n");
+            }
+        }
+
+        return htmlBuilder.toString();
+    }
 
 	private String generateMenuHtml(List<MenuDTO> menus) {
 		StringBuilder sb = new StringBuilder();

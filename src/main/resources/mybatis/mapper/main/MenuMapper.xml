@@ -14,6 +14,38 @@
 			CONNECT BY PARENT_MENU_ID = PRIOR MENU_ID
 			ORDER SIBLINGS BY MENU_ORDER
 	</select>
+	
+	<select id="getMenuAuthByRole" resultType="com.eun.tutorial.dto.main.MenuDTO">
+	  SELECT CASE
+	    <choose>
+	      <when test="role == 'ROLE_SYS'">
+	        WHEN MENU_AUTH IN ('ROLE_SYS', 'ROLE_ADMIN', 'ROLE_FAMILY', 'ROLE_USER', 'ROLE_ANY') THEN 'Y'
+	      </when>
+	      <when test="role == 'ROLE_ADMIN'">
+	        WHEN MENU_AUTH IN ('ROLE_ADMIN', 'ROLE_FAMILY', 'ROLE_USER', 'ROLE_ANY') THEN 'Y'
+	      </when>
+	      <when test="role == 'ROLE_FAMILY'">
+	        WHEN MENU_AUTH IN ('ROLE_FAMILY', 'ROLE_USER', 'ROLE_ANY') THEN 'Y'
+	      </when>
+	      <when test="role == 'ROLE_USER'">
+	        WHEN MENU_AUTH IN ('ROLE_USER', 'ROLE_ANY') THEN 'Y'
+	      </when>
+	      <when test="role == 'ROLE_ANY'">
+	        WHEN MENU_AUTH IN ('ROLE_ANY') THEN 'Y'
+	      </when>
+	      <!-- 다른 롤에 대한 처리 추가 -->
+	      <otherwise>
+	        ELSE 'N'
+	      </otherwise>
+	    </choose>
+	  END AS MENU_AUTH, m.MENU_ID, m.PARENT_MENU_ID
+	  FROM zthh_menu m
+	  WHERE DEL_YN = 'N'
+	  START WITH PARENT_MENU_ID = 'N/A'
+	  CONNECT BY PRIOR MENU_ID = PARENT_MENU_ID
+	  ORDER SIBLINGS BY MENU_ORDER
+	</select>
+	
 
 	<insert id="insertMenu">
 		INSERT INTO ZTHH_MENU (CATEGORY, MENU_LEVEL, MENU_AUTH, MENU_ID, MENU_PATH, MENU_ICON, MENU_ORDER, PARENT_MENU_ID, id, del_yn, create_id, create_dt, update_id, update_dt)
