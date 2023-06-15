@@ -40,7 +40,23 @@ public class MenuServiceImpl implements MenuService {
 	@Override
 	public String getMenuAuthByRole(String role) {
 		List<MenuDTO> menuDTOList = menuMapper.getMenuAuthByRole(role);
-		return generateMenuHtmlRecursive(menuDTOList, "N/A");
+		Map<String, List<MenuDTO>> submenuDTOListMap = new HashMap<String, List<MenuDTO>>();
+		for (MenuDTO menuDTO : menuDTOList) {
+			if(submenuDTOListMap.get(menuDTO.getParentMenuId())==null) {
+				List<MenuDTO> menuList = new ArrayList<>();
+				menuList.add(menuDTO);
+				submenuDTOListMap.put(menuDTO.getParentMenuId(), menuList);
+			}else {
+				(submenuDTOListMap.get(menuDTO.getParentMenuId())).add(menuDTO);
+			}
+		}
+		
+		StringBuilder htmlBuilder = new StringBuilder();
+		htmlBuilder.append("<ul class=\"list-group\" id=\"menu\">\n");
+		generateMenuHtmlRecursive(htmlBuilder, submenuDTOListMap, "root");
+		htmlBuilder.append("</ul>\n");
+		
+		return htmlBuilder.toString();
 	}
 
 	@Override
@@ -73,37 +89,42 @@ public class MenuServiceImpl implements MenuService {
 		return generateMenuHtml(menus);
 	}
 	
-    private String generateMenuHtmlRecursive(List<MenuDTO> menuDTOList, String parentMenuId) {
-        StringBuilder htmlBuilder = new StringBuilder();
-
+    private void generateMenuHtmlRecursive(StringBuilder htmlBuilder, Map<String, List<MenuDTO>> submenuDTOListMap, String parentMenuId) {
+        
+    	List<MenuDTO> menuDTOList = submenuDTOListMap.get(parentMenuId);
+    			
         for (MenuDTO menuDTO : menuDTOList) {
-            if (menuDTO.getParentMenuId().equals(parentMenuId)) {
-                String menuId = menuDTO.getMenuId();
-                String menuAuth = menuDTO.getMenuAuth();
-                int menuLevel = menuDTO.getMenuLevel();
+        	String id = menuDTO.getId();
+            String menuId = menuDTO.getMenuId();
+            String menuAuth = menuDTO.getMenuAuth();
 
-                htmlBuilder.append("<li class=\"list-group-item\">\n");
-                htmlBuilder.append("<div class=\"custom-control custom-checkbox\">\n");
-                htmlBuilder.append("<input type=\"checkbox\" class=\"custom-control-input\" id=\"").append(menuId).append("\"");
-                if ("Y".equals(menuAuth)) {
-                    htmlBuilder.append(" checked");
-                }
-                htmlBuilder.append(">\n");
-                htmlBuilder.append("<label class=\"custom-control-label\" for=\"").append(menuId).append("\">").append(menuId).append("</label>\n");
-                htmlBuilder.append("</div>\n");
-
-                // 하위 메뉴가 있는 경우 재귀 호출
-                if (menuLevel < 4) {
-                    htmlBuilder.append("<ul class=\"list-group collapse\" id=\"").append(menuId).append("Menu\">\n");
-                    htmlBuilder.append(generateMenuHtmlRecursive(menuDTOList, menuId));
-                    htmlBuilder.append("</ul>\n");
-                }
-
-                htmlBuilder.append("</li>\n");
+            htmlBuilder.append("<li class=\"list-group-item\">\n");
+            htmlBuilder.append("<div class=\"custom-control custom-checkbox\">\n");
+            htmlBuilder.append("<input type=\"checkbox\" class=\"custom-control-input\" id=\"").append(menuId).append("\" data-menu-id=\""+id+"\"");
+            if ("Y".equals(menuAuth)) {
+                htmlBuilder.append(" checked");
             }
-        }
+            htmlBuilder.append(">\n");
+            
+            htmlBuilder.append("<label class=\"custom-control-label\" for=\"").append(menuId).append("\">\n");
+            
+            // 하위 메뉴 있는 경우 아이콘 표시
+            if (submenuDTOListMap.containsKey(menuId)) {
+            	htmlBuilder.append("<i class=\"fas fa-plus\"></i> ");
+            }
+            
+            htmlBuilder.append(menuId).append("</label>\n");
+            htmlBuilder.append("</div>\n");
 
-        return htmlBuilder.toString();
+            // 하위 메뉴가 있는 경우 재귀 호출
+            if (submenuDTOListMap.get(menuId)!=null) {
+                htmlBuilder.append("<ul class=\"list-group collapse\" id=\"").append(menuId).append("Menu\">\n");
+                generateMenuHtmlRecursive(htmlBuilder, submenuDTOListMap, menuId);
+                htmlBuilder.append("</ul>\n");
+            }
+
+            htmlBuilder.append("</li>\n");
+        }
     }
 
 	private String generateMenuHtml(List<MenuDTO> menus) {
@@ -198,6 +219,11 @@ public class MenuServiceImpl implements MenuService {
 		sb.append("\t\t</nav>\n");
 		sb.append("\t</div>\n");
 
+	}
+
+	@Override
+	public void savePermissions(String role, List<String> allowedMenuItems) {
+		
 	}
 
 }

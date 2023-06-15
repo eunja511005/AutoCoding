@@ -138,7 +138,7 @@ function initSelectBox(selectBoxId, url, includeAll, selectedValues) {
 	      if (response.success) {
 		        $.each(response.data, function(index, commonCode) {
 		          var option = $('<option>').val(commonCode.code).text(commonCode.value);
-		          if (selectedValues && selectedValues.indexOf(commonCode.code) !== -1) {
+		          if (Array.isArray(selectedValues) && selectedValues.indexOf(commonCode.code) !== -1) {
 		            option.prop('selected', true);
 		          }
 		          selectBox.append(option);		         

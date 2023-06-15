@@ -38,7 +38,7 @@
 	        ELSE 'N'
 	      </otherwise>
 	    </choose>
-	  END AS MENU_AUTH, m.MENU_ID, m.PARENT_MENU_ID
+	  END AS MENU_AUTH, m.ID, m.MENU_ID, m.PARENT_MENU_ID
 	  FROM zthh_menu m
 	  WHERE DEL_YN = 'N'
 	  START WITH PARENT_MENU_ID = 'N/A'
