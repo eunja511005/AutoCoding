@@ -15,13 +15,13 @@
 		<div class="card-body" style="width:100%">
 			<div class="container-fluid">
 		      <div class="row align-items-center">
-		        <div class="col-md-10">
+		        <div class="col-md-10 col-sm-11">
 		          <div class="form-floating">
 		            <select class="form-select" id="roleId" name="roleId" required></select>
 		            <label for="roleId">ROLE_ID</label>
 		          </div>
 		        </div>
-		        <div class="col-md-2 d-flex justify-content-center">
+		        <div class="col-md-2 col-sm-1 d-flex justify-content-center">
 		          <button id="save-btn" class="btn btn-outline-primary"><i class="fas fa-save"></i> Save</button>
 		        </div>
 		      </div>
