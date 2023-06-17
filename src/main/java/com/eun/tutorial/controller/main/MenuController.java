@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.eun.tutorial.dto.main.ApiResponse;
-import com.eun.tutorial.dto.main.AutocodingFieldDTO;
 import com.eun.tutorial.dto.main.MenuDTO;
 import com.eun.tutorial.service.main.MenuService;
 import com.eun.tutorial.util.StringUtils;
@@ -90,14 +89,9 @@ public class MenuController {
     }
     
 	@PostMapping("/savePermissions")
-	public @ResponseBody ApiResponse savePermissions(@RequestParam String role, @RequestParam("allowedMenuItems[]") List<String> allowedMenuItems) {
-	    try {
-	    	log.info(role);
-	    	menuService.savePermissions(role, allowedMenuItems);
-	        return new ApiResponse<>(true, "Successfully saved permission.", null);
-	    } catch (Exception e) {
-	        return new ApiResponse<>(false, "Failed to save permission.", null);
-	    }
+	public @ResponseBody ApiResponse savePermissions(@RequestParam String role, @RequestParam("allowedMenuItems[]") List<String> allowedMenuItems){
+    	menuService.savePermissions(role, allowedMenuItems);
+        return new ApiResponse<>(true, "Successfully saved permission.", null);
 	}
 }
 

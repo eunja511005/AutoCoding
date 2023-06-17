@@ -1,5 +1,6 @@
 package com.eun.tutorial.service.main;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -8,6 +9,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
+import org.apache.ibatis.annotations.Case;
 import org.springframework.context.MessageSource;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -105,12 +107,11 @@ public class MenuServiceImpl implements MenuService {
                 htmlBuilder.append(" checked");
             }
             htmlBuilder.append(">\n");
-            
             htmlBuilder.append("<label class=\"custom-control-label\" for=\"").append(menuId).append("\">\n");
             
             // 하위 메뉴 있는 경우 아이콘 표시
             if (submenuDTOListMap.containsKey(menuId)) {
-            	htmlBuilder.append("<i class=\"fas fa-plus\"></i> ");
+            	htmlBuilder.append("<i class=\"fas fa-caret-right\"></i> ");
             }
             
             htmlBuilder.append(menuId).append("</label>\n");
@@ -118,7 +119,7 @@ public class MenuServiceImpl implements MenuService {
 
             // 하위 메뉴가 있는 경우 재귀 호출
             if (submenuDTOListMap.get(menuId)!=null) {
-                htmlBuilder.append("<ul class=\"list-group collapse\" id=\"").append(menuId).append("Menu\">\n");
+                htmlBuilder.append("<ul class=\"list-group collapse show\" id=\"").append(menuId).append("Menu\">\n");
                 generateMenuHtmlRecursive(htmlBuilder, submenuDTOListMap, menuId);
                 htmlBuilder.append("</ul>\n");
             }
@@ -222,8 +223,55 @@ public class MenuServiceImpl implements MenuService {
 	}
 
 	@Override
-	public void savePermissions(String role, List<String> allowedMenuItems) {
+	public void savePermissions(String role, List<String> allowedMenuItems){
 		
+		List<MenuDTO> menuDTOList = menuMapper.getMenuAuthByRole(role);
+		List<String> authList = new ArrayList<>();
+		for (MenuDTO menuDTO : menuDTOList) {
+			if("Y".equals(menuDTO.getMenuAuth())) {
+				authList.add(menuDTO.getId());
+			}
+		}
+		
+		// 체크 O -> X (기존에 해당 롤에 있던 권한 중 빠진 권한은 차 상위 롤로 업데이트)
+		List<String> noAuthList = new ArrayList<>();
+		for (String id : authList) {
+			if(!allowedMenuItems.contains(id)) {
+				noAuthList.add(id);
+			}
+		}
+		String upperRole = getUpperRole(role);
+		if(!noAuthList.isEmpty()) {
+			menuMapper.updateMenuAuthByMenuIds(upperRole, noAuthList);
+		}
+		
+		// 체크 X -> O (요청된 권한 중 기존에 없던 권한만 업데이트 해줌, 그래야 하위 롤이 가지고 있던 권한이 안 없어 짐)
+		List<String> addAuthList = new ArrayList<>();
+		for (String id : allowedMenuItems) {
+			if(!authList.contains(id)) {
+				addAuthList.add(id);
+			}
+		}
+		if(!addAuthList.isEmpty()) {
+			menuMapper.updateMenuAuthByMenuIds(role, addAuthList);
+		}
+	}
+
+	private String getUpperRole(String role) {
+		if("ROLE_ANY".equals(role)) {
+			return "ROLE_USER";
+		}
+		if("ROLE_USER".equals(role)) {
+			return "ROLE_FAMILY";
+		}
+		if("ROLE_FAMILY".equals(role)) {
+			return "ROLE_ADMIN";
+		}
+		if("ROLE_ADMIN".equals(role)) {
+			return "ROLE_SYS";
+		}
+		
+		return null;
 	}
 
 }

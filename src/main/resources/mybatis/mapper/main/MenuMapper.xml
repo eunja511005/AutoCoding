@@ -67,5 +67,14 @@
 		WHERE id = #{id}
 		ORDER BY update_dt, create_dt
 	</select>
+	
+    <update id="updateMenuAuthByMenuIds">
+        UPDATE ZTHH_MENU
+        SET MENU_AUTH = #{role}
+        WHERE id IN
+        <foreach item="menuId" collection="menuIds" open="(" separator="," close=")">
+            #{menuId}
+        </foreach>
+    </update>
 
 </mapper>

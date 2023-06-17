@@ -14,21 +14,17 @@
 		</div>	
 		<div class="card-body" style="width:100%">
 			<div class="container-fluid">
-				<div class="row">
-					<div class="col-12">
-						<form id="menuControlForm" class="row g-2 align-items-center">
-							<div class="col-md">
-								<div class="form-floating">
-									<select class="form-select" id="roleId" name="roleId" required></select>
-									<label for="roleId">ROLE_ID</label>
-								</div>									
-							</div>
-							<div class="col-md text-center">
-								<button id="save-btn" class="btn btn-outline-primary"><i class="fas fa-save"></i></button>
-							</div>
-						</form>
-					</div>
-				</div>
+		      <div class="row align-items-center">
+		        <div class="col-md-10">
+		          <div class="form-floating">
+		            <select class="form-select" id="roleId" name="roleId" required></select>
+		            <label for="roleId">ROLE_ID</label>
+		          </div>
+		        </div>
+		        <div class="col-md-2 d-flex justify-content-center">
+		          <button id="save-btn" class="btn btn-outline-primary"><i class="fas fa-save"></i> Save</button>
+		        </div>
+		      </div>
 			</div>			
 		</div>
 	</div>	
