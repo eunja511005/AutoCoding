@@ -26,7 +26,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
@@ -36,6 +35,7 @@ import org.springframework.web.servlet.LocaleResolver;
 import com.eun.tutorial.dto.ZthhErrorDTO;
 import com.eun.tutorial.dto.main.MenuControlDTO;
 import com.eun.tutorial.exception.CustomException;
+import com.eun.tutorial.exception.CustomForbiddenEntryPoint;
 import com.eun.tutorial.service.UserService;
 import com.eun.tutorial.service.ZthhErrorService;
 import com.eun.tutorial.service.main.MenuControlService;
@@ -60,6 +60,7 @@ public class MyWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter
 	private final UserService userService;
 	private final SessionRegistry sessionRegistry;
 	private final CustomLogoutHandler customLogoutHandler;
+	private final CustomForbiddenEntryPoint customForbiddenEntryPoint;
 	
     // logout -> login max session 1 오류 해결을 위해 추가
     @Bean
@@ -150,8 +151,8 @@ public class MyWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter
             .anyRequest().authenticated()
             .and()
             .exceptionHandling()
-            .authenticationEntryPoint(new Http403ForbiddenEntryPoint());
-        
+            //.authenticationEntryPoint(new Http403ForbiddenEntryPoint());
+            .authenticationEntryPoint(customForbiddenEntryPoint);
         /**
          * 5.로그인 설정
          *   1) 로그인 페이지 설정
