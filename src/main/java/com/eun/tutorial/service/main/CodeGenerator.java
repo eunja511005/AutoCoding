@@ -266,6 +266,7 @@ public class CodeGenerator {
         builder.append("\t\treturn %sMapper.select%sList();\n");
         builder.append("\t}\n\n");
         builder.append("\t@Override\n");
+        builder.append("\t@Transactional\n");
         builder.append("\t@SetCreateAndUpdateId\n");
         builder.append("\t@CreatePermission\n");
         builder.append("\tpublic int save%s(%sDTO %sDTO) {\n");
