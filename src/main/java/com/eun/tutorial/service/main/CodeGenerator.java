@@ -239,7 +239,8 @@ public class CodeGenerator {
         // Generate the imports
         builder.append("import java.util.List;\n");
         builder.append("import java.util.UUID;\n\n");
-        builder.append("import org.springframework.stereotype.Service;\n\n");
+        builder.append("import org.springframework.stereotype.Service;\n");
+        builder.append("import org.springframework.transaction.annotation.Transactional;\n\n");
         
         builder.append("import com.eun.tutorial.aspect.annotation.CheckAuthorization;\n");
         builder.append("import com.eun.tutorial.aspect.annotation.CreatePermission;\n");
@@ -272,12 +273,14 @@ public class CodeGenerator {
         builder.append("\t\treturn %sMapper.insert%s(%sDTO);\n");
         builder.append("\t}\n\n");
         builder.append("\t@Override\n");
+        builder.append("\t@Transactional\n");
         builder.append("\t@SetCreateAndUpdateId\n");
         builder.append("\t@CheckAuthorization\n");
         builder.append("\tpublic int update%s(%sDTO %sDTO) {\n");
         builder.append("\t\treturn %sMapper.update%s(%sDTO);\n");
         builder.append("\t}\n\n");
         builder.append("\t@Override\n");
+        builder.append("\t@Transactional\n");
         builder.append("\t@CheckAuthorization\n");
         builder.append("\tpublic int delete%s(String id) {\n");
         builder.append("\t\treturn %sMapper.delete%s(id);\n");
