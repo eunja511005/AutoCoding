@@ -17,4 +17,5 @@ public interface MenuMapper {
 	int deleteMenu(String id);
 	MenuDTO getMenuListById(String id);
 	int updateMenuAuthByMenuIds(@Param("role") String role, @Param("menuIds") List<String> menuIds);
+	int updateMenuControl();
 }

@@ -76,5 +76,20 @@
             #{menuId}
         </foreach>
     </update>
+	
+    <update id="updateMenuControl">
+      <![CDATA[
+		UPDATE ZTHH_MENUCONTROL c
+		SET c.ROLE_ID = (SELECT SUBSTR(m.MENU_AUTH, 6)
+		                 FROM ZTHH_MENU m
+		                 WHERE m.MENU_PATH = c.URL
+		                 AND m.DEL_YN = 'N'
+		                 AND SUBSTR(m.MENU_AUTH, 6) <> c.ROLE_ID)
+		WHERE c.URL IN (SELECT m.MENU_PATH
+		                FROM ZTHH_MENU m
+		                WHERE m.DEL_YN = 'N'
+		                AND SUBSTR(m.MENU_AUTH, 6) <> c.ROLE_ID)
+      ]]> 		                
+    </update>
 
 </mapper>

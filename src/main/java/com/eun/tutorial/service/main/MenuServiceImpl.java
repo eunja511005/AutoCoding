@@ -16,6 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.eun.tutorial.aspect.annotation.CheckAuthorization;
 import com.eun.tutorial.aspect.annotation.CreatePermission;
@@ -223,6 +224,7 @@ public class MenuServiceImpl implements MenuService {
 	}
 
 	@Override
+	@Transactional
 	public void savePermissions(String role, List<String> allowedMenuItems){
 		
 		List<MenuDTO> menuDTOList = menuMapper.getMenuAuthByRole(role);
@@ -255,6 +257,9 @@ public class MenuServiceImpl implements MenuService {
 		if(!addAuthList.isEmpty()) {
 			menuMapper.updateMenuAuthByMenuIds(role, addAuthList);
 		}
+		
+		// 메뉴 권한에 맞게 메뉴 콘트롤러 테이블 업데이트
+		menuMapper.updateMenuControl();
 	}
 
 	private String getUpperRole(String role) {
