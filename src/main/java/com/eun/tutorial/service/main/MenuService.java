@@ -12,5 +12,5 @@ public interface MenuService {
 	MenuDTO getMenuListById(String id);
 	String generateMenuHtml();
 	int updateMenu(MenuDTO menuDTO);
-	void savePermissions(String role, List<String> allowedMenuItems);
+	void savePermissions(String role, List<String> allowedMenuItems) throws Exception;
 }

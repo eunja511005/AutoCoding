@@ -1,6 +1,5 @@
 package com.eun.tutorial.service.main;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -9,22 +8,20 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
-import org.apache.ibatis.annotations.Case;
 import org.springframework.context.MessageSource;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.eun.tutorial.aspect.annotation.CheckAuthorization;
 import com.eun.tutorial.aspect.annotation.CreatePermission;
+import com.eun.tutorial.dto.main.MenuControlDTO;
 import com.eun.tutorial.dto.main.MenuDTO;
+import com.eun.tutorial.exception.CustomException;
 import com.eun.tutorial.mapper.main.MenuMapper;
-import com.eun.tutorial.service.user.PrincipalDetails;
 import com.eun.tutorial.util.AuthUtils;
-import com.eun.tutorial.util.StringUtils;
 
 import lombok.AllArgsConstructor;
 
@@ -34,6 +31,8 @@ public class MenuServiceImpl implements MenuService {
 
 	private final MenuMapper menuMapper;
 	private final MessageSource messageSource;
+	private final MenuControlService menuControlService;
+	private final HttpSecurity http;
 
 	@Override
 	public List<MenuDTO> getMenuList() {
@@ -225,7 +224,7 @@ public class MenuServiceImpl implements MenuService {
 
 	@Override
 	@Transactional
-	public void savePermissions(String role, List<String> allowedMenuItems){
+	public void savePermissions(String role, List<String> allowedMenuItems) throws Exception{
 		
 		List<MenuDTO> menuDTOList = menuMapper.getMenuAuthByRole(role);
 		List<String> authList = new ArrayList<>();
@@ -260,6 +259,9 @@ public class MenuServiceImpl implements MenuService {
 		
 		// 메뉴 권한에 맞게 메뉴 콘트롤러 테이블 업데이트
 		menuMapper.updateMenuControl();
+		
+		// 서버 리스타트 없이 권한 업데이트 
+		menuControlService.updateMenuControlList(http);
 	}
 
 	private String getUpperRole(String role) {

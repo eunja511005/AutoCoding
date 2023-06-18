@@ -15,18 +15,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.stereotype.Service;
 
 import com.eun.tutorial.aspect.annotation.CheckAuthorization;
 import com.eun.tutorial.aspect.annotation.CreatePermission;
 import com.eun.tutorial.aspect.annotation.SetCreateAndUpdateId;
 import com.eun.tutorial.dto.main.MenuControlDTO;
+import com.eun.tutorial.exception.CustomException;
 import com.eun.tutorial.mapper.main.MenuControlMapper;
-import com.eun.tutorial.service.user.PrincipalDetails;
-import com.eun.tutorial.util.AuthUtils;
 
 import lombok.AllArgsConstructor;
 
@@ -34,7 +32,6 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class MenuControlServiceImpl implements MenuControlService {
 
-	private static final String ANONYMOUS = "anonymous";
 	private final MenuControlMapper menuControlMapper;
 
 	@Override
@@ -77,5 +74,24 @@ public class MenuControlServiceImpl implements MenuControlService {
 	public Map<String, String> getLogYnByUrlAndMethod(String url, String method) {
 		return menuControlMapper.getLogYnByUrlAndMethod(url, method);
 	}
+	
+    public void updateMenuControlList(HttpSecurity http) throws Exception {
+        List<MenuControlDTO> menuControlList = this.getMenuControlList();
+        for (MenuControlDTO menuControlDTO : menuControlList) {
+        	HttpMethod httpMethod = HttpMethod.resolve(menuControlDTO.getMethod());
+            if (httpMethod == null) {
+                throw new CustomException(500, "No HTTP Method");
+            }
+            
+            String url = menuControlDTO.getUrl();
+            String roleId = menuControlDTO.getRoleId();
+            
+            if ("ANY".equals(roleId)) {
+            	http.authorizeRequests().antMatchers(httpMethod, url).permitAll();
+            } else {
+            	http.authorizeRequests().antMatchers(httpMethod, url).hasRole(roleId);
+            }
+        }
+    }
 
 }

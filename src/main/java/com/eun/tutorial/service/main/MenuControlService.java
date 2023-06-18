@@ -14,6 +14,8 @@ package com.eun.tutorial.service.main;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+
 import com.eun.tutorial.dto.main.MenuControlDTO;
 
 public interface MenuControlService {
@@ -24,4 +26,5 @@ public interface MenuControlService {
 	MenuControlDTO getMenuControlListById(String id);
 	List<MenuControlDTO> getMenuControlByRoleId(String roleId);
 	Map<String, String> getLogYnByUrlAndMethod(String url, String method);
+	void updateMenuControlList(HttpSecurity http) throws Exception;
 }

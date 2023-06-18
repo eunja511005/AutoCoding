@@ -89,7 +89,7 @@ public class MenuController {
     }
     
 	@PostMapping("/savePermissions")
-	public @ResponseBody ApiResponse savePermissions(@RequestParam String role, @RequestParam("allowedMenuItems[]") List<String> allowedMenuItems){
+	public @ResponseBody ApiResponse savePermissions(@RequestParam String role, @RequestParam("allowedMenuItems[]") List<String> allowedMenuItems) throws Exception{
     	menuService.savePermissions(role, allowedMenuItems);
         return new ApiResponse<>(true, "Successfully saved permission.", null);
 	}
