@@ -52,7 +52,7 @@ class MenuServiceImplTest {
 	void setUp() {
 		setMenuMock();
 		setMessageMock();
-		menuService = new MenuServiceImpl(menuMapper, messageSource);
+		menuService = new MenuServiceImpl(menuMapper, messageSource, null, null);
 	}
 
 	@Test
