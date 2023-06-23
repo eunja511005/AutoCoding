@@ -9,17 +9,15 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.context.MessageSource;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import com.eun.tutorial.aspect.annotation.CheckAuthorization;
 import com.eun.tutorial.aspect.annotation.CreatePermission;
-import com.eun.tutorial.dto.main.MenuControlDTO;
 import com.eun.tutorial.dto.main.MenuDTO;
-import com.eun.tutorial.exception.CustomException;
 import com.eun.tutorial.mapper.main.MenuMapper;
 import com.eun.tutorial.util.AuthUtils;
 
@@ -244,6 +242,7 @@ public class MenuServiceImpl implements MenuService {
 		String upperRole = getUpperRole(role);
 		if(!noAuthList.isEmpty()) {
 			menuMapper.updateMenuAuthByMenuIds(upperRole, noAuthList);
+			TransactionAspectSupport.currentTransactionStatus().flush();
 		}
 		
 		// 체크 X -> O (요청된 권한 중 기존에 없던 권한만 업데이트 해줌, 그래야 하위 롤이 가지고 있던 권한이 안 없어 짐)
@@ -255,6 +254,7 @@ public class MenuServiceImpl implements MenuService {
 		}
 		if(!addAuthList.isEmpty()) {
 			menuMapper.updateMenuAuthByMenuIds(role, addAuthList);
+			TransactionAspectSupport.currentTransactionStatus().flush();
 		}
 		
 		// 메뉴 권한에 맞게 메뉴 콘트롤러 테이블 업데이트
