@@ -1,6 +1,5 @@
 package com.eun.tutorial.util;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -25,7 +24,7 @@ public class FileUtil {
     @Value("${spring.servlet.multipart.max-file-size}")
     private long maxSize;
 
-    private static final String[] ALLOWED_IMAGE_TYPES = {"image/jpeg", "image/png"};
+    private static final String[] ALLOWED_IMAGE_TYPES = {"image/jpeg", "image/png", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/vnd.ms-excel"};
 
     public boolean isAllowedImageType(String contentType) {
         for (String allowedType : ALLOWED_IMAGE_TYPES) {
@@ -36,7 +35,7 @@ public class FileUtil {
         return false;
     }
 
-    private static final String[] ALLOWED_MIME_TYPES = {"image/jpeg", "image/png"};
+    private static final String[] ALLOWED_MIME_TYPES = {"image/jpeg", "image/png", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/vnd.ms-excel", "application/x-tika-msoffice"};
 
     public boolean isAllowedMimeType(String mimeType) {
         for (String allowedType : ALLOWED_MIME_TYPES) {

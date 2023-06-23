@@ -1,0 +1,274 @@
+<div class="container-fluid px-4">
+    <div class="breadcrumb-container">
+        <ol class="breadcrumb mt-2 justify-content-end">
+            <li class="breadcrumb-item">Interface</li>
+            <li class="breadcrumb-item">Layout</li>
+            <li class="breadcrumb-item active">Static Navigation</li>
+        </ol>
+    </div>
+    
+    <h1 class="page-title mb-4">Static Navigation</h1>    
+
+	<div class="card mb-4" style="width:100%">
+	  <div class="card-header">
+	    <i class="fas fa-search"></i> Search
+	  </div>
+	  <div class="card-body">
+	    <form id="searchForm" >
+	      <div class="row mb-1">
+	        <label for="multibox" class="col-sm-1 col-form-label" style="padding-left: 20px;">멀티</label>
+	        <div class="col-sm-5">
+	          <select class="form-control" id="multibox" name="multibox" multiple></select>
+	        </div>
+	        <label for="selectbox" class="col-sm-1 col-form-label" style="padding-left: 20px;">싱글</label>
+	        <div class="col-sm-5">
+	          <select class="form-select" id="selectbox" name="selectbox"></select>
+	        </div>
+	      </div>
+	      <div class="row mb-1">
+	        <label for="email" class="col-sm-1 col-form-label" style="padding-left: 20px;">이메일</label>
+	        <div class="col-sm-5">
+	          <input type="email" class="form-control" id="email" name="email">
+	        </div>
+	        <label for="num" class="col-sm-1 col-form-label" style="padding-left: 20px;">넘버</label>
+	        <div class="col-sm-5">
+	          <input type="number" class="form-control" id="num" name="num">
+	        </div>
+	      </div>
+	      <div class="row mb-1">
+	        <label for="shorttext" class="col-sm-1 col-form-label" style="padding-left: 20px;">텍스트</label>
+	        <div class="col-sm-5">
+	          <input type="text" class="form-control" id="shorttext" name="shorttext">
+	        </div>
+	        <label for="longtext" class="col-sm-1 col-form-label" style="padding-left: 20px;">롱텍스트</label>
+	        <div class="col-sm-5">
+	          <input type="text" class="form-control" id="longtext" name="longtext">
+	        </div>
+	      </div>
+	      <div class="row mb-1">
+	        <label for="startDate" class="col-sm-1 col-form-label" style="padding-left: 20px;">Date</label>
+	        <div class="col-sm-5">
+			    <div class="row">
+			      <div class="col">
+			        <input type="date" class="form-control" id="startDate" name="startDate">
+			      </div>
+			      <div class="col">
+			        <input type="date" class="form-control" id="endDate" name="endDate">
+			      </div>
+			    </div>
+	        </div>
+	      </div>
+	      <div class="row mb-1">
+	        <label for="chk" class="col-sm-1 col-form-label" style="padding-left: 20px;">체크</label>
+	        <div class="col-sm-5 d-flex align-items-center">
+	          <input type="checkbox" class="form-check-input" id="chk" name="chk">
+	        </div>
+	        <label for="radio" class="col-sm-1 col-form-label" style="padding-left: 20px;">라디오</label>
+		    <div class="col-sm-5 d-flex align-items-center">
+		      <input type="radio" class="form-check-input me-2" name="radioGroup" id="Male" value="M">
+		      <label class="form-check-label" for="Male">남성</label>
+		      <input type="radio" class="form-check-input ms-4 me-2" name="radioGroup" id="Female" value="F" checked>
+		      <label class="form-check-label" for="Female">여성</label>
+		      <input type="radio" class="form-check-input ms-4 me-2" name="radioGroup" id="Other" value="O">
+		      <label class="form-check-label" for="Other">기타</label>
+		    </div>	        
+	      </div>
+	      <div class="row mt-3">
+	        <div class="col text-end">
+	          <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i> Search</button>
+	        </div>
+	      </div>
+	    </form>
+	  </div>
+	</div>
+	
+<!-- 신규 데이터 입력 모달 -->
+<div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addModalLabel">Add Data</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+			    <form id="saveForm" >
+			      <input type="hidden" id="id_m" name="id" value="" />
+			      <div class="row mb-1">
+			        <label for="multibox_m" class="col-sm-3 col-form-label" style="padding-left: 20px;">멀티</label>
+			        <div class="col-sm-9">
+			          <select class="form-control" id="multibox_m" name="multibox" multiple></select>
+			        </div>
+			      </div>  
+			      <div class="row mb-1">  
+			        <label for="selectbox_m" class="col-sm-3 col-form-label" style="padding-left: 20px;">싱글</label>
+			        <div class="col-sm-9">
+			          <select class="form-select" id="selectbox_m" name="selectbox"></select>
+			        </div>
+			      </div>
+			      <div class="row mb-1">
+			        <label for="email_m" class="col-sm-3 col-form-label" style="padding-left: 20px;">이메일</label>
+			        <div class="col-sm-9">
+			          <input type="email" class="form-control" id="email_m" name="email">
+			        </div>
+			      </div>  
+			      <div class="row mb-1">  			        
+			        <label for="num_m" class="col-sm-3 col-form-label" style="padding-left: 20px;">넘버</label>
+			        <div class="col-sm-9">
+			          <input type="number" class="form-control" id="num_m" name="num">
+			        </div>
+			      </div>
+			      <div class="row mb-1">
+			        <label for="shorttext_m" class="col-sm-3 col-form-label" style="padding-left: 20px;">텍스트</label>
+			        <div class="col-sm-9">
+			          <input type="text" class="form-control" id="shorttext_m" name="shorttext">
+			        </div>
+			      </div>  
+			      <div class="row mb-1">  			        
+			        <label for="longtext_m" class="col-sm-3 col-form-label" style="padding-left: 20px;">롱텍스트</label>
+			        <div class="col-sm-9">
+			          <input type="text" class="form-control" id="longtext_m" name="longtext">
+			        </div>
+			      </div>
+			      <div class="row mb-1">
+			        <label for="chk_m" class="col-sm-3 col-form-label" style="padding-left: 20px;">체크</label>
+			        <div class="col-sm-9 d-flex align-items-center">
+			          <input type="checkbox" class="form-check-input" id="chk_m" name="chk" checked>
+			        </div>
+			      </div>  
+				  <div class="row mb-1">
+				  	<label for="Male_m" class="col-sm-3 col-form-label" style="padding-left: 20px;">라디오</label>
+				 	 <div class="col-sm-9 d-flex align-items-center">
+				    	<input type="radio" class="form-check-input me-2" name="radioGroup_m" id="Male_m" value="M" checked>
+				   	 <label class="form-check-label" for="Male_m">남성</label>
+				   	 <input type="radio" class="form-check-input ms-4 me-2" name="radioGroup_m" id="Female_m" value="F">
+				   	 <label class="form-check-label" for="Female_m">여성</label>
+				   	 <input type="radio" class="form-check-input ms-4 me-2" name="radioGroup_m" id="Other_m" value="O">
+				    	<label class="form-check-label" for="Other_m">기타</label>
+				  	</div>	        
+				  </div>
+
+			    </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="saveButton">Save</button>
+            </div>
+        </div>
+    </div>
+</div>	
+	
+	<div class="card mb-4" style="width:100%">
+		<div class="card-header">
+	        <i class="fas fa-border-all"></i> Table Lists
+		</div>
+		<div class="card-body" style="width:100%">
+		    <div class="d-flex justify-content-end mb-3">
+		      <button id="addButton" class="btn btn-primary"><i class="fas fa-plus"></i> Add</button>
+		    </div>
+			<table id="dataTable" class="table table-hover" style="width:100%">
+				<thead>
+					<tr>
+						<th>multibox</th>
+						<th>selectbox</th>
+						<th>email</th>
+						<th>num</th>
+						<th>shorttext</th>
+						<th>chk</th>
+						<th>radio</th>
+						<th>createDt</th>
+						<th>longtext</th>
+						<th>Edit</th>
+						<th>Delete</th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+		</div>
+	</div>    
+	
+    
+    <div class="card mb-4">
+		<div class="card-body">
+		    <div class="container mt-5">
+		        <div class="mb-3">
+		            <form method="POST" enctype="multipart/form-data">
+		                <div class="row">
+		                    <div class="col">
+		                        <div class="form-group">
+		                            <input type="file" class="form-control-file" id="fileInput" name="file" multiple>
+		                        </div>
+		                    </div>
+		                    <div class="col text-end">
+		                        <button id="uploadButton" class="btn btn-primary" type="submit">
+		                            <i class="fas fa-cloud-upload-alt me-2"></i> Upload
+		                        </button>
+		                    </div>
+		                </div>
+		            </form>
+		        </div>
+		        
+		        <div class="border p-3">
+		            <h4>Selected Files</h4>
+		            <ul class="list-group" id="fileList"></ul>
+		        </div>
+		        
+				<div class="border p-3 mt-4" id="fileListContainer">
+					<h4>Uploaded Files</h4>
+					<ul id="fileList" class="list-group"></ul>
+				</div>		        
+		    </div>
+		</div>
+    </div>	  
+    
+<div class="card mb-4" style="width:100%">
+  <div class="card-header">
+    <i class="fas fa-border-all"></i> 테이블 목록
+  </div>
+  <div class="card-body" style="width:100%">
+    <ul class="nav nav-tabs">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="headerTab1" data-bs-toggle="tab" data-bs-target="#tabContent1" type="button" role="tab" aria-controls="tabContent1" aria-selected="true">탭 1</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="headerTab2" data-bs-toggle="tab" data-bs-target="#tabContent2" type="button" role="tab" aria-controls="tabContent2" aria-selected="false">탭 2</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="headerTab3" data-bs-toggle="tab" data-bs-target="#tabContent3" type="button" role="tab" aria-controls="tabContent3" aria-selected="false">탭 3</button>
+      </li>
+    </ul>
+    <div class="tab-content mt-2" id="myTabContent">
+      <div class="tab-pane fade show active" id="tabContent1" role="tabpanel" aria-labelledby="headerTab1">
+        <h5>탭 1의 내용</h5>
+        <p>탭 1이 선택되었을 때 표시되는 내용입니다.</p>
+      </div>
+      <div class="tab-pane fade" id="tabContent2" role="tabpanel" aria-labelledby="headerTab2">
+        <h5>탭 2의 내용</h5>
+        <p>탭 2가 선택되었을 때 표시되는 내용입니다.</p>
+      </div>
+      <div class="tab-pane fade" id="tabContent3" role="tabpanel" aria-labelledby="headerTab3">
+        <h5>탭 3의 내용</h5>
+        <p>탭 3이 선택되었을 때 표시되는 내용입니다.</p>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    <div style="height: 10vh"></div>
+        
+  
+    <div class="card mb-4">
+        <div class="card-body">
+            <p class="mb-0">
+                This page is an example of using static navigation. By removing the
+                <code>.sb-nav-fixed</code>
+                class from the
+                <code>body</code>
+                , the top navigation and side navigation will become static on scroll. Scroll down this page to see an example.
+            </p>
+        </div>
+    </div>  
+  
+</div>
+
+<script src="/js/main/content/layout.js"></script>

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eun.tutorial.mapper.main.LayoutMapper">
+
+	<select id="selectLayoutList" resultType="com.eun.tutorial.dto.main.LayoutDTO">
+		SELECT MULTIBOX, SELECTBOX, EMAIL, NUM, SHORTTEXT, LONGTEXT, CHK, RADIO, id, del_yn, create_id, TO_CHAR(create_dt, 'YYYY-MM-DD HH24:MI:SS') AS create_dt, update_id, TO_CHAR(update_dt, 'YYYY-MM-DD HH24:MI:SS') AS update_dt FROM ZTHH_LAYOUT where del_yn='N' ORDER BY update_dt, create_dt
+	</select>
+
+	<insert id="insertLayout">
+		INSERT INTO ZTHH_LAYOUT (MULTIBOX, SELECTBOX, EMAIL, NUM, SHORTTEXT, LONGTEXT, CHK, RADIO, id, del_yn, create_id, create_dt, update_id, update_dt)
+		VALUES (#{multibox}, #{selectbox}, #{email}, #{num}, #{shorttext}, #{longtext}, #{chk}, #{radio}, #{id}, 'N', #{createId}, CURRENT_TIMESTAMP, #{updateId}, CURRENT_TIMESTAMP)
+	</insert>
+
+	<update id="updateLayout">
+		UPDATE ZTHH_LAYOUT
+		SET MULTIBOX = #{multibox}, SELECTBOX = #{selectbox}, EMAIL = #{email}, NUM = #{num}, SHORTTEXT = #{shorttext}, LONGTEXT = #{longtext}, CHK = #{chk}, RADIO = #{radio}, update_id = #{updateId}, update_dt = CURRENT_TIMESTAMP
+		WHERE id = #{id}
+	</update>
+
+	<delete id="deleteLayout">
+		UPDATE ZTHH_LAYOUT SET del_yn = 'Y', update_dt = CURRENT_TIMESTAMP WHERE id = #{id}
+	</delete>
+
+	<select id="getLayoutListById" parameterType="string" resultType="com.eun.tutorial.dto.main.LayoutDTO">
+		SELECT MULTIBOX, SELECTBOX, EMAIL, NUM, SHORTTEXT, LONGTEXT, CHK, RADIO, id, del_yn, create_id, TO_CHAR(create_dt, 'YYYY-MM-DD HH24:MI:SS') AS create_dt, update_id, TO_CHAR(update_dt, 'YYYY-MM-DD HH24:MI:SS') AS update_dt FROM ZTHH_LAYOUT
+		WHERE id = #{id}
+		ORDER BY update_dt, create_dt
+	</select>
+	
+	<select id="selectLayouts" parameterType="java.util.HashMap" resultType="com.eun.tutorial.dto.main.LayoutDTO">
+		SELECT
+			MULTIBOX,
+			SELECTBOX,
+			EMAIL,
+			NUM,
+			SHORTTEXT,
+			LONGTEXT,
+			CHK,
+			RADIO,
+			id,
+			del_yn,
+			create_id,
+			TO_CHAR(create_dt, 'YYYY-MM-DD HH24:MI:SS') AS create_dt,
+			update_id,
+			TO_CHAR(update_dt, 'YYYY-MM-DD HH24:MI:SS') AS update_dt
+		FROM
+			ZTHH_LAYOUT	
+	    WHERE del_yn='N'
+			<if test="multibox != null and multibox.size() > 0">
+			    AND MULTIBOX IN
+			    <foreach collection="multibox" item="item" open="(" close=")" separator=",">
+			        #{item}
+			    </foreach>
+			</if>
+	        <if test="search.selectbox != null and search.selectbox.value != ''">
+	            AND LOWER(SELECTBOX) LIKE '%'||LOWER(#{search.selectbox.value})||'%'
+	        </if>
+	        <if test="search.email != null and search.email.value != ''">
+	            AND LOWER(EMAIL) LIKE '%'||LOWER(#{search.email.value})||'%'
+	        </if>
+	        <if test="search.num != null and search.num.value != ''">
+	            AND LOWER(NUM) LIKE '%'||LOWER(#{search.num.value})||'%'
+	        </if>
+	        <if test="search.shorttext != null and search.shorttext.value != ''">
+	            AND LOWER(SHORTTEXT) LIKE '%'||LOWER(#{search.shorttext.value})||'%'
+	        </if>
+	        <if test="search.longtext != null and search.longtext.value != ''">
+	            AND LOWER(LONGTEXT) LIKE '%'||LOWER(#{search.longtext.value})||'%'
+	        </if>
+	        <if test="chk != null and chk != ''">
+	            AND LOWER(CHK) LIKE '%'||LOWER(#{chk})||'%'
+	        </if>
+	        <if test="search.radio != null and search.radio.value != ''">
+	            AND LOWER(RADIO) LIKE '%'||LOWER(#{search.radio.value})||'%'
+	        </if>
+		    <if test="search.startDate != null and search.startDate.value != ''">
+		      	AND TO_CHAR(create_dt, 'YYYY-MM-DD') &gt;= #{search.startDate.value}
+		    </if>
+		    <if test="search.endDate != null and search.endDate.value != ''">
+		      	AND TO_CHAR(create_dt, 'YYYY-MM-DD') &lt;= #{search.endDate.value}
+		    </if>			          
+	    ORDER BY ${orderColumnName} ${orderDirection}
+	    OFFSET #{offset} ROWS FETCH NEXT #{limit} ROWS ONLY
+	</select>	
+	
+    <select id="getTotalCount" parameterType="java.util.HashMap" resultType="int">
+        SELECT
+            COUNT(*)
+		FROM
+			ZTHH_LAYOUT	
+	    WHERE del_yn='N'
+			<if test="multibox != null and multibox.size() > 0">
+			    AND MULTIBOX IN
+			    <foreach collection="multibox" item="item" open="(" close=")" separator=",">
+			        #{item}
+			    </foreach>
+			</if>
+	        <if test="search.selectbox != null and search.selectbox.value != ''">
+	            AND LOWER(SELECTBOX) LIKE '%'||LOWER(#{search.selectbox.value})||'%'
+	        </if>
+	        <if test="search.email != null and search.email.value != ''">
+	            AND LOWER(EMAIL) LIKE '%'||LOWER(#{search.email.value})||'%'
+	        </if>
+	        <if test="search.num != null and search.num.value != ''">
+	            AND LOWER(NUM) LIKE '%'||LOWER(#{search.num.value})||'%'
+	        </if>
+	        <if test="search.shorttext != null and search.shorttext.value != ''">
+	            AND LOWER(SHORTTEXT) LIKE '%'||LOWER(#{search.shorttext.value})||'%'
+	        </if>
+	        <if test="search.longtext != null and search.longtext.value != ''">
+	            AND LOWER(LONGTEXT) LIKE '%'||LOWER(#{search.longtext.value})||'%'
+	        </if>
+	        <if test="chk != null and chk != ''">
+	            AND LOWER(CHK) LIKE '%'||LOWER(#{chk})||'%'
+	        </if>
+	        <if test="search.radio != null and search.radio.value != ''">
+	            AND LOWER(RADIO) LIKE '%'||LOWER(#{search.radio.value})||'%'
+	        </if>
+		    <if test="search.startDate != null and search.startDate.value != ''">
+		      	AND TO_CHAR(create_dt, 'YYYY-MM-DD') &gt;= #{search.startDate.value}
+		    </if>
+		    <if test="search.endDate != null and search.endDate.value != ''">
+		      	AND TO_CHAR(create_dt, 'YYYY-MM-DD') &lt;= #{search.endDate.value}
+		    </if>	    	    
+    </select>	
+
+</mapper>

@@ -32,8 +32,13 @@ public class CreateACLAspect {
 
 		Object result = joinPoint.proceed();
 
-		Method getIdMethod = dto.getClass().getMethod("getId");
-		String resourceId = (String) getIdMethod.invoke(dto);
+        String resourceId = "";
+        if (dto instanceof String) {//delete
+        	resourceId = (String) dto;
+        }else {//update
+            Method getIdMethod = dto.getClass().getMethod("getId");
+            resourceId = (String) getIdMethod.invoke(dto);
+        }
 
 		log.info("##### CreateACL : "+ loginId + ", " + resourceId);
 		saveToACLTable(resourceId, loginId); // ACL 테이블에 리소스 ID와 유저 ID 저장

@@ -127,25 +127,29 @@ function addLogoutEvent(){
 }
 
 function initSelectBox(selectBoxId, url, includeAll, selectedValues) {
-	  var selectBox = $('#' + selectBoxId);
-	  selectBox.empty();
-	  
-	  if (includeAll) {
-	    selectBox.append($('<option>').val('').text('ALL'));
-	  }
+	var selectBox = $('#' + selectBoxId);
+	selectBox.empty();
 
+	if (includeAll) {
+	  selectBox.append($('<option>').val('').text('ALL'));
+	}
+
+	return new Promise((resolve, reject) => {
 	  callAjax(url, "GET", null, function(response) {
-	      if (response.success) {
-		        $.each(response.data, function(index, commonCode) {
-		          var option = $('<option>').val(commonCode.code).text(commonCode.value);
-		          if (Array.isArray(selectedValues) && selectedValues.indexOf(commonCode.code) !== -1) {
-		            option.prop('selected', true);
-		          }
-		          selectBox.append(option);		         
-		        });
-		  }
+	    if (response.success) {
+	      $.each(response.data, function(index, commonCode) {
+	        var option = $('<option>').val(commonCode.code).text(commonCode.value);
+	        if (Array.isArray(selectedValues) && selectedValues.indexOf(commonCode.code) !== -1) {
+	          option.prop('selected', true);
+	        }
+	        selectBox.append(option);
+	      });
+	      resolve();
+	    } else {
+	      reject(new Error('Ajax request failed'));
+	    }
 	  });
-	  
+	});
 }
 
 
