@@ -12,8 +12,10 @@ import org.springframework.context.MessageSource;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import com.eun.tutorial.aspect.annotation.CheckAuthorization;
 import com.eun.tutorial.aspect.annotation.CreatePermission;
@@ -31,6 +33,7 @@ public class MenuServiceImpl implements MenuService {
 	private final MessageSource messageSource;
 	private final MenuControlService menuControlService;
 	private final HttpSecurity http;
+	private final PlatformTransactionManager transactionManager;
 
 	@Override
 	public List<MenuDTO> getMenuList() {
@@ -242,6 +245,10 @@ public class MenuServiceImpl implements MenuService {
 		String upperRole = getUpperRole(role);
 		if(!noAuthList.isEmpty()) {
 			menuMapper.updateMenuAuthByMenuIds(upperRole, noAuthList);
+			
+		    // 중간 커밋
+		    TransactionStatus status = transactionManager.getTransaction(TransactionDefinition.withDefaults());
+		    transactionManager.commit(status);
 		}
 		
 		// 체크 X -> O (요청된 권한 중 기존에 없던 권한만 업데이트 해줌, 그래야 하위 롤이 가지고 있던 권한이 안 없어 짐)
@@ -257,7 +264,6 @@ public class MenuServiceImpl implements MenuService {
 		
 		// 메뉴 권한에 맞게 메뉴 콘트롤러 테이블 업데이트
 		menuMapper.updateMenuControl();
-		TransactionAspectSupport.currentTransactionStatus().flush();
 		
 		// 서버 리스타트 없이 권한 업데이트 
 		menuControlService.updateMenuControlList(http);
