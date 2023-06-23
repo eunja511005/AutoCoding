@@ -226,7 +226,8 @@ public class MenuServiceImpl implements MenuService {
 	@Override
 	@Transactional
 	public void savePermissions(String role, List<String> allowedMenuItems) throws Exception{
-		
+	    TransactionStatus status = transactionManager.getTransaction(TransactionDefinition.withDefaults());
+	    
 		List<MenuDTO> menuDTOList = menuMapper.getMenuAuthByRole(role);
 		List<String> authList = new ArrayList<>();
 		for (MenuDTO menuDTO : menuDTOList) {
@@ -245,9 +246,6 @@ public class MenuServiceImpl implements MenuService {
 		String upperRole = getUpperRole(role);
 		if(!noAuthList.isEmpty()) {
 			menuMapper.updateMenuAuthByMenuIds(upperRole, noAuthList);
-			
-		    // 중간 커밋
-		    TransactionStatus status = transactionManager.getTransaction(TransactionDefinition.withDefaults());
 		    transactionManager.commit(status);
 		}
 		
@@ -260,6 +258,7 @@ public class MenuServiceImpl implements MenuService {
 		}
 		if(!addAuthList.isEmpty()) {
 			menuMapper.updateMenuAuthByMenuIds(role, addAuthList);
+			transactionManager.commit(status);
 		}
 		
 		// 메뉴 권한에 맞게 메뉴 콘트롤러 테이블 업데이트
