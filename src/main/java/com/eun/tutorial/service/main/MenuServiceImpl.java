@@ -224,55 +224,59 @@ public class MenuServiceImpl implements MenuService {
 	}
 
 	@Override
-	@Transactional
-	public void savePermissions(String role, List<String> allowedMenuItems) throws Exception{
+	public void savePermissions(String role, List<String> allowedMenuItems) throws Exception {
 	    TransactionStatus status = transactionManager.getTransaction(TransactionDefinition.withDefaults());
-	    
-		List<MenuDTO> menuDTOList = menuMapper.getMenuAuthByRole(role);
-		List<String> authList = new ArrayList<>();
-		for (MenuDTO menuDTO : menuDTOList) {
-			if("Y".equals(menuDTO.getMenuAuth())) {
-				authList.add(menuDTO.getId());
-			}
-		}
-		
-		// 체크 O -> X (기존에 해당 롤에 있던 권한 중 빠진 권한은 차 상위 롤로 업데이트)
-		List<String> noAuthList = new ArrayList<>();
-		for (String id : authList) {
-			if(!allowedMenuItems.contains(id)) {
-				noAuthList.add(id);
-			}
-		}
-		String upperRole = getUpperRole(role);
-		if(!noAuthList.isEmpty()) {
-			menuMapper.updateMenuAuthByMenuIds(upperRole, noAuthList);
-		    transactionManager.commit(status);
-		    
-		    // 새로운 트랜잭션 시작
-	        status = transactionManager.getTransaction(TransactionDefinition.withDefaults());
-		}
-		
-		// 체크 X -> O (요청된 권한 중 기존에 없던 권한만 업데이트 해줌, 그래야 하위 롤이 가지고 있던 권한이 안 없어 짐)
-		List<String> addAuthList = new ArrayList<>();
-		for (String id : allowedMenuItems) {
-			if(!authList.contains(id)) {
-				addAuthList.add(id);
-			}
-		}
-		if(!addAuthList.isEmpty()) {
-			menuMapper.updateMenuAuthByMenuIds(role, addAuthList);
-			transactionManager.commit(status);
-			
-			// 새로운 트랜잭션 시작
-	        status = transactionManager.getTransaction(TransactionDefinition.withDefaults());
-		}
-		
-		// 메뉴 권한에 맞게 메뉴 콘트롤러 테이블 업데이트
-		menuMapper.updateMenuControl();
-		transactionManager.commit(status);
-		
-		// 서버 리스타트 없이 권한 업데이트 
-		menuControlService.updateMenuControlList(http);
+
+	    try {
+	        List<MenuDTO> menuDTOList = menuMapper.getMenuAuthByRole(role);
+	        List<String> authList = new ArrayList<>();
+	        for (MenuDTO menuDTO : menuDTOList) {
+	            if ("Y".equals(menuDTO.getMenuAuth())) {
+	                authList.add(menuDTO.getId());
+	            }
+	        }
+
+	        // 체크 O -> X (기존에 해당 롤에 있던 권한 중 빠진 권한은 차 상위 롤로 업데이트)
+	        List<String> noAuthList = new ArrayList<>();
+	        for (String id : authList) {
+	            if (!allowedMenuItems.contains(id)) {
+	                noAuthList.add(id);
+	            }
+	        }
+	        String upperRole = getUpperRole(role);
+	        if (!noAuthList.isEmpty()) {
+	            menuMapper.updateMenuAuthByMenuIds(upperRole, noAuthList);
+	            transactionManager.commit(status);
+
+	            // 새로운 트랜잭션 시작
+	            status = transactionManager.getTransaction(TransactionDefinition.withDefaults());
+	        }
+
+	        // 체크 X -> O (요청된 권한 중 기존에 없던 권한만 업데이트 해줌, 그래야 하위 롤이 가지고 있던 권한이 안 없어 짐)
+	        List<String> addAuthList = new ArrayList<>();
+	        for (String id : allowedMenuItems) {
+	            if (!authList.contains(id)) {
+	                addAuthList.add(id);
+	            }
+	        }
+	        if (!addAuthList.isEmpty()) {
+	            menuMapper.updateMenuAuthByMenuIds(role, addAuthList);
+	            transactionManager.commit(status);
+
+	            // 새로운 트랜잭션 시작
+	            status = transactionManager.getTransaction(TransactionDefinition.withDefaults());
+	        }
+
+	        // 메뉴 권한에 맞게 메뉴 콘트롤러 테이블 업데이트
+	        menuMapper.updateMenuControl();
+	        transactionManager.commit(status);
+
+	        // 서버 리스타트 없이 권한 업데이트
+	        menuControlService.updateMenuControlList(http);
+	    } catch (Exception e) {
+	        transactionManager.rollback(status);
+	        throw e;
+	    }
 	}
 
 	private String getUpperRole(String role) {
