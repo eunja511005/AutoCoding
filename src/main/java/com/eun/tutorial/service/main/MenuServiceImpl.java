@@ -242,7 +242,6 @@ public class MenuServiceImpl implements MenuService {
 		String upperRole = getUpperRole(role);
 		if(!noAuthList.isEmpty()) {
 			menuMapper.updateMenuAuthByMenuIds(upperRole, noAuthList);
-			TransactionAspectSupport.currentTransactionStatus().flush();
 		}
 		
 		// 체크 X -> O (요청된 권한 중 기존에 없던 권한만 업데이트 해줌, 그래야 하위 롤이 가지고 있던 권한이 안 없어 짐)
@@ -254,11 +253,11 @@ public class MenuServiceImpl implements MenuService {
 		}
 		if(!addAuthList.isEmpty()) {
 			menuMapper.updateMenuAuthByMenuIds(role, addAuthList);
-			TransactionAspectSupport.currentTransactionStatus().flush();
 		}
 		
 		// 메뉴 권한에 맞게 메뉴 콘트롤러 테이블 업데이트
 		menuMapper.updateMenuControl();
+		TransactionAspectSupport.currentTransactionStatus().flush();
 		
 		// 서버 리스타트 없이 권한 업데이트 
 		menuControlService.updateMenuControlList(http);
