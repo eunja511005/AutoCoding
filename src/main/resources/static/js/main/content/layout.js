@@ -1,19 +1,18 @@
 /**
-    This software is protected by copyright laws and international copyright treaties.
-    The ownership and intellectual property rights of this software belong to the developer.
-    Unauthorized reproduction, distribution, modification, sale, or commercial use of this software is strictly prohibited
-    and may result in legal consequences.
-    This software is licensed to the user and must be used in accordance with the terms of the license.
-    Under no circumstances should the source code or design of this software be disclosed or leaked.
-    The developer shall not be liable for any loss or damages.
-    Please read the license and usage permissions carefully before using.
-*/
+ * This software is protected by copyright laws and international copyright
+ * treaties. The ownership and intellectual property rights of this software
+ * belong to the developer. Unauthorized reproduction, distribution,
+ * modification, sale, or commercial use of this software is strictly prohibited
+ * and may result in legal consequences. This software is licensed to the user
+ * and must be used in accordance with the terms of the license. Under no
+ * circumstances should the source code or design of this software be disclosed
+ * or leaked. The developer shall not be liable for any loss or damages. Please
+ * read the license and usage permissions carefully before using.
+ */
 
 var csrfheader = $("meta[name='_csrf_header']").attr("content");
 var csrftoken = $("meta[name='_csrf']").attr("content");
 var table;
-var addedRows = []; // 새로 추가된 라인을 저장하는 배열
-var isNewRow = false; // 신규 로우 추가 여부를 나타내는 변수
 
 $(document).ready(function() {
 	debugger;
@@ -25,35 +24,18 @@ $(document).ready(function() {
 	    console.error('셀렉트 박스 초기화 에러:', error);
 	});
 
-	$('#searchForm').on('submit', function(event) {
+	// 카드 헤더 클릭시 바디 토글
+	$('.card-header').on('click', handleCollapseClick);
+	
+	$('#searchButton').on('click', function(event) {
 		event.preventDefault();
 		table.ajax.reload();
 	});
 	
-	$('#saveButton').on('click', function(event) {
-		  event.preventDefault();
-		  var formData = new FormData($('#saveForm')[0]);
-		  
-		  // 체크 박스의 값을 폼 데이터에 추가
-		  formData.append('chk', $("#chk_m").is(':checked') ? "Y" : "N");
-
-		  var json = {};
-		  formData.forEach(function(value, key) {
-		    if (key === 'radioGroup_m') {
-		      var selectedRadio = $("input[name='radioGroup_m']:checked").val();
-		      json['radio'] = selectedRadio;
-		    } else {
-		      json[key] = value;
-		    }
-		  });
-
-		  var data = JSON.stringify(json);
-
-		  saveData(data);
-	});
-
-	// 카드 헤더 클릭시 바디 토글
-	$('.card-header').on('click', handleCollapseClick);
+	$('#saveButton').on('click', saveData);
+	
+    // 파일 업로드 버튼 클릭 이벤트 추가
+    $('#uploadButton').on('click', uploadFiles);
 
     // 파일 선택시 선택한 파일 리스트 제목 보여주기
     $('#fileInput').on('change', function(event) {
@@ -67,9 +49,6 @@ $(document).ready(function() {
         deleteFile(index);
     });
     
-    // 파일 업로드 버튼 클릭 이벤트 추가
-    $('#uploadButton').on('click', uploadFiles);
-	
 });
 
 async function initSelectBoxs(){
@@ -81,11 +60,11 @@ async function initSelectBoxs(){
 function displayFileList(fileList) {
     var listContainer = $('#fileList');
     listContainer.empty(); // 기존 목록 초기화
-    selectedFiles = []; // 선택된 파일 배열 초기화
+    //selectedFiles = []; // 선택된 파일 배열 초기화
 
     for (var i = 0; i < fileList.length; i++) {
         var fileName = fileList[i].name;
-        selectedFiles.push(fileList[i]); // 선택된 파일 배열에 추가
+        //selectedFiles.push(fileList[i]); // 선택된 파일 배열에 추가
 
         var listItem = $('<li>', {
             class: 'list-group-item',
@@ -193,7 +172,7 @@ function uploadFiles(event) {
         }
       });
     
-    //callAjax("/layout/uploadFile", "POST", formData, uploadCallback);
+    // callAjax("/layout/uploadFile", "POST", formData, uploadCallback);
 }
 
 function searchDataTable() {
@@ -203,7 +182,7 @@ function searchDataTable() {
         "searching": false, // 검색 기능 비활성화
 		scrollX: true, 
 		ajax: {
-			//async: false, // 동기 호출을 위해 async 속성을 false로 설정, 디폴트는 true
+			// async: false, // 동기 호출을 위해 async 속성을 false로 설정, 디폴트는 true
 			url: '/layout/list',
 			"type": "POST",
 			contentType : 'application/json; charset=utf-8',
@@ -212,7 +191,7 @@ function searchDataTable() {
 			},
             "data": function (d) {
             	
-            // ----------------- search 값 가져 오기 시작 ----------------- 
+            // ----------------- search 값 가져 오기 시작 -----------------
                 
             	// 멀티 셀렉트 박스의 선택된 값들 가져오기
                 var multibox = document.getElementById("multibox");
@@ -254,7 +233,7 @@ function searchDataTable() {
                 console.log("체크:", chk);
                 console.log("라디오:", selectedRadio);
                 
-            // ----------------- search 값 가져 오기 종료 ----------------- 
+            // ----------------- search 값 가져 오기 종료 -----------------
             	
             	var searchParams = {
             		multibox     : {value : JSON.stringify(selectedOptions), regex : false},
@@ -353,8 +332,26 @@ function handleCollapseClick() {
 	$cardBody.slideToggle();
 }
 
-function saveData(formData) {
-	callAjax("/layout/save", "POST", formData, saveCallback);
+function saveData(event) {
+	event.preventDefault();
+	var formData = new FormData($('#saveForm')[0]);
+	  
+	// 체크 박스의 값을 폼 데이터에 추가
+	formData.append('chk', $("#chk_m").is(':checked') ? "Y" : "N");
+
+	var json = {};
+	formData.forEach(function(value, key) {
+	    if (key === 'radioGroup_m') {
+	      var selectedRadio = $("input[name='radioGroup_m']:checked").val();
+	      json['radio'] = selectedRadio;
+	    } else {
+	      json[key] = value;
+	    }
+	});
+
+	var data = JSON.stringify(json);
+	  
+	callAjax("/layout/save", "POST", data, saveCallback);
 }
 
 function editData(id) {
