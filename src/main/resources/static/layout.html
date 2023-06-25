@@ -82,80 +82,87 @@
 	  </div>
 	</div>
 	
-<!-- 신규 데이터 입력 모달 -->
-<div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addModalLabel">Add Data</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-			    <form id="saveForm" >
-			      <input type="hidden" id="id_m" name="id" value="" />
-			      <div class="row mb-1">
-			        <label for="multibox_m" class="col-sm-3 col-form-label" style="padding-left: 20px;">멀티</label>
-			        <div class="col-sm-9">
-			          <select class="form-control" id="multibox_m" name="multibox" multiple></select>
-			        </div>
-			      </div>  
-			      <div class="row mb-1">  
-			        <label for="selectbox_m" class="col-sm-3 col-form-label" style="padding-left: 20px;">싱글</label>
-			        <div class="col-sm-9">
-			          <select class="form-select" id="selectbox_m" name="selectbox"></select>
-			        </div>
-			      </div>
-			      <div class="row mb-1">
-			        <label for="email_m" class="col-sm-3 col-form-label" style="padding-left: 20px;">이메일</label>
-			        <div class="col-sm-9">
-			          <input type="email" class="form-control" id="email_m" name="email">
-			        </div>
-			      </div>  
-			      <div class="row mb-1">  			        
-			        <label for="num_m" class="col-sm-3 col-form-label" style="padding-left: 20px;">넘버</label>
-			        <div class="col-sm-9">
-			          <input type="number" class="form-control" id="num_m" name="num">
-			        </div>
-			      </div>
-			      <div class="row mb-1">
-			        <label for="shorttext_m" class="col-sm-3 col-form-label" style="padding-left: 20px;">텍스트</label>
-			        <div class="col-sm-9">
-			          <input type="text" class="form-control" id="shorttext_m" name="shorttext">
-			        </div>
-			      </div>  
-			      <div class="row mb-1">  			        
-			        <label for="longtext_m" class="col-sm-3 col-form-label" style="padding-left: 20px;">롱텍스트</label>
-			        <div class="col-sm-9">
-			          <input type="text" class="form-control" id="longtext_m" name="longtext">
-			        </div>
-			      </div>
-			      <div class="row mb-1">
-			        <label for="chk_m" class="col-sm-3 col-form-label" style="padding-left: 20px;">체크</label>
-			        <div class="col-sm-9 d-flex align-items-center">
-			          <input type="checkbox" class="form-check-input" id="chk_m" name="chk" checked>
-			        </div>
-			      </div>  
-				  <div class="row mb-1">
-				  	<label for="Male_m" class="col-sm-3 col-form-label" style="padding-left: 20px;">라디오</label>
-				 	 <div class="col-sm-9 d-flex align-items-center">
-				    	<input type="radio" class="form-check-input me-2" name="radioGroup_m" id="Male_m" value="M" checked>
-				   	 <label class="form-check-label" for="Male_m">남성</label>
-				   	 <input type="radio" class="form-check-input ms-4 me-2" name="radioGroup_m" id="Female_m" value="F">
-				   	 <label class="form-check-label" for="Female_m">여성</label>
-				   	 <input type="radio" class="form-check-input ms-4 me-2" name="radioGroup_m" id="Other_m" value="O">
-				    	<label class="form-check-label" for="Other_m">기타</label>
-				  	</div>	        
-				  </div>
+	<!-- 신규 데이터 입력 모달 -->
+	<div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="addModalLabel">Add Data</h5>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      </div>
+	      <div class="modal-body">
+	        <form id="saveForm" class="needs-validation" novalidate>
+	          <input type="hidden" id="id_m" name="id" value="" />
+	          <div class="row mb-1">
+	            <label for="multibox_m" class="col-sm-3 col-form-label" style="padding-left: 20px;">멀티</label>
+	            <div class="col-sm-9">
+	              <select class="form-control" id="multibox_m" name="multibox" multiple required></select>
+	              <div class="invalid-feedback">필수 입력 필드입니다.</div>
+	            </div>
+	          </div>
+	          <div class="row mb-1">
+	            <label for="selectbox_m" class="col-sm-3 col-form-label" style="padding-left: 20px;">싱글</label>
+	            <div class="col-sm-9">
+	              <select class="form-select" id="selectbox_m" name="selectbox" required></select>
+	              <div class="invalid-feedback">필수 입력 필드입니다.</div>
+	            </div>
+	          </div>
+	          <div class="row mb-1">
+	            <label for="email_m" class="col-sm-3 col-form-label" style="padding-left: 20px;">이메일</label>
+	            <div class="col-sm-9">
+	              <input type="email" class="form-control" id="email_m" name="email" required>
+	              <div class="invalid-feedback">유효한 이메일을 입력해주세요.</div>
+	            </div>
+	          </div>
+	          <div class="row mb-1">
+	            <label for="num_m" class="col-sm-3 col-form-label" style="padding-left: 20px;">넘버</label>
+	            <div class="col-sm-9">
+	              <input type="number" class="form-control" id="num_m" name="num" required pattern="[0-9]+">
+	              <div class="invalid-feedback">숫자만 입력 가능합니다.</div>
+	            </div>
+	          </div>
+	          <div class="row mb-1">
+	            <label for="shorttext_m" class="col-sm-3 col-form-label" style="padding-left: 20px;">텍스트</label>
+	            <div class="col-sm-9">
+	              <input type="text" class="form-control" id="shorttext_m" name="shorttext" required maxlength="5">
+	              <div class="invalid-feedback">5자리까지 입력 가능 합니다.</div>
+	            </div>
+	          </div>
+	          <div class="row mb-1">
+	            <label for="longtext_m" class="col-sm-3 col-form-label" style="padding-left: 20px;">롱텍스트</label>
+	            <div class="col-sm-9">
+	              <input type="text" class="form-control" id="longtext_m" name="longtext" required>
+	              <div class="invalid-feedback">필수 입력 필드입니다.</div>
+	            </div>
+	          </div>
+	          <div class="row mb-1">
+	            <label for="chk_m" class="col-sm-3 col-form-label" style="padding-left: 20px;">체크</label>
+	            <div class="col-sm-9 d-flex align-items-center">
+	              <input type="checkbox" class="form-check-input" id="chk_m" name="chk" checked>
+	            </div>
+	          </div>
+	          <div class="row mb-1">
+	            <label for="Male_m" class="col-sm-3 col-form-label" style="padding-left: 20px;">라디오</label>
+	            <div class="col-sm-9 d-flex align-items-center">
+	              <input type="radio" class="form-check-input me-2" name="radioGroup_m" id="Male_m" value="M" checked required>
+	              <label class="form-check-label" for="Male_m">남성</label>
+	              <input type="radio" class="form-check-input ms-4 me-2" name="radioGroup_m" id="Female_m" value="F" required>
+	              <label class="form-check-label" for="Female_m">여성</label>
+	              <input type="radio" class="form-check-input ms-4 me-2" name="radioGroup_m" id="Other_m" value="O" required>
+	              <label class="form-check-label" for="Other_m">기타</label>
+	              <div class="invalid-feedback">필수 입력 필드입니다.</div>
+	            </div>
+	          </div>
+	        </form>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+	        <button type="button" class="btn btn-primary" id="saveButton">Save</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
 
-			    </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="saveButton">Save</button>
-            </div>
-        </div>
-    </div>
-</div>	
 	
 	<div class="card mb-4" style="width:100%">
 		<div class="card-header">

@@ -268,3 +268,22 @@ function compressImage(imageFile, maxSize, quality) {
     reader.onerror = reject;
   });
 }
+
+function validateAndSave(form, event) {
+	  event.preventDefault();
+	  event.stopPropagation();
+	  
+	  if (!form.checkValidity()) {
+	    form.classList.add('was-validated');
+	    swal({
+	      title: "Input Error",
+	      text: "Please check input.",
+	      icon: "warning",
+	      button: "OK",
+	    });
+	    return false;
+	  } else {
+	    form.classList.add('was-validated');
+	    return true;
+	  }
+}
