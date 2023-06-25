@@ -414,8 +414,13 @@ function handleCollapseClick() {
 }
 
 function saveData(event) {
-	event.preventDefault();
-	var formData = new FormData($('#saveForm')[0]);
+	var form = $('#saveForm')[0];
+	
+	if (!validateAndSave(form, event)) {
+		return;
+	}
+	
+	var formData = new FormData(form);
 	  
 	// 체크 박스의 값을 폼 데이터에 추가
 	formData.append('chk', $("#chk_m").is(':checked') ? "Y" : "N");
