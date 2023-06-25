@@ -77,6 +77,7 @@ public class FileUtil {
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
         String currentDate = now.format(dateTimeFormatter);
+        currentDate = "openImg/"+currentDate;
 
         // 파일 저장
         String originalFileExtension = MimeTypeUtils.parseMimeType(mimeType).getSubtype();

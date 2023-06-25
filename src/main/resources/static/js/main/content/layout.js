@@ -310,6 +310,39 @@ function searchDataTable() {
         // 모달 창을 띄움
         $('#addModal').modal('show');
 	});
+	
+	$('#longtext_m').summernote({
+  	    placeholder: 'Hello Summernote lite',
+  	    tabsize: 2,
+        height: 300,                 // set editor height
+        minHeight: null,             // set minimum height of editor
+        maxHeight: null,             // set maximum height of editor
+        focus: true,                  // set focus to editable area after
+										// initializing summernote
+        toolbar: [
+  		    ['fontname', ['fontname']],
+  		    ['fontsize', ['fontsize']],
+  		    ['style', ['bold', 'italic', 'underline','strikethrough', 'clear']],
+  		    ['color', ['forecolor','color']],
+  		    ['table', ['table']],
+  		    ['para', ['ul', 'ol', 'paragraph']],
+  		    ['height', ['height']],
+  		    ['insert',['picture','link','video']],
+  		    ['view', ['codeview','fullscreen', 'help']]
+  		  ],		  
+		  callbacks: {
+		      onImageUpload: onImageUpload
+		  },  		  
+  		// 추가한 글꼴
+  		fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New','맑은 고딕','궁서','굴림체','굴림','돋음체','바탕체'],
+  		 // 추가한 폰트사이즈
+  		fontSizes: ['8','9','10','11','12','14','16','18','20','22','24','28','30','36','50','72']
+    });
+	
+	$(document).on('focusin', '#longtext_t', function() {
+		debugger;
+		
+	});
 
 	$('#dataTable tbody').on('click', '.edit-button', function() {
 		var id = $(this).data('id');
@@ -334,7 +367,6 @@ function searchDataTable() {
         createTab(tabId, tabTitle, tabContent);
 		
 	});
-
 }
 
 //탭 생성 함수
@@ -395,8 +427,11 @@ function createTab(tabId, tabTitle, tabContent) {
       .attr('role', 'tabpanel')
       .attr('aria-labelledby', 'header' + tabId)
       .append($('<h5></h5>').text(tabTitle))
-      .append($('<p></p>').text(tabContent));
-  
+      //.append($('<p></p>').text(tabContent));
+      //.append($('<textarea id="longtext_t"></textarea>').text(tabContent)); // Summernote를 초기화하고 tabContent를 설정합니다.
+      //.append($('<div class="summernote-container"></div>').append($('<textarea></textarea>').attr('id', 'longtext_t').text(tabContent)));
+      .append($('<div></div>').attr('id', 'summernote_' + tabId)); // Summernote를 초기화할 div 요소 추가
+      
     // 탭 제목과 컨텐츠를 추가
     $('.nav-tabs').append(tabTitleHtml);
     $('.tab-content').append(tabContentHtml);
@@ -406,6 +441,15 @@ function createTab(tabId, tabTitle, tabContent) {
     $('.tab-content .tab-pane').removeClass('show active'); // 모든 탭 컨텐츠 숨기기
     $('#' + tabId).addClass('show active');
     $('#header' + tabId).addClass('active');
+    
+    // Summernote 초기화
+    $('#summernote_' + tabId).summernote({
+    	  toolbar: false, // 툴바 비활성화
+    });
+    
+    // 탭 컨텐츠에 tabContent 내용 써머노트에 설정
+    $('#summernote_' + tabId).summernote("disable");
+    $('#summernote_' + tabId).summernote('code', tabContent);
 }
 
 function handleCollapseClick() {
@@ -455,7 +499,7 @@ function editCallback(response){
 	$('#email_m').val(response.data.email);
 	$('#num_m').val(response.data.num);
 	$('#shorttext_m').val(response.data.shorttext);
-	$('#longtext_m').val(response.data.longtext);
+	$('#longtext_m').summernote('code', response.data.longtext);
 	
 	var chkBox = $("#chk_m");
 	chkBox.prop("checked", (response.data.chk === "Y"));
@@ -509,4 +553,33 @@ function uploadCallback(response){
 		icon: "success",
 		button: "OK",
 	})
+}
+
+function onImageUpload(files) {
+	  for (var i = 0; i < files.length; i++) {
+	    // 이미지 파일을 압축합니다. (압축: 70% 수준 유지)
+	    compressImage(files[i], 300, 0.7).then(function (compressedImage) {
+	      // 압축된 이미지 파일을 서버에 업로드합니다.
+	      const formData = new FormData();
+	      formData.append('file', compressedImage);
+	      $.ajax({
+	        type: 'POST',
+	        url: '/posts/uploadImage',
+			beforeSend: function(xhr) {
+				xhr.setRequestHeader(csrfheader, csrftoken);
+			},
+	        data: formData,
+	        processData: false,
+	        contentType: false,
+	        success: function (data) {
+	          // 서버로부터 이미지 파일의 경로를 받아와 HTML 본문에 삽입합니다.
+	          const imgNode = $('<img>').attr('src', data.createdFilePath);
+	          $('#longtext_m').summernote('insertNode', imgNode[0]);
+	        },
+	        error: function () {
+	          alert('이미지 업로드에 실패했습니다.');
+	        }
+	      });
+	    });
+	  }
 }
