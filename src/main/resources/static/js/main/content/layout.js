@@ -323,8 +323,89 @@ function searchDataTable() {
 
 	$('#dataTable tbody').on('click', 'tr', function() {
 		$(this).toggleClass('selected');
+		
+		var selectedRowsData = table.row(this).data();		
+		
+        // 탭을 생성하고 내용을 설정합니다.
+        var tabId = selectedRowsData.id;
+        var tabTitle = selectedRowsData.shorttext;
+        var tabContent = selectedRowsData.longtext;
+
+        createTab(tabId, tabTitle, tabContent);
+		
 	});
 
+}
+
+//탭 생성 함수
+function createTab(tabId, tabTitle, tabContent) {
+    // 이미 해당 탭이 생성되어 있는지 확인
+    var existingTab = $('#' + tabId);
+    if (existingTab.length > 0) {
+      // 이미 생성된 탭이 있는 경우 해당 탭으로 이동
+      $('.nav-tabs .nav-link').removeClass('active');
+      $('.tab-content .tab-pane').removeClass('show active');
+      existingTab.addClass('show active');
+      $('#header' + tabId).addClass('active');
+      return;
+    }
+  
+    // 탭 제목에 사용될 버튼 HTML 생성
+    var closeButton = $('<button></button>')
+      .addClass('close close-tab-btn')
+      .attr('type', 'button')
+      .attr('aria-label', 'Close')
+      .html('<span aria-hidden="true">&times;</span>')
+      .on('click', function() {
+        // 닫기 버튼 클릭 이벤트 처리
+        var currentTab = $('#' + tabId);
+        var prevTab = currentTab.prev('.tab-pane');
+        currentTab.remove(); // 현재 탭 컨텐츠 제거
+        $('#header' + tabId).parent().remove(); // 탭 제목 제거
+  
+        if (prevTab.length > 0) {
+          // 이전 탭 컨텐츠 보이기
+          prevTab.addClass('show active');
+          var prevTabId = prevTab.attr('id');
+          $('#header' + prevTabId).addClass('active');
+        }
+      });
+  
+    // 탭 제목과 닫기 버튼을 포함한 HTML 생성
+    var tabTitleHtml = $('<li></li>')
+      .addClass('nav-item')
+      .append(
+        $('<button></button>')
+          .addClass('nav-link')
+          .attr('id', 'header' + tabId)
+          .attr('data-bs-toggle', 'tab')
+          .attr('data-bs-target', '#' + tabId)
+          .attr('type', 'button')
+          .attr('role', 'tab')
+          .attr('aria-controls', tabId)
+          .attr('aria-selected', 'false')
+          .text(tabTitle)
+          .append(closeButton) // 닫기 버튼 추가
+      );
+  
+    // 탭 컨텐츠 생성
+    var tabContentHtml = $('<div></div>')
+      .addClass('tab-pane fade')
+      .attr('id', tabId)
+      .attr('role', 'tabpanel')
+      .attr('aria-labelledby', 'header' + tabId)
+      .append($('<h5></h5>').text(tabTitle))
+      .append($('<p></p>').text(tabContent));
+  
+    // 탭 제목과 컨텐츠를 추가
+    $('.nav-tabs').append(tabTitleHtml);
+    $('.tab-content').append(tabContentHtml);
+  
+    // 생성된 탭 활성화
+    $('.nav-tabs .nav-link').removeClass('active'); // 모든 탭 제목의 'active' 클래스 제거
+    $('.tab-content .tab-pane').removeClass('show active'); // 모든 탭 컨텐츠 숨기기
+    $('#' + tabId).addClass('show active');
+    $('#header' + tabId).addClass('active');
 }
 
 function handleCollapseClick() {
