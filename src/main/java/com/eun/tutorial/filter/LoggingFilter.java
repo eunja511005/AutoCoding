@@ -111,8 +111,14 @@ public class LoggingFilter implements Filter {
     private String extractRequestData(ContentCachingRequestWrapper requestWrapper) throws IOException {
         StringBuilder requestData = new StringBuilder();
 
+        // 요청 URL과 메서드 추출
+        String url = requestWrapper.getRequestURL().toString();
+        String method = requestWrapper.getMethod();
+
+        requestData.append("Request URL: ").append(url).append(System.lineSeparator());
+        requestData.append("Request Method: ").append(method).append(System.lineSeparator());
+
         // 요청 헤더 추출
-     // 요청 헤더 추출
         Enumeration<String> headerNamesEnum = requestWrapper.getHeaderNames();
         List<String> headerNamesList = Collections.list(headerNamesEnum);
         Map<String, String> headers = new HashMap<>();
