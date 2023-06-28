@@ -13,21 +13,21 @@ import com.eun.tutorial.service.main.UserRequestHistoryService;
 
 import lombok.extern.slf4j.Slf4j;
 
+
 @Slf4j
 public class LoggingFilter implements Filter {
 
-	private MenuControlService menuControlService;
-	private UserRequestHistoryService userRequestHistoryService;
+//	private MenuControlService menuControlService;
+//	private UserRequestHistoryService userRequestHistoryService;
 
-    public LoggingFilter(MenuControlService menuControlService, UserRequestHistoryService userRequestHistoryService) {
-		this.menuControlService = menuControlService;
-		this.userRequestHistoryService = userRequestHistoryService;
-    }
+//    public LoggingFilter(MenuControlService menuControlService, UserRequestHistoryService userRequestHistoryService) {
+//		this.menuControlService = menuControlService;
+//		this.userRequestHistoryService = userRequestHistoryService;
+//    }
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain)
             throws IOException, ServletException {
-    	
     	chain.doFilter(servletRequest, servletResponse);
     }
 
