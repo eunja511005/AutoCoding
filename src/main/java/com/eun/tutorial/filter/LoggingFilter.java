@@ -97,10 +97,10 @@ public class LoggingFilter implements Filter {
 
         chain.doFilter(requestWrapper, responseWrapper);
         
-        String responseContent = extractResponseData(responseWrapper);
+        //String responseContent = extractResponseData(responseWrapper);
         
 		if(logDataYn.equals("Y")) {
-			userRequestHistoryDTO.setResData(responseContent);
+			userRequestHistoryDTO.setResData("");
 		}
 		
 		if(logYn.equals("Y")) {
@@ -161,45 +161,45 @@ public class LoggingFilter implements Filter {
 //        return requestData.toString();
 //    }
     
-    private String extractRequestBody(ContentCachingRequestWrapper requestWrapper) throws IOException {
-        InputStream inputStream = requestWrapper.getInputStream();
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        byte[] buffer = new byte[1024];
-        int bytesRead;
-        while ((bytesRead = inputStream.read(buffer)) != -1) {
-            outputStream.write(buffer, 0, bytesRead);
-        }
-        outputStream.flush();
-        byte[] requestBodyBytes = outputStream.toByteArray();
-        return new String(requestBodyBytes, "UTF-8");
-    }
+//    private String extractRequestBody(ContentCachingRequestWrapper requestWrapper) throws IOException {
+//        InputStream inputStream = requestWrapper.getInputStream();
+//        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+//        byte[] buffer = new byte[1024];
+//        int bytesRead;
+//        while ((bytesRead = inputStream.read(buffer)) != -1) {
+//            outputStream.write(buffer, 0, bytesRead);
+//        }
+//        outputStream.flush();
+//        byte[] requestBodyBytes = outputStream.toByteArray();
+//        return new String(requestBodyBytes, "UTF-8");
+//    }
     
-    private String extractResponseData(ContentCachingResponseWrapper responseWrapper) {
-        StringBuilder responseData = new StringBuilder();
-
-        // 응답 상태 코드 추출
-        int statusCode = responseWrapper.getStatus();
-        responseData.append("Response Status Code: ").append(statusCode).append(System.lineSeparator());
-
-        // 응답 헤더 추출
-        Map<String, String> headers = new HashMap<>();
-        responseWrapper.getHeaderNames().forEach(headerName -> headers.put(headerName, responseWrapper.getHeader(headerName)));
-
-        if (!headers.isEmpty()) {
-            responseData.append("Response Headers: ").append(System.lineSeparator());
-            headers.forEach((headerName, headerValue) -> responseData.append(headerName).append(": ").append(headerValue).append(System.lineSeparator()));
-        }
-
-        // 응답 바디 추출
-        byte[] responseBody = responseWrapper.getContentAsByteArray();
-
-        if (responseBody.length > 0) {
-            String responseBodyString = new String(responseBody, StandardCharsets.UTF_8);
-            responseData.append("Response Body: ").append(responseBodyString);
-        }
-
-        return responseData.toString();
-    }
+//    private String extractResponseData(ContentCachingResponseWrapper responseWrapper) {
+//        StringBuilder responseData = new StringBuilder();
+//
+//        // 응답 상태 코드 추출
+//        int statusCode = responseWrapper.getStatus();
+//        responseData.append("Response Status Code: ").append(statusCode).append(System.lineSeparator());
+//
+//        // 응답 헤더 추출
+//        Map<String, String> headers = new HashMap<>();
+//        responseWrapper.getHeaderNames().forEach(headerName -> headers.put(headerName, responseWrapper.getHeader(headerName)));
+//
+//        if (!headers.isEmpty()) {
+//            responseData.append("Response Headers: ").append(System.lineSeparator());
+//            headers.forEach((headerName, headerValue) -> responseData.append(headerName).append(": ").append(headerValue).append(System.lineSeparator()));
+//        }
+//
+//        // 응답 바디 추출
+//        byte[] responseBody = responseWrapper.getContentAsByteArray();
+//
+//        if (responseBody.length > 0) {
+//            String responseBodyString = new String(responseBody, StandardCharsets.UTF_8);
+//            responseData.append("Response Body: ").append(responseBodyString);
+//        }
+//
+//        return responseData.toString();
+//    }
 
 	private void saveMenuControl(String url, String method, String logYn, String logDataYn) {
 		MenuControlDTO menuControlDTO = new MenuControlDTO();
