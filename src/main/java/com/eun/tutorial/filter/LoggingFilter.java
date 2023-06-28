@@ -84,7 +84,8 @@ public class LoggingFilter implements Filter {
 
 			if (logDataYn.equals("Y")) {
 				// 요청 데이터 추출
-		        String requestData = extractRequestData(requestWrapper);
+				String requestData="";
+//		        String requestData = extractRequestData(requestWrapper);
 		        
 				if (requestData.length() > 2000) {
 					requestData = requestData.substring(0, 2000);
@@ -110,55 +111,55 @@ public class LoggingFilter implements Filter {
         responseWrapper.copyBodyToResponse();
     }
 
-    private String extractRequestData(ContentCachingRequestWrapper requestWrapper) throws IOException {
-        StringBuilder requestData = new StringBuilder();
-
-        // 요청 URL과 메서드 추출
-        String url = requestWrapper.getRequestURL().toString();
-        String method = requestWrapper.getMethod();
-
-        requestData.append("Request URL: ").append(url).append(System.lineSeparator());
-        requestData.append("Request Method: ").append(method).append(System.lineSeparator());
-
-        // 요청 헤더 추출
-        Enumeration<String> headerNamesEnum = requestWrapper.getHeaderNames();
-        List<String> headerNamesList = Collections.list(headerNamesEnum);
-        Map<String, String> headers = new HashMap<>();
-
-        headerNamesList.forEach(headerName -> headers.put(headerName, requestWrapper.getHeader(headerName)));
-
-        if (!headers.isEmpty()) {
-            requestData.append("Request Headers: ").append(System.lineSeparator());
-            headers.forEach((headerName, headerValue) -> requestData.append(headerName).append(": ").append(headerValue).append(System.lineSeparator()));
-        }
-
-        // 요청 파라미터 추출
-        Map<String, String[]> parameterMap = requestWrapper.getParameterMap();
-
-        if (!parameterMap.isEmpty()) {
-            requestData.append("Request Parameters: ").append(System.lineSeparator());
-            parameterMap.forEach((paramName, paramValues) -> {
-                String paramValue = Arrays.toString(paramValues);
-                requestData.append(paramName).append(": ").append(paramValue).append(System.lineSeparator());
-            });
-        }
-
-        // 요청 바디 추출
-        byte[] requestBody = requestWrapper.getContentAsByteArray();
-
-        if (requestBody.length > 0) {
-            String requestBodyString = new String(requestBody, StandardCharsets.UTF_8);
-            requestData.append("Request Body: ").append(requestBodyString).append(System.lineSeparator());
-        }
-        
-        // 요청 inputStream
-        String stream = extractRequestBody(requestWrapper);
-        if (!StringUtils.isBlank(stream)) {
-            requestData.append("Request Stream: ").append(stream).append(System.lineSeparator());
-        }
-
-        return requestData.toString();
-    }
+//    private String extractRequestData(ContentCachingRequestWrapper requestWrapper) throws IOException {
+//        StringBuilder requestData = new StringBuilder();
+//
+//        // 요청 URL과 메서드 추출
+//        String url = requestWrapper.getRequestURL().toString();
+//        String method = requestWrapper.getMethod();
+//
+//        requestData.append("Request URL: ").append(url).append(System.lineSeparator());
+//        requestData.append("Request Method: ").append(method).append(System.lineSeparator());
+//
+//        // 요청 헤더 추출
+//        Enumeration<String> headerNamesEnum = requestWrapper.getHeaderNames();
+//        List<String> headerNamesList = Collections.list(headerNamesEnum);
+//        Map<String, String> headers = new HashMap<>();
+//
+//        headerNamesList.forEach(headerName -> headers.put(headerName, requestWrapper.getHeader(headerName)));
+//
+//        if (!headers.isEmpty()) {
+//            requestData.append("Request Headers: ").append(System.lineSeparator());
+//            headers.forEach((headerName, headerValue) -> requestData.append(headerName).append(": ").append(headerValue).append(System.lineSeparator()));
+//        }
+//
+//        // 요청 파라미터 추출
+//        Map<String, String[]> parameterMap = requestWrapper.getParameterMap();
+//
+//        if (!parameterMap.isEmpty()) {
+//            requestData.append("Request Parameters: ").append(System.lineSeparator());
+//            parameterMap.forEach((paramName, paramValues) -> {
+//                String paramValue = Arrays.toString(paramValues);
+//                requestData.append(paramName).append(": ").append(paramValue).append(System.lineSeparator());
+//            });
+//        }
+//
+//        // 요청 바디 추출
+//        byte[] requestBody = requestWrapper.getContentAsByteArray();
+//
+//        if (requestBody.length > 0) {
+//            String requestBodyString = new String(requestBody, StandardCharsets.UTF_8);
+//            requestData.append("Request Body: ").append(requestBodyString).append(System.lineSeparator());
+//        }
+//        
+//        // 요청 inputStream
+//        String stream = extractRequestBody(requestWrapper);
+//        if (!StringUtils.isBlank(stream)) {
+//            requestData.append("Request Stream: ").append(stream).append(System.lineSeparator());
+//        }
+//
+//        return requestData.toString();
+//    }
     
     private String extractRequestBody(ContentCachingRequestWrapper requestWrapper) throws IOException {
         InputStream inputStream = requestWrapper.getInputStream();
