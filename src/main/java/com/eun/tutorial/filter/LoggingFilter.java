@@ -1,5 +1,6 @@
 package com.eun.tutorial.filter;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -27,6 +28,7 @@ import com.eun.tutorial.dto.main.UserRequestHistoryDTO;
 import com.eun.tutorial.service.main.MenuControlService;
 import com.eun.tutorial.service.main.UserRequestHistoryService;
 import com.eun.tutorial.util.AuthUtils;
+import com.eun.tutorial.util.StringUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -150,14 +152,25 @@ public class LoggingFilter implements Filter {
         }
         
         // 요청 inputStream
-        InputStream inputStream = requestWrapper.getInputStream();
-        byte[] requestBodyBytes = inputStream.readAllBytes();
-        if (requestBodyBytes.length > 0) {
-        	String stream = new String(requestBodyBytes, StandardCharsets.UTF_8);
+        String stream = extractRequestBody(requestWrapper);
+        if (!StringUtils.isBlank(stream)) {
             requestData.append("Request Stream: ").append(stream).append(System.lineSeparator());
         }
 
         return requestData.toString();
+    }
+    
+    private String extractRequestBody(ContentCachingRequestWrapper requestWrapper) throws IOException {
+        InputStream inputStream = requestWrapper.getInputStream();
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        byte[] buffer = new byte[1024];
+        int bytesRead;
+        while ((bytesRead = inputStream.read(buffer)) != -1) {
+            outputStream.write(buffer, 0, bytesRead);
+        }
+        outputStream.flush();
+        byte[] requestBodyBytes = outputStream.toByteArray();
+        return new String(requestBodyBytes, "UTF-8");
     }
     
     private String extractResponseData(ContentCachingResponseWrapper responseWrapper) {
