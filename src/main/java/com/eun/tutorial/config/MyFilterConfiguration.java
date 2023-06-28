@@ -25,8 +25,7 @@ public class MyFilterConfiguration {
     @Bean
     public FilterRegistrationBean<LoggingFilter> loggingFilter() {
     	FilterRegistrationBean<LoggingFilter> registration = new FilterRegistrationBean<>();
-//    	registration.setFilter(new LoggingFilter(menuControlService, userRequestHistoryService));
-    	registration.setFilter(new LoggingFilter());
+    	registration.setFilter(new LoggingFilter(menuControlService, userRequestHistoryService));
     	registration.addUrlPatterns("/*"); // Set the URL patterns for the filter
     	registration.setName("LoggingFilter");
     	registration.setOrder(1); // Set the order in which the filter should be applied
