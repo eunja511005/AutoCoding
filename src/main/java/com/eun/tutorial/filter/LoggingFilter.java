@@ -1,15 +1,7 @@
 package com.eun.tutorial.filter;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import javax.servlet.Filter;
@@ -17,18 +9,10 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.web.util.ContentCachingRequestWrapper;
-import org.springframework.web.util.ContentCachingResponseWrapper;
 
 import com.eun.tutorial.dto.main.MenuControlDTO;
-import com.eun.tutorial.dto.main.UserRequestHistoryDTO;
 import com.eun.tutorial.service.main.MenuControlService;
 import com.eun.tutorial.service.main.UserRequestHistoryService;
-import com.eun.tutorial.util.AuthUtils;
-import com.eun.tutorial.util.StringUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -47,68 +31,68 @@ public class LoggingFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain)
             throws IOException, ServletException {
     	
-        ContentCachingRequestWrapper requestWrapper = new ContentCachingRequestWrapper((HttpServletRequest) servletRequest);
-        ContentCachingResponseWrapper responseWrapper = new ContentCachingResponseWrapper((HttpServletResponse) servletResponse);
-
-        UserRequestHistoryDTO userRequestHistoryDTO = new UserRequestHistoryDTO();
-    	
-        String url = requestWrapper.getRequestURI();
-        String method = requestWrapper.getMethod();
-        
-		log.info("##### requestURI : {}", url);
-		log.info("##### requestMethod : {}", method);
-
-		String logYn;
-		String logDataYn;
-		MenuControlDTO matchMenuControlDTO = getMenuControlDTO(url, method);
-		
-		if (matchMenuControlDTO==null) {
-			logYn = "Y";
-			logDataYn = "N";
-			saveMenuControl(url, method, logYn, logDataYn);
-		}else {
-			logYn = matchMenuControlDTO.getLogYn();
-			logDataYn = matchMenuControlDTO.getLogDataYn();
-		}
-		
-		if (logYn.equals("Y")) {
-
-			// 요청 정보 추출
-			String ip = requestWrapper.getRemoteAddr();
-			String user = AuthUtils.getLoginUser();
-	        
-			userRequestHistoryDTO.setUrl(url);
-			userRequestHistoryDTO.setMethod(method);
-			userRequestHistoryDTO.setReqIp(ip);
-			userRequestHistoryDTO.setReqUser(user);
-
-			if (logDataYn.equals("Y")) {
-				// 요청 데이터 추출
-				String requestData="";
-//		        String requestData = extractRequestData(requestWrapper);
-		        
-				if (requestData.length() > 2000) {
-					requestData = requestData.substring(0, 2000);
-				}
-				
-				userRequestHistoryDTO.setReqData(requestData);
-			}
-		}
-
-        chain.doFilter(requestWrapper, responseWrapper);
-        
-        //String responseContent = extractResponseData(responseWrapper);
-        
-		if(logDataYn.equals("Y")) {
-			userRequestHistoryDTO.setResData("");
-		}
-		
-		if(logYn.equals("Y")) {
-			userRequestHistoryService.saveUserRequestHistory(userRequestHistoryDTO);
-		}
-        
-        // 추출한 데이터를 다시 응답으로 전송하기 위해 responseWrapper에 쓰입니다.
-        responseWrapper.copyBodyToResponse();
+//        ContentCachingRequestWrapper requestWrapper = new ContentCachingRequestWrapper((HttpServletRequest) servletRequest);
+//        ContentCachingResponseWrapper responseWrapper = new ContentCachingResponseWrapper((HttpServletResponse) servletResponse);
+//
+//        UserRequestHistoryDTO userRequestHistoryDTO = new UserRequestHistoryDTO();
+//    	
+//        String url = requestWrapper.getRequestURI();
+//        String method = requestWrapper.getMethod();
+//        
+//		log.info("##### requestURI : {}", url);
+//		log.info("##### requestMethod : {}", method);
+//
+//		String logYn;
+//		String logDataYn;
+//		MenuControlDTO matchMenuControlDTO = getMenuControlDTO(url, method);
+//		
+//		if (matchMenuControlDTO==null) {
+//			logYn = "Y";
+//			logDataYn = "N";
+//			saveMenuControl(url, method, logYn, logDataYn);
+//		}else {
+//			logYn = matchMenuControlDTO.getLogYn();
+//			logDataYn = matchMenuControlDTO.getLogDataYn();
+//		}
+//		
+//		if (logYn.equals("Y")) {
+//
+//			// 요청 정보 추출
+//			String ip = requestWrapper.getRemoteAddr();
+//			String user = AuthUtils.getLoginUser();
+//	        
+//			userRequestHistoryDTO.setUrl(url);
+//			userRequestHistoryDTO.setMethod(method);
+//			userRequestHistoryDTO.setReqIp(ip);
+//			userRequestHistoryDTO.setReqUser(user);
+//
+//			if (logDataYn.equals("Y")) {
+//				// 요청 데이터 추출
+//				String requestData="";
+////		        String requestData = extractRequestData(requestWrapper);
+//		        
+//				if (requestData.length() > 2000) {
+//					requestData = requestData.substring(0, 2000);
+//				}
+//				
+//				userRequestHistoryDTO.setReqData(requestData);
+//			}
+//		}
+//
+//        chain.doFilter(requestWrapper, responseWrapper);
+//        
+//        //String responseContent = extractResponseData(responseWrapper);
+//        
+//		if(logDataYn.equals("Y")) {
+//			userRequestHistoryDTO.setResData("");
+//		}
+//		
+//		if(logYn.equals("Y")) {
+//			userRequestHistoryService.saveUserRequestHistory(userRequestHistoryDTO);
+//		}
+//        
+//        // 추출한 데이터를 다시 응답으로 전송하기 위해 responseWrapper에 쓰입니다.
+//        responseWrapper.copyBodyToResponse();
     }
 
 //    private String extractRequestData(ContentCachingRequestWrapper requestWrapper) throws IOException {
