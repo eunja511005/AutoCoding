@@ -100,6 +100,9 @@ public class LoggingFilter implements Filter {
         String responseContent = extractResponseData(responseWrapper);
         
 		if(logDataYn.equals("Y")) {
+			if (responseContent.length() > 2000) {
+				responseContent = responseContent.substring(0, 2000);
+			}
 			userRequestHistoryDTO.setResData(responseContent);
 		}
 		
