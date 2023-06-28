@@ -1,10 +1,11 @@
 package com.eun.tutorial.config;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -16,7 +17,6 @@ import org.json.JSONObject;
 import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -33,12 +33,12 @@ import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.web.servlet.LocaleResolver;
 
 import com.eun.tutorial.dto.ZthhErrorDTO;
-import com.eun.tutorial.dto.main.MenuControlDTO;
-import com.eun.tutorial.exception.CustomException;
+import com.eun.tutorial.dto.main.UserRequestHistoryDTO;
 import com.eun.tutorial.exception.CustomForbiddenEntryPoint;
 import com.eun.tutorial.service.UserService;
 import com.eun.tutorial.service.ZthhErrorService;
 import com.eun.tutorial.service.main.MenuControlService;
+import com.eun.tutorial.service.main.UserRequestHistoryService;
 import com.eun.tutorial.service.user.CustomOAuth2UserService;
 import com.eun.tutorial.service.user.PrincipalDetails;
 import com.eun.tutorial.util.AuthUtils;
@@ -61,7 +61,8 @@ public class MyWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter
 	private final SessionRegistry sessionRegistry;
 	private final CustomLogoutHandler customLogoutHandler;
 	private final CustomForbiddenEntryPoint customForbiddenEntryPoint;
-	
+	private final UserRequestHistoryService userRequestHistoryService;
+
     // logout -> login max session 1 오류 해결을 위해 추가
     @Bean
     public ServletListenerRegistrationBean<HttpSessionEventPublisher> httpSessionEventPublisher() {
@@ -180,6 +181,28 @@ public class MyWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter
                         response.getWriter().print(json);
                     })
                     .failureHandler((request, response, exception)->{
+                    	
+                        // LoggingFilter를 호출하여 로그를 기록합니다.
+                    	UserRequestHistoryDTO userRequestHistoryDTO = new UserRequestHistoryDTO();
+            			userRequestHistoryDTO.setUrl(request.getRequestURI());
+            			userRequestHistoryDTO.setMethod(request.getMethod());
+            			userRequestHistoryDTO.setReqIp(request.getRemoteAddr());
+            			userRequestHistoryDTO.setReqUser(AuthUtils.getLoginUser());
+            			
+            	        Map<String, String[]> parameterMap = request.getParameterMap();
+            	        StringBuilder requestData = new StringBuilder();
+            	        if (!parameterMap.isEmpty()) {
+            	            requestData.append("Request Parameters: ").append(System.lineSeparator());
+            	            parameterMap.forEach((paramName, paramValues) -> {
+            	                String paramValue = Arrays.toString(paramValues);
+            	                requestData.append(paramName).append(": ").append(paramValue).append(System.lineSeparator());
+            	            });
+            	        }
+            	        userRequestHistoryDTO.setReqData(requestData.toString());
+            	        userRequestHistoryDTO.setResData(exception.getMessage());
+            	        userRequestHistoryService.saveUserRequestHistory(userRequestHistoryDTO);
+
+                    	
                         String errMsg = "";
                         if(exception.getClass().isAssignableFrom(BadCredentialsException.class)){
                             errMsg = "Invalid username or password";
