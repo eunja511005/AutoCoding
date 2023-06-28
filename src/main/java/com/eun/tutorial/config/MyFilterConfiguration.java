@@ -1,21 +1,36 @@
 package com.eun.tutorial.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ResourceLoader;
 
+import com.eun.tutorial.filter.LoggingFilter;
 import com.eun.tutorial.filter.XssFilter;
 import com.eun.tutorial.service.ZthhErrorService;
+import com.eun.tutorial.service.main.MenuControlService;
+import com.eun.tutorial.service.main.UserRequestHistoryService;
+
+import lombok.RequiredArgsConstructor;
 
 @Configuration
+@RequiredArgsConstructor
 public class MyFilterConfiguration {
-    @Autowired
-    private ResourceLoader resourceLoader;
+	private final ResourceLoader resourceLoader;
+    private final ZthhErrorService zthhErrorService;
+	private final MenuControlService menuControlService;
+	private final UserRequestHistoryService userRequestHistoryService;
+
     
-	@Autowired
-	private ZthhErrorService zthhErrorService;
+    @Bean
+    public FilterRegistrationBean<LoggingFilter> loggingFilter() {
+    	FilterRegistrationBean<LoggingFilter> registration = new FilterRegistrationBean<>();
+    	registration.setFilter(new LoggingFilter(menuControlService, userRequestHistoryService));
+    	registration.addUrlPatterns("/*"); // Set the URL patterns for the filter
+    	registration.setName("LoggingFilter");
+    	registration.setOrder(0); // Set the order in which the filter should be applied
+    	return registration;
+    }
 	
     @Bean
     public FilterRegistrationBean<XssFilter> myFilter() {
@@ -26,4 +41,5 @@ public class MyFilterConfiguration {
         registration.setOrder(1); // Set the order in which the filter should be applied
         return registration;
     }
+
 }

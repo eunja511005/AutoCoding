@@ -36,13 +36,11 @@ public class UserRequestLoggingAspect {
 	private ThreadLocal<String> logYnThreadLocal = new ThreadLocal<>();
 	private ThreadLocal<String> logDataYnThreadLocal = new ThreadLocal<>();
 
-	// Pointcut: 모든 Controller의 메서드에 적용
-	@Pointcut("within(@org.springframework.stereotype.Controller *)")
+	//@Pointcut("within(@org.springframework.stereotype.Controller *)")
 	public void controllerPointcut() {
 	}
 
-	// Before advice: 메서드 실행 전에 요청 정보 로깅
-	@Before("controllerPointcut()")
+	//@Before("controllerPointcut()")
 	public void logRequest(JoinPoint joinPoint) {
 		UserRequestHistoryDTO userRequestHistoryDTO = new UserRequestHistoryDTO();
 
@@ -136,8 +134,7 @@ public class UserRequestLoggingAspect {
 		menuControlService.saveMenuControl(menuControlDTO);
 	}
 
-	// AfterReturning advice: 메서드 실행 후에 응답 정보 로깅
-	@AfterReturning(pointcut = "controllerPointcut()", returning = "result")
+	//@AfterReturning(pointcut = "controllerPointcut()", returning = "result")
 	public void logResponse(JoinPoint joinPoint, Object result) {
 
 		String logYn = logYnThreadLocal.get();
