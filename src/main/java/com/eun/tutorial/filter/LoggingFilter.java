@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -110,9 +112,12 @@ public class LoggingFilter implements Filter {
         StringBuilder requestData = new StringBuilder();
 
         // 요청 헤더 추출
+     // 요청 헤더 추출
+        Enumeration<String> headerNamesEnum = requestWrapper.getHeaderNames();
+        List<String> headerNamesList = Collections.list(headerNamesEnum);
         Map<String, String> headers = new HashMap<>();
-        requestWrapper.getHeaderNames().asIterator()
-                .forEachRemaining(headerName -> headers.put(headerName, requestWrapper.getHeader(headerName)));
+
+        headerNamesList.forEach(headerName -> headers.put(headerName, requestWrapper.getHeader(headerName)));
 
         if (!headers.isEmpty()) {
             requestData.append("Request Headers: ").append(System.lineSeparator());
