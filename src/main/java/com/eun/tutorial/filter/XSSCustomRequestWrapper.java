@@ -7,7 +7,7 @@ import java.nio.charset.StandardCharsets;
 
 import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
-import javax.servlet.http.HttpServletRequestWrapper;
+//import javax.servlet.http.HttpServletRequestWrapper;
 
 import org.apache.commons.io.IOUtils;
 import org.springframework.web.util.ContentCachingRequestWrapper;
@@ -18,7 +18,7 @@ import com.eun.tutorial.service.ZthhErrorService;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class XSSCustomRequestWrapper extends HttpServletRequestWrapper {
+public class XSSCustomRequestWrapper extends ContentCachingRequestWrapper {
 	
 	private ZthhErrorService zthhErrorService;
 
