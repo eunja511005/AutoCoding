@@ -33,8 +33,10 @@ public class XSSCustomRequestWrapper extends HttpServletRequestWrapper {
     public ServletInputStream getInputStream() throws IOException {
         InputStream inputStream = super.getInputStream();
         String contentType = super.getContentType();
+        log.debug("##### contentType detected: {}", contentType);
         if (contentType != null && contentType.startsWith("application/json")) {
             String json = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
+            log.debug("##### json detected: {}", json);
             String sanitizedJson = cleanXSS(json);
             ByteArrayInputStream bis = new ByteArrayInputStream(sanitizedJson.getBytes(StandardCharsets.UTF_8));
             return new ServletInputStream() {
