@@ -4,15 +4,13 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
 import org.apache.commons.io.IOUtils;
+import org.springframework.web.util.ContentCachingRequestWrapper;
 
 import com.eun.tutorial.dto.ZthhErrorDTO;
 import com.eun.tutorial.service.ZthhErrorService;
@@ -24,7 +22,7 @@ public class XSSCustomRequestWrapper extends HttpServletRequestWrapper {
 	
 	private ZthhErrorService zthhErrorService;
 
-	public XSSCustomRequestWrapper(HttpServletRequest request, ZthhErrorService zthhErrorService) {
+	public XSSCustomRequestWrapper(ContentCachingRequestWrapper request, ZthhErrorService zthhErrorService) {
         super(request);
         this.zthhErrorService = zthhErrorService;
     }
