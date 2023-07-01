@@ -72,6 +72,8 @@ public class LoggingFilter implements Filter {
 			logDataYn = matchMenuControlDTO.getLogDataYn();
 		}
 		
+		log.info("##### logDataYn : {}", logDataYn);
+		
 		if (logYn.equals("Y")) {
 
 			// 요청 정보 추출
