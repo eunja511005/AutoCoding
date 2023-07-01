@@ -16,10 +16,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.owasp.validator.html.AntiSamy;
 import org.owasp.validator.html.Policy;
+import org.owasp.validator.html.PolicyException;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.web.util.ContentCachingRequestWrapper;
-import org.springframework.web.util.ContentCachingResponseWrapper;
 
 import com.eun.tutorial.dto.ZthhErrorDTO;
 import com.eun.tutorial.service.ZthhErrorService;
@@ -59,24 +58,24 @@ public class XssFilter implements Filter {
 	@Override
 	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
 			throws IOException, ServletException {
-        ContentCachingRequestWrapper requestWrapper = new ContentCachingRequestWrapper((HttpServletRequest) servletRequest);
-        ContentCachingResponseWrapper responseWrapper = new ContentCachingResponseWrapper((HttpServletResponse) servletResponse);
+		HttpServletRequest request = (HttpServletRequest) servletRequest;
+		HttpServletResponse response = (HttpServletResponse) servletResponse;
 		
-		log.info("##### requestURI : {}", requestWrapper.getRequestURI());
-		log.info("##### remoteUser : {}", requestWrapper.getRemoteUser());
-		if(requestWrapper.getUserPrincipal()!=null) {
-			log.info("##### userName : {}", requestWrapper.getUserPrincipal().getName());
+		log.info("##### requestURI : {}", request.getRequestURI());
+		log.info("##### remoteUser : {}", request.getRemoteUser());
+		if(request.getUserPrincipal()!=null) {
+			log.info("##### userName : {}", request.getUserPrincipal().getName());
 		}
 
 		try {
-			if(noXssUrlList.contains(requestWrapper.getRequestURI())){
-				filterChain.doFilter(requestWrapper, responseWrapper);
-			}else if(xssCustomUrlList.contains(requestWrapper.getRequestURI())){
-				XSSCustomRequestWrapper xSSCustomRequestWrapper = new XSSCustomRequestWrapper(requestWrapper, zthhErrorService);
-				filterChain.doFilter(xSSCustomRequestWrapper, responseWrapper);
+			if(noXssUrlList.contains(request.getRequestURI())){
+				filterChain.doFilter(request, response);
+			}else if(xssCustomUrlList.contains(request.getRequestURI())){
+				XSSCustomRequestWrapper xSSCustomRequestWrapper = new XSSCustomRequestWrapper(request, zthhErrorService);
+				filterChain.doFilter(xSSCustomRequestWrapper, response);
 			}else {
-				XSSCustomRequestWrapper xSSCustomRequestWrapper = new XSSCustomRequestWrapper(requestWrapper, zthhErrorService);
-				filterChain.doFilter(xSSCustomRequestWrapper, responseWrapper);
+				XSSCustomRequestWrapper xSSCustomRequestWrapper = new XSSCustomRequestWrapper(request, zthhErrorService);
+				filterChain.doFilter(xSSCustomRequestWrapper, response);
 //				XssRequestWrapper wrappedRequest = new XssRequestWrapper(request, antiSamy, zthhErrorService);
 //				filterChain.doFilter(wrappedRequest, response);
 			}
@@ -93,9 +92,6 @@ public class XssFilter implements Filter {
 
 			e.printStackTrace();
 		}
-		
-        // 추출한 데이터를 다시 응답으로 전송하기 위해 responseWrapper에 쓰입니다.
-        responseWrapper.copyBodyToResponse();
 
 	}
 	

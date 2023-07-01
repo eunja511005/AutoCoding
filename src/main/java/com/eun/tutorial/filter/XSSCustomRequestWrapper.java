@@ -4,13 +4,15 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
-//import javax.servlet.http.HttpServletRequestWrapper;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 
 import org.apache.commons.io.IOUtils;
-import org.springframework.web.util.ContentCachingRequestWrapper;
 
 import com.eun.tutorial.dto.ZthhErrorDTO;
 import com.eun.tutorial.service.ZthhErrorService;
@@ -18,11 +20,11 @@ import com.eun.tutorial.service.ZthhErrorService;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class XSSCustomRequestWrapper extends ContentCachingRequestWrapper {
+public class XSSCustomRequestWrapper extends HttpServletRequestWrapper {
 	
 	private ZthhErrorService zthhErrorService;
 
-	public XSSCustomRequestWrapper(ContentCachingRequestWrapper request, ZthhErrorService zthhErrorService) {
+	public XSSCustomRequestWrapper(HttpServletRequest request, ZthhErrorService zthhErrorService) {
         super(request);
         this.zthhErrorService = zthhErrorService;
     }
@@ -31,10 +33,8 @@ public class XSSCustomRequestWrapper extends ContentCachingRequestWrapper {
     public ServletInputStream getInputStream() throws IOException {
         InputStream inputStream = super.getInputStream();
         String contentType = super.getContentType();
-        log.debug("##### contentType detected: {}", contentType);
         if (contentType != null && contentType.startsWith("application/json")) {
             String json = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
-            log.debug("##### json detected: {}", json);
             String sanitizedJson = cleanXSS(json);
             ByteArrayInputStream bis = new ByteArrayInputStream(sanitizedJson.getBytes(StandardCharsets.UTF_8));
             return new ServletInputStream() {
