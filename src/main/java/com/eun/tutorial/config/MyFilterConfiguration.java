@@ -22,20 +22,20 @@ public class MyFilterConfiguration {
 	private final UserRequestHistoryService userRequestHistoryService;
 
     
-    @Bean
-    public FilterRegistrationBean<LoggingFilter> loggingFilter() {
-    	FilterRegistrationBean<LoggingFilter> registration = new FilterRegistrationBean<>();
-    	registration.setFilter(new LoggingFilter(menuControlService, userRequestHistoryService));
-    	registration.addUrlPatterns("/*"); // Set the URL patterns for the filter
-    	registration.setName("LoggingFilter");
-    	registration.setOrder(1); // Set the order in which the filter should be applied
-    	return registration;
-    }
+//    @Bean
+//    public FilterRegistrationBean<LoggingFilter> loggingFilter() {
+//    	FilterRegistrationBean<LoggingFilter> registration = new FilterRegistrationBean<>();
+//    	registration.setFilter(new LoggingFilter(menuControlService, userRequestHistoryService));
+//    	registration.addUrlPatterns("/*"); // Set the URL patterns for the filter
+//    	registration.setName("LoggingFilter");
+//    	registration.setOrder(1); // Set the order in which the filter should be applied
+//    	return registration;
+//    }
 	
     @Bean
     public FilterRegistrationBean<XssFilter> myFilter() {
         FilterRegistrationBean<XssFilter> registration = new FilterRegistrationBean<>();
-        registration.setFilter(new XssFilter(resourceLoader, zthhErrorService));
+        registration.setFilter(new XssFilter(resourceLoader, zthhErrorService, menuControlService, userRequestHistoryService));
         registration.addUrlPatterns("/*"); // Set the URL patterns for the filter
         registration.setName("XssFilter");
         registration.setOrder(2); // Set the order in which the filter should be applied

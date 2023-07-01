@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,6 +16,7 @@ import javax.servlet.http.HttpServletRequestWrapper;
 import org.apache.commons.io.IOUtils;
 
 import com.eun.tutorial.dto.ZthhErrorDTO;
+import com.eun.tutorial.dto.main.UserRequestHistoryDTO;
 import com.eun.tutorial.service.ZthhErrorService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -23,19 +25,25 @@ import lombok.extern.slf4j.Slf4j;
 public class XSSCustomRequestWrapper extends HttpServletRequestWrapper {
 	
 	private ZthhErrorService zthhErrorService;
+	private boolean needXSSCheck;
+	private StringBuilder requestData;
 
-	public XSSCustomRequestWrapper(HttpServletRequest request, ZthhErrorService zthhErrorService) {
+	public XSSCustomRequestWrapper(HttpServletRequest request, ZthhErrorService zthhErrorService, boolean needXSSCheck, StringBuilder requestData) {
         super(request);
         this.zthhErrorService = zthhErrorService;
+        this.needXSSCheck = needXSSCheck;
+        this.requestData = requestData;
     }
     
     @Override
     public ServletInputStream getInputStream() throws IOException {
         InputStream inputStream = super.getInputStream();
+        String input = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
+        requestData.append("Request Body: ").append(input).append(System.lineSeparator());
+        
         String contentType = super.getContentType();
-        if (contentType != null && contentType.startsWith("application/json")) {
-            String json = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
-            String sanitizedJson = cleanXSS(json);
+        if (needXSSCheck && contentType != null && contentType.startsWith("application/json")) {
+            String sanitizedJson = cleanXSS(input);
             ByteArrayInputStream bis = new ByteArrayInputStream(sanitizedJson.getBytes(StandardCharsets.UTF_8));
             return new ServletInputStream() {
                 @Override
@@ -66,30 +74,44 @@ public class XSSCustomRequestWrapper extends HttpServletRequestWrapper {
     @Override
     public String[] getParameterValues(String parameter) {
         String[] values = super.getParameterValues(parameter);
-
+       
+        requestData.append("Request Parameters: ").append(System.lineSeparator());
+        requestData.append(parameter).append(": ").append(Arrays.toString(values)).append(System.lineSeparator());
+        
         if (values == null) {
             return new String[0];
         }
+        
+        if(needXSSCheck) {
+            int count = values.length;
+            String[] encodedValues = new String[count];
 
-        int count = values.length;
-        String[] encodedValues = new String[count];
+            for (int i = 0; i < count; i++) {
+                encodedValues[i] = cleanXSS(values[i]);
+            }
 
-        for (int i = 0; i < count; i++) {
-            encodedValues[i] = cleanXSS(values[i]);
+            return encodedValues;
         }
 
-        return encodedValues;
+        return values;
     }
 
     @Override
     public String getParameter(String parameter) {
         String value = super.getParameter(parameter);
+        
+        requestData.append("Request Parameter( ").append(System.lineSeparator());
+        requestData.append(parameter).append(": ").append(value).append(")").append(System.lineSeparator());
 
         if (value == null) {
             return null;
         }
 
-        return cleanXSS(value);
+        if(needXSSCheck) {
+        	return cleanXSS(value);
+        }
+        
+        return value;
     }
 
     @Override
@@ -99,8 +121,13 @@ public class XSSCustomRequestWrapper extends HttpServletRequestWrapper {
         if (value == null) {
             return null;
         }
+        
+        if(needXSSCheck) {
+        	return cleanXSS(value);
+        }
+        
+        return value;
 
-        return cleanXSS(value);
     }
 
     private String cleanXSS(String value) {
