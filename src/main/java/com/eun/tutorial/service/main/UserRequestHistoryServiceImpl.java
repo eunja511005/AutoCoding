@@ -24,9 +24,11 @@ import com.eun.tutorial.dto.main.UserRequestHistoryDTO;
 import com.eun.tutorial.mapper.main.UserRequestHistoryMapper;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class UserRequestHistoryServiceImpl implements UserRequestHistoryService {
 
 	private final UserRequestHistoryMapper userRequestHistoryMapper;
@@ -40,8 +42,13 @@ public class UserRequestHistoryServiceImpl implements UserRequestHistoryService 
 	@Override
 	@SetCreateAndUpdateId
 	public int saveUserRequestHistory(UserRequestHistoryDTO userRequestHistoryDTO) {
-		userRequestHistoryDTO.setId("userRequestHistory_"+UUID.randomUUID());
-		return userRequestHistoryMapper.insertUserRequestHistory(userRequestHistoryDTO);
+    	try {//오류 발생해도 기존 로직에는 영향을 주지 않고 오류 로그만 남김
+    		userRequestHistoryDTO.setId("userRequestHistory_"+UUID.randomUUID());
+    		return userRequestHistoryMapper.insertUserRequestHistory(userRequestHistoryDTO);
+    	}catch (Exception e) {
+    		log.error(e.getMessage());
+		}
+    	return 0;
 	}
 
 	@Override
