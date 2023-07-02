@@ -42,7 +42,7 @@ public class XSSCustomRequestWrapper extends HttpServletRequestWrapper {
         requestData.append("Request Body: ").append(input).append(System.lineSeparator());
         
         String contentType = super.getContentType();
-        if (needXSSCheck && contentType != null && contentType.startsWith("application/json")) {
+        if (contentType != null && contentType.startsWith("application/json")) {
             String sanitizedJson = cleanXSS(input);
             ByteArrayInputStream bis = new ByteArrayInputStream(sanitizedJson.getBytes(StandardCharsets.UTF_8));
             return new ServletInputStream() {
@@ -67,7 +67,7 @@ public class XSSCustomRequestWrapper extends HttpServletRequestWrapper {
                 }
             };
         } else {
-            return super.getInputStream();
+            return (ServletInputStream) inputStream;
         }
     }
 
@@ -82,18 +82,14 @@ public class XSSCustomRequestWrapper extends HttpServletRequestWrapper {
             return new String[0];
         }
         
-        if(needXSSCheck) {
-            int count = values.length;
-            String[] encodedValues = new String[count];
+        int count = values.length;
+        String[] encodedValues = new String[count];
 
-            for (int i = 0; i < count; i++) {
-                encodedValues[i] = cleanXSS(values[i]);
-            }
-
-            return encodedValues;
+        for (int i = 0; i < count; i++) {
+            encodedValues[i] = cleanXSS(values[i]);
         }
 
-        return values;
+        return encodedValues;
     }
 
     @Override
@@ -107,11 +103,7 @@ public class XSSCustomRequestWrapper extends HttpServletRequestWrapper {
             return null;
         }
 
-        if(needXSSCheck) {
-        	return cleanXSS(value);
-        }
-        
-        return value;
+        return cleanXSS(value);
     }
 
     @Override
@@ -122,61 +114,59 @@ public class XSSCustomRequestWrapper extends HttpServletRequestWrapper {
             return null;
         }
         
-        if(needXSSCheck) {
-        	return cleanXSS(value);
-        }
-        
-        return value;
+        return cleanXSS(value);
 
     }
 
     private String cleanXSS(String value) {
-        if (value == null || value.isEmpty()) {
-            return "";
-        }
+    	if(needXSSCheck) {
+    		if (value == null || value.isEmpty()) {
+                return "";
+            }
 
-        boolean idDetected = false;
-        
-        // Escape XSS characters
-        if (value.contains("<")) {
-            log.warn("##### XSS detected: {}", value);
-            value = value.replace("<", "&lt;");
-            idDetected = true;
-        }
-        if (value.contains(">")) {
-            log.warn("##### XSS detected: {}", value);
-            value = value.replace(">", "&gt;");
-            idDetected = true;
-        }
-        if (value.contains("&")) {
-        	log.warn("##### XSS detected: {}", value);
-        	value = value.replace("&", "&amp;");
-        	idDetected = true;
-        }
+            boolean idDetected = false;
+            
+            // Escape XSS characters
+            if (value.contains("<")) {
+                log.warn("##### XSS detected: {}", value);
+                value = value.replace("<", "&lt;");
+                idDetected = true;
+            }
+            if (value.contains(">")) {
+                log.warn("##### XSS detected: {}", value);
+                value = value.replace(">", "&gt;");
+                idDetected = true;
+            }
+            if (value.contains("&")) {
+            	log.warn("##### XSS detected: {}", value);
+            	value = value.replace("&", "&amp;");
+            	idDetected = true;
+            }
 
-        // Escape SQL injection characters
-        if (value.contains("'")) {
-            log.warn("##### SQL injection detected: {}", value);
-            value = value.replace("'", "''");
-            idDetected = true;
-        }
-        if (value.contains("--")) {
-        	log.warn("##### SQL injection detected: {}", value);
-        	value = value.replace("--", "__");
-        	idDetected = true;
-        }
+            // Escape SQL injection characters
+            if (value.contains("'")) {
+                log.warn("##### SQL injection detected: {}", value);
+                value = value.replace("'", "''");
+                idDetected = true;
+            }
+            if (value.contains("--")) {
+            	log.warn("##### SQL injection detected: {}", value);
+            	value = value.replace("--", "__");
+            	idDetected = true;
+            }
 
-        // Filter file system manipulation characters(댓글에 마침표는 들어 갈수 있어서 일단 제외)
-		/*
-		 * if (value.contains("..")) {
-		 * log.warn("##### File system manipulation detected: {}", value); value =
-		 * value.replace("\\.\\.", ""); idDetected = true; }
-		 */
-        
-        if(idDetected) {
-        	zthhErrorService.save(
-        			ZthhErrorDTO.builder().errorMessage("Detecting security-sensitive characters in input values : " + value).build());
-        }
+            // Filter file system manipulation characters(댓글에 마침표는 들어 갈수 있어서 일단 제외)
+    		/*
+    		 * if (value.contains("..")) {
+    		 * log.warn("##### File system manipulation detected: {}", value); value =
+    		 * value.replace("\\.\\.", ""); idDetected = true; }
+    		 */
+            
+            if(idDetected) {
+            	zthhErrorService.save(
+            			ZthhErrorDTO.builder().errorMessage("Detecting security-sensitive characters in input values : " + value).build());
+            }
+    	}
 
         return value;
     }
