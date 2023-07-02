@@ -28,11 +28,16 @@ public class CustomLogoutHandler implements LogoutHandler {
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
 
-        List<SessionInformation> sessions = sessionRegistry.getAllSessions(AuthUtils.getPrincipalDetails(), true);
-        userService.updateLastLoginDt(AuthUtils.getLoginUser(), "");
-        
-        for (SessionInformation session : sessions) {
-            session.expireNow();
-        }
+    	PrincipalDetails principalDetails = AuthUtils.getPrincipalDetails();
+    	if(principalDetails!=null) {
+            List<SessionInformation> sessions = sessionRegistry.getAllSessions(principalDetails, true);
+            userService.updateLastLoginDt(AuthUtils.getLoginUser(), "");
+            
+            for (SessionInformation session : sessions) {
+                session.expireNow();
+            }
+    	}
+    	
+
     }
 }
