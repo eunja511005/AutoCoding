@@ -171,15 +171,15 @@ public class XssFilter implements Filter {
 			if (logDataYn.equals("Y")) {
 				// 요청 데이터
 		        String requestDataString = requestData.toString();
-				if (requestDataString.length() > 2000) {
-					requestDataString = requestDataString.substring(0, 2000);
+				if (requestDataString.length() > 1000) {
+					requestDataString = requestDataString.substring(0, 1000);
 				}
 				userRequestHistoryDTO.setReqData(requestDataString);
 				
 				// 응답 데이터
 		        String responseContent = extractResponseData(responseWrapper);
-		        if (responseContent.length() > 2000) {
-					responseContent = responseContent.substring(0, 2000);
+		        if (responseContent.length() > 1000) {
+					responseContent = responseContent.substring(0, 1000);
 				}
 				userRequestHistoryDTO.setResData(responseContent);
 			}
