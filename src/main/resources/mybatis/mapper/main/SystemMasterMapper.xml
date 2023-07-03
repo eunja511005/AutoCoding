@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eun.tutorial.mapper.main.SystemMasterMapper">
+
+	<select id="selectSystemMasterList" resultType="com.eun.tutorial.dto.main.SystemMasterDTO">
+		SELECT SYSTEM_NAME, SYSTEM_DESCRIPTION, SYSTEM_ADMIN, HOMEPAGE, id, del_yn, create_id, TO_CHAR(create_dt, 'YYYY-MM-DD HH24:MI:SS') AS create_dt, update_id, TO_CHAR(update_dt, 'YYYY-MM-DD HH24:MI:SS') AS update_dt FROM ZTHH_SYSTEMMASTER where del_yn='N' ORDER BY update_dt, create_dt
+	</select>
+
+	<insert id="insertSystemMaster">
+		INSERT INTO ZTHH_SYSTEMMASTER (SYSTEM_NAME, SYSTEM_DESCRIPTION, SYSTEM_ADMIN, HOMEPAGE, id, del_yn, create_id, create_dt, update_id, update_dt)
+		VALUES (#{systemName}, #{systemDescription}, #{systemAdmin}, #{homepage}, #{id}, 'N', #{createId}, CURRENT_TIMESTAMP, #{updateId}, CURRENT_TIMESTAMP)
+	</insert>
+
+	<update id="updateSystemMaster">
+		UPDATE ZTHH_SYSTEMMASTER
+		SET SYSTEM_NAME = #{systemName}, SYSTEM_DESCRIPTION = #{systemDescription}, SYSTEM_ADMIN = #{systemAdmin}, HOMEPAGE = #{homepage}, update_id = #{updateId}, update_dt = CURRENT_TIMESTAMP
+		WHERE id = #{id}
+	</update>
+
+	<delete id="deleteSystemMaster">
+		UPDATE ZTHH_SYSTEMMASTER SET del_yn = 'Y', update_dt = CURRENT_TIMESTAMP WHERE id = #{id}
+	</delete>
+
+	<select id="getSystemMasterListById" parameterType="string" resultType="com.eun.tutorial.dto.main.SystemMasterDTO">
+		SELECT SYSTEM_NAME, SYSTEM_DESCRIPTION, SYSTEM_ADMIN, HOMEPAGE, id, del_yn, create_id, TO_CHAR(create_dt, 'YYYY-MM-DD HH24:MI:SS') AS create_dt, update_id, TO_CHAR(update_dt, 'YYYY-MM-DD HH24:MI:SS') AS update_dt FROM ZTHH_SYSTEMMASTER
+		WHERE id = #{id}
+		ORDER BY update_dt, create_dt
+	</select>
+
+</mapper>
