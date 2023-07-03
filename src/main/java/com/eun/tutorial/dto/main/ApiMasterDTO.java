@@ -27,6 +27,7 @@ public class ApiMasterDTO {
 	private int callMax;
 	private String httpMethod;
 	private String logYn;
+	private String systemName;
 	private String id;
 	private boolean delYn;
 	private String createId;

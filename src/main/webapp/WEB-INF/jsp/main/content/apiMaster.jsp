@@ -82,6 +82,12 @@
 										<label for="logYn">LOG_YN</label>
 									</div>
 								</div>
+								<div class="col-md">
+									<div class="form-floating">
+										<input type="text" class="form-control" id="systemName" name="systemName" placeholder="Enter systemName" required>
+										<label for="systemName">SYSTEM_NAME</label>
+									</div>
+								</div>
 								<div class="col-md text-center">
 									<button type="submit" class="btn btn-outline-primary"><i class="fas fa-save"></i></button>
 									<button type="reset" class="btn btn-outline-secondary" id="clear-btn"><i class="fas fa-undo"></i></button>
@@ -115,6 +121,7 @@
 							<th>CALL_MAX</th>
 							<th>HTTP_METHOD</th>
 							<th>LOG_YN</th>
+							<th>SYSTEM_NAME</th>
 							<th>Edit</th>
 							<th>Delete</th>
 						</tr>

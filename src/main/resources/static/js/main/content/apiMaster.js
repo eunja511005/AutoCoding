@@ -54,6 +54,7 @@ function initializeApiMasterTable() {
 			{ data: 'callMax' },
 			{ data: 'httpMethod' },
 			{ data: 'logYn' },
+			{ data: 'systemName' },
 			{
 				data: null,
 				render: function(data, type, row, meta) {
@@ -112,6 +113,7 @@ function editCallback(response){
 	$('#callMax').val(response.data.callMax);
 	$('#httpMethod').val(response.data.httpMethod);
 	$('#logYn').val(response.data.logYn);
+	$('#systemName').val(response.data.systemName);
 
 	$('#apiMasterForm').attr('data-mode', 'edit');
 }
