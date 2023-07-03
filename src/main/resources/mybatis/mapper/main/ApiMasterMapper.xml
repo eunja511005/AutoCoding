@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eun.tutorial.mapper.main.ApiMasterMapper">
+
+	<select id="selectApiMasterList" resultType="com.eun.tutorial.dto.main.ApiMasterDTO">
+		SELECT API_NAME, API_DESCRIPTION, CALL_URL, DIRECTION, AUTHOR, CALL_MAX, HTTP_METHOD, LOG_YN, id, del_yn, create_id, TO_CHAR(create_dt, 'YYYY-MM-DD HH24:MI:SS') AS create_dt, update_id, TO_CHAR(update_dt, 'YYYY-MM-DD HH24:MI:SS') AS update_dt FROM ZTHH_APIMASTER where del_yn='N' ORDER BY update_dt, create_dt
+	</select>
+
+	<insert id="insertApiMaster">
+		INSERT INTO ZTHH_APIMASTER (API_NAME, API_DESCRIPTION, CALL_URL, DIRECTION, AUTHOR, CALL_MAX, HTTP_METHOD, LOG_YN, id, del_yn, create_id, create_dt, update_id, update_dt)
+		VALUES (#{apiName}, #{apiDescription}, #{callUrl}, #{direction}, #{author}, #{callMax}, #{httpMethod}, #{logYn}, #{id}, 'N', #{createId}, CURRENT_TIMESTAMP, #{updateId}, CURRENT_TIMESTAMP)
+	</insert>
+
+	<update id="updateApiMaster">
+		UPDATE ZTHH_APIMASTER
+		SET API_NAME = #{apiName}, API_DESCRIPTION = #{apiDescription}, CALL_URL = #{callUrl}, DIRECTION = #{direction}, AUTHOR = #{author}, CALL_MAX = #{callMax}, HTTP_METHOD = #{httpMethod}, LOG_YN = #{logYn}, update_id = #{updateId}, update_dt = CURRENT_TIMESTAMP
+		WHERE id = #{id}
+	</update>
+
+	<delete id="deleteApiMaster">
+		UPDATE ZTHH_APIMASTER SET del_yn = 'Y', update_dt = CURRENT_TIMESTAMP WHERE id = #{id}
+	</delete>
+
+	<select id="getApiMasterListById" parameterType="string" resultType="com.eun.tutorial.dto.main.ApiMasterDTO">
+		SELECT API_NAME, API_DESCRIPTION, CALL_URL, DIRECTION, AUTHOR, CALL_MAX, HTTP_METHOD, LOG_YN, id, del_yn, create_id, TO_CHAR(create_dt, 'YYYY-MM-DD HH24:MI:SS') AS create_dt, update_id, TO_CHAR(update_dt, 'YYYY-MM-DD HH24:MI:SS') AS update_dt FROM ZTHH_APIMASTER
+		WHERE id = #{id}
+		ORDER BY update_dt, create_dt
+	</select>
+
+</mapper>
