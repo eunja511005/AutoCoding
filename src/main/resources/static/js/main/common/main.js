@@ -48,6 +48,9 @@ function loadDynamicContent(url) {
 	  // 이전에 로딩된 동적 요소를 삭제
 	  $('#dynamic-content').empty();
 	  //$("#menuContainer").empty();
+	  
+	  // 로그인 여부를 체크합니다.
+	  checkLoginStatus();
 
 	  // 새 페이지 로딩
 	  $('#dynamic-content').load(url, function(response, status, xhr) {
@@ -65,6 +68,7 @@ function checkLoginStatus() {
 		type: "GET",
 		dataType: "json",
 		success: function(response) {
+			$('#navbarDropdown').empty(); // 이전 내용 초기화
 			if(response.result != undefined && response.result == "login") {
 				// 로그인 되어 있을 경우
 				$('#login-btn').hide();
@@ -86,6 +90,7 @@ function checkLoginStatus() {
 			    const i = document.createElement('i');
 			    i.classList.add('fas', 'fa-user', 'fa-fw');
 			    $('#navbarDropdown').append(i);
+			    $('#loggedInUser').text("");
 			}
 		},
 		error: function(xhr) {
