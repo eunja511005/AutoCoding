@@ -13,9 +13,14 @@ import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
-@Configuration
-public class MyWebMvcConfig implements WebMvcConfigurer {
+import com.eun.tutorial.service.UserService;
 
+import lombok.RequiredArgsConstructor;
+
+@Configuration
+@RequiredArgsConstructor
+public class MyWebMvcConfig implements WebMvcConfigurer {
+	
 	@Bean
     public MessageSource messageSource() {
         ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
@@ -39,6 +44,11 @@ public class MyWebMvcConfig implements WebMvcConfigurer {
     @Bean
     public SessionRegistry sessionRegistry(){
         return new SessionRegistryImpl();
+    }
+    
+    @Bean
+    public MySessionListner mySessionListener(SessionRegistry sessionRegistry, UserService userService) {
+        return new MySessionListner(sessionRegistry, userService);
     }
     
 }
