@@ -2,6 +2,11 @@ package com.eun.tutorial.dto.main;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,22 +35,32 @@ public class RealEstatePriceItem {
 
     @Data
     @NoArgsConstructor
-    @AllArgsConstructor
     public static class BodyDTO {
         private ItemsDTO items;
+
+        public BodyDTO(ItemsDTO items) {
+            this.items = items;
+        }
+
+        public ItemsDTO getItems() {
+            if (items == null) {
+                items = new ItemsDTO();
+            }
+            return items;
+        }
     }
 
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
     public static class ItemsDTO {
-        private List<ItemDTO> item;
+        private List<RealEstatePriceItemDTO> item;
     }
 
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class ItemDTO {
+    public static class RealEstatePriceItemDTO {
         private String 거래금액;
         private String 거래유형;
         private String 건축년도;
