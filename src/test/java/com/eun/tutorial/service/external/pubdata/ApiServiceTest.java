@@ -1,4 +1,4 @@
-package com.eun.tutorial.service.main;
+package com.eun.tutorial.service.external.pubdata;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -26,7 +26,7 @@ import com.eun.tutorial.dto.main.RealEstatePriceItem;
 class ApiServiceTest {
 	
 	@Autowired
-    private ApiService apiService;
+    private ApiServiceImpl apiService;
 
 //    @Test
 //    void sendRequest_Post_Success() throws URISyntaxException {
@@ -70,7 +70,7 @@ class ApiServiceTest {
     	ResponseEntity<RealEstatePriceItem> response = apiService.sendRequest(uri, method, requestBody, headers,
     			requestMediaType, responseMediaType, responseType);
     	
-    	List<RealEstatePriceItem.ItemDTO> items = response.getBody().getResponse().getBody().getItems().getItem();
+    	List<RealEstatePriceItem.RealEstatePriceItemDTO> items = response.getBody().getResponse().getBody().getItems().getItem();
     	
     	assertEquals(HttpStatus.OK, response.getStatusCode());
     	assertEquals(49, items.size());

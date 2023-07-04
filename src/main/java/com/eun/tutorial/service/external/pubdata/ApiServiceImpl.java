@@ -1,4 +1,4 @@
-package com.eun.tutorial.service.main;
+package com.eun.tutorial.service.external.pubdata;
 
 import java.net.URI;
 
@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class ApiService {
+public class ApiServiceImpl implements ApiService{
 
 	private final RestTemplate restTemplate;
 
