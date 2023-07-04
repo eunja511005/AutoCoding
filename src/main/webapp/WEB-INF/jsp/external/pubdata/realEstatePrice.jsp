@@ -48,14 +48,11 @@
 				<thead>
 					<tr>
 						<th><fmt:message key="field.label.transactionAmount" /></th>
-						<th><fmt:message key="field.label.transactionType" /></th>
 						<th><fmt:message key="field.label.constructionYear" /></th>
 						<th><fmt:message key="field.label.judicialDong" /></th>
 						<th><fmt:message key="field.label.apartment" /></th>
 						<th><fmt:message key="field.label.exclusiveArea" /></th>
 						<th><fmt:message key="field.label.floor" /></th>
-						<th><fmt:message key="field.label.edit" /></th>
-						<th><fmt:message key="field.label.delete" /></th>
 					</tr>
 				</thead>
 				<tbody>

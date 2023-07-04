@@ -178,6 +178,7 @@ function uploadFiles(event) {
 
 function searchDataTable() {
 	table = $('#dataTable').DataTable({
+		"responsive": true,
         "serverSide": true,
         "processing": true,
         "searching": false, // 검색 기능 비활성화
@@ -228,31 +229,25 @@ function searchDataTable() {
 		},
 		columns: [
 			{ data: '거래금액' },
-			{ data: '거래유형' },
 			{ data: '건축년도' },
-			{ data: '법정동' },
-			{ data: '아파트' },
+	        {
+	            data: '법정동',
+	            render: function (data, type, row, meta) {
+	                return '<span title="' + data + '">' + data + '</span>';
+	            }
+	        },			
+	        {
+	            data: '아파트',
+	            render: function (data, type, row, meta) {
+	                return '<span title="' + data + '">' + data + '</span>';
+	            }
+	        },				
 			{ data: '전용면적' },
 			{ data: '층' },
-			{
-				data: null,
-				render: function(data, type, row, meta) {
-					var editButton = '<button type="button" class="btn btn-sm btn-outline-info mx-1 edit-button" data-id="' + row.id + '"><i class="fas fa-edit"></i></button>';
-					return editButton;
-				},
-			},
-			{
-				data: null,
-				render: function(data, type, row, meta) {
-					var deleteButton = '<button type="button" class="btn btn-sm btn-outline-danger mx-1 delete-button" data-id="' + row.id + '"><i class="fas fa-trash"></i></button>';
-					return deleteButton;
-				},
-			},
 		],
 		columnDefs: [
-		    { className: "text-center", "targets": [ 7, 8 ] },
-		    { "orderable": false, "targets": [1, 2, 3, 4, 6, 7, 8] }, // 1, 2, 3, 6, 7번째 컬럼은 정렬 불가능하도록 설정
-		    { "orderable": true, "targets": [0, 5] } // 0번째와 5번째 컬럼은 정렬 가능하도록 설정
+		    { "orderable": false, "targets": [1, 2, 3, 5] }, // 1, 2, 3, 6, 7번째 컬럼은 정렬 불가능하도록 설정
+		    { "orderable": true, "targets": [0, 4] } // 0번째와 5번째 컬럼은 정렬 가능하도록 설정
 		],
 		order: [0, 'desc'], // 자동 정렬 비활성화
 	});
