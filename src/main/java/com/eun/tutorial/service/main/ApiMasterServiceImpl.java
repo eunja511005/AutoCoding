@@ -70,4 +70,9 @@ public class ApiMasterServiceImpl implements ApiMasterService {
 		return apiMasterMapper.getApiMasterListById(id);
 	}
 
+	@Override
+	public ApiMasterDTO getApiMasterByAPIAndSystemName(String apiName, String systemName) {
+		return apiMasterMapper.getApiMasterByAPIAndSystemName(apiName, systemName);
+	}
+
 }

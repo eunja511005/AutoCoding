@@ -21,4 +21,5 @@ public interface ApiMasterService {
 	int updateApiMaster(ApiMasterDTO apiMasterDTO);
 	int deleteApiMaster(String id);
 	ApiMasterDTO getApiMasterListById(String id);
+	ApiMasterDTO getApiMasterByAPIAndSystemName(String apiName, String systemName);
 }

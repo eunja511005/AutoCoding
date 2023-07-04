@@ -14,6 +14,7 @@ package com.eun.tutorial.mapper.main;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.eun.tutorial.dto.main.ApiMasterDTO;
 
@@ -24,4 +25,5 @@ public interface ApiMasterMapper {
 	int updateApiMaster(ApiMasterDTO apiMasterDTO);
 	int deleteApiMaster(String id);
 	ApiMasterDTO getApiMasterListById(String id);
+	ApiMasterDTO getApiMasterByAPIAndSystemName(@Param("apiName") String apiName, @Param("systemName") String systemName);
 }

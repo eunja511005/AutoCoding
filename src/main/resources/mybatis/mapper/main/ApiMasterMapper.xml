@@ -27,4 +27,11 @@
 		ORDER BY update_dt, create_dt
 	</select>
 
+	<select id="getApiMasterByAPIAndSystemName" parameterType="string" resultType="com.eun.tutorial.dto.main.ApiMasterDTO">
+		SELECT API_NAME, API_DESCRIPTION, CALL_URL, DIRECTION, AUTHOR, CALL_MAX, HTTP_METHOD, LOG_YN, SYSTEM_NAME, id, del_yn, create_id, TO_CHAR(create_dt, 'YYYY-MM-DD HH24:MI:SS') AS create_dt, update_id, TO_CHAR(update_dt, 'YYYY-MM-DD HH24:MI:SS') AS update_dt
+			FROM ZTHH_APIMASTER 
+			WHERE API_NAME = #{apiName} 
+			AND SYSTEM_NAME =#{systemName}
+	</select>
+
 </mapper>
