@@ -43,6 +43,7 @@
     <%@ include file="/WEB-INF/jsp/main/common/script.jsp" %>
     <!-- <script src="/js/main/common/leftNav.js"></script>  -->
     <script src="/js/main/common/main.js"></script>    
+    <script src="/js/main/common/message.js"></script>    
     
 	</body>
 	

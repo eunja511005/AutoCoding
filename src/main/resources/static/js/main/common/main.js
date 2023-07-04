@@ -292,3 +292,12 @@ function validateAndSave(form, event) {
 	    return true;
 	  }
 }
+
+function setInitialMonthValue(inputElement) {
+    var currentDate = new Date();
+    var currentMonth = currentDate.getMonth() + 1;
+    var currentYear = currentDate.getFullYear();
+    var formattedMonth = currentYear + '-' + ('0' + currentMonth).slice(-2);
+
+    inputElement.val(formattedMonth);
+  }
