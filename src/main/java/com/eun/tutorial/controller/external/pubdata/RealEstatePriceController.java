@@ -25,6 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.eun.tutorial.dto.main.DataTableRequestDTO;
 import com.eun.tutorial.dto.main.DataTableResult;
+import com.eun.tutorial.dto.main.RealEstatePriceItem.ItemsDTO;
 import com.eun.tutorial.dto.main.RealEstatePriceItem.RealEstatePriceItemDTO;
 import com.eun.tutorial.service.external.pubdata.RealEstatePriceService;
 import com.eun.tutorial.util.DataTableUtil;
@@ -50,13 +51,9 @@ public class RealEstatePriceController {
 
 	@PostMapping("/list")
 	public @ResponseBody DataTableResult<RealEstatePriceItemDTO> searchRealEstatePrice(@RequestBody DataTableRequestDTO searchDTO) throws JsonProcessingException, URISyntaxException {
-	    List<RealEstatePriceItemDTO> itemList = realEstatePriceService.searchRealEstatePrice(searchDTO);
+	    ItemsDTO itemsDTO = realEstatePriceService.searchRealEstatePrice(searchDTO);
 	    
-	    int size = 0;
-	    if(itemList!=null){
-	    	size = itemList.size();
-	    }
-	    return DataTableUtil.getResult(searchDTO, itemList, size);
+	    return DataTableUtil.getResult(searchDTO, itemsDTO.getItem(), itemsDTO.getTotalSize());
 	}
 
 //	@PostMapping("/list/{id}")

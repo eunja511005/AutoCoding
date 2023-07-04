@@ -12,12 +12,11 @@
 package com.eun.tutorial.service.external.pubdata;
 
 import java.net.URISyntaxException;
-import java.util.List;
 
 import com.eun.tutorial.dto.main.DataTableRequestDTO;
-import com.eun.tutorial.dto.main.RealEstatePriceItem.RealEstatePriceItemDTO;
+import com.eun.tutorial.dto.main.RealEstatePriceItem.ItemsDTO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 public interface RealEstatePriceService {
-	List<RealEstatePriceItemDTO> searchRealEstatePrice(DataTableRequestDTO searchDTO) throws JsonProcessingException, URISyntaxException;
+	ItemsDTO searchRealEstatePrice(DataTableRequestDTO searchDTO) throws JsonProcessingException, URISyntaxException;
 }

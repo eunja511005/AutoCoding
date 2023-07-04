@@ -52,7 +52,7 @@ $(document).ready(function() {
 });
 
 async function initSearchCondition(){
-	await initSelectBox('lawCode', '/commonCode/LAWCODE', true, ['11110']);
+	await initSelectBox('lawCode', '/commonCode/LAWCODE', false, ['41115']);
 	
 	var searchMonthInput = $('#searchMonth');
     setInitialMonthValue(searchMonthInput);
@@ -230,7 +230,6 @@ function searchDataTable() {
 			{ data: '거래금액' },
 			{ data: '거래유형' },
 			{ data: '건축년도' },
-			{ data: '년' },
 			{ data: '법정동' },
 			{ data: '아파트' },
 			{ data: '전용면적' },
@@ -250,10 +249,12 @@ function searchDataTable() {
 				},
 			},
 		],
-        columnDefs: [
-            { className: "text-center", "targets": [ 4, 5 ] }
-        ],
-		order: [4, 'desc'], // 자동 정렬 비활성화
+		columnDefs: [
+		    { className: "text-center", "targets": [ 7, 8 ] },
+		    { "orderable": false, "targets": [1, 2, 3, 4, 6, 7, 8] }, // 1, 2, 3, 6, 7번째 컬럼은 정렬 불가능하도록 설정
+		    { "orderable": true, "targets": [0, 5] } // 0번째와 5번째 컬럼은 정렬 가능하도록 설정
+		],
+		order: [0, 'desc'], // 자동 정렬 비활성화
 	});
 	
 	$('#addButton').on('click', function(event) {

@@ -55,6 +55,7 @@ public class RealEstatePriceItem {
     @AllArgsConstructor
     public static class ItemsDTO {
         private List<RealEstatePriceItemDTO> item;
+        private int totalSize;
     }
 
     @Data
@@ -76,5 +77,14 @@ public class RealEstatePriceItem {
         private String 층;
         private String 해제사유발생일;
         private String 해제여부;
+        
+        public double getTransactionAmount() {
+            String amountWithoutCommas = 거래금액.replace(",", "");
+            return Double.parseDouble(amountWithoutCommas);
+        }
+        
+        public double getExclusiveArea() {
+            return Double.parseDouble(전용면적);
+        }
     }
 }
