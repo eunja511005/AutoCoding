@@ -24,11 +24,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.eun.tutorial.dto.external.pubdata.RealEstatePriceItem;
+import com.eun.tutorial.dto.external.pubdata.RealEstatePriceItem.ItemsDTO;
+import com.eun.tutorial.dto.external.pubdata.RealEstatePriceItem.RealEstatePriceItemDTO;
 import com.eun.tutorial.dto.main.ApiMasterDTO;
 import com.eun.tutorial.dto.main.DataTableRequestDTO;
-import com.eun.tutorial.dto.main.RealEstatePriceItem;
-import com.eun.tutorial.dto.main.RealEstatePriceItem.ItemsDTO;
-import com.eun.tutorial.dto.main.RealEstatePriceItem.RealEstatePriceItemDTO;
 import com.eun.tutorial.service.main.ApiMasterService;
 import com.eun.tutorial.util.MessageUtil;
 import com.eun.tutorial.util.RestTemplateCallUtil;
@@ -42,8 +42,6 @@ public class RealEstateServiceImpl implements RealEstatePriceService {
 
 	private final RestTemplateCallUtil restTemplateCallUtil;
 	private final ApiMasterService apiMasterService;
-	private final MessageUtil messageUtil;
-	
 
 	@Override
 	public ItemsDTO searchRealEstatePrice(DataTableRequestDTO searchDTO) throws JsonProcessingException, URISyntaxException {
@@ -57,20 +55,10 @@ public class RealEstateServiceImpl implements RealEstatePriceService {
 		ApiMasterDTO apiMasterDTO = apiMasterService.getApiMasterByAPIAndSystemName(apiName, systemName);
         String endpointUrl = apiMasterDTO.getCallUrl();
         String serviceKey = apiMasterDTO.getAuthor();
-        HttpMethod method;
-        if(apiMasterDTO.getHttpMethod().equals("GET")) {
-        	method = HttpMethod.GET;
-        }else if(apiMasterDTO.getHttpMethod().equals("POST")) {
-        	method = HttpMethod.POST;
-        }else {
-        	String unknownHttpMethodMsg = messageUtil.getMessage("api.master.unknown.http.method");
-            throw new IllegalArgumentException(unknownHttpMethodMsg);
-        }
     	
         // [중요] URI를 이용해서 호출해야 인코딩된 serviceKey가 정상적으로 공공포털로 넘어가 오류 안남
         endpointUrl = endpointUrl + "?serviceKey=" + serviceKey + "&LAWD_CD=" + lawCode + "&DEAL_YMD=" + searchMonth;
 
-        URI uri = new URI(endpointUrl);
         Object requestBody = null;
         HttpHeaders headers = new HttpHeaders();
         MediaType requestMediaType = MediaType.APPLICATION_JSON;
@@ -78,7 +66,7 @@ public class RealEstateServiceImpl implements RealEstatePriceService {
         Class<RealEstatePriceItem> responseType = RealEstatePriceItem.class;
     	
     	// Send the request
-    	ResponseEntity<RealEstatePriceItem> response = restTemplateCallUtil.sendRequest(uri, method, requestBody, headers,
+    	ResponseEntity<RealEstatePriceItem> response = restTemplateCallUtil.sendRequest(endpointUrl, apiMasterDTO.getHttpMethod(), requestBody, headers,
     			requestMediaType, responseMediaType, responseType);
     	
     	List<RealEstatePriceItemDTO> itemList = response.getBody().getResponse().getBody().getItems().getItem();

@@ -13,8 +13,8 @@ package com.eun.tutorial.service.external.pubdata;
 
 import java.net.URISyntaxException;
 
+import com.eun.tutorial.dto.external.pubdata.RealEstatePriceItem.ItemsDTO;
 import com.eun.tutorial.dto.main.DataTableRequestDTO;
-import com.eun.tutorial.dto.main.RealEstatePriceItem.ItemsDTO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 public interface RealEstatePriceService {

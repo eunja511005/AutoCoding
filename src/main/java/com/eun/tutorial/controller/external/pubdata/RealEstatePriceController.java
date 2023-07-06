@@ -23,10 +23,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.eun.tutorial.dto.external.pubdata.RealEstatePriceItem.ItemsDTO;
+import com.eun.tutorial.dto.external.pubdata.RealEstatePriceItem.RealEstatePriceItemDTO;
 import com.eun.tutorial.dto.main.DataTableRequestDTO;
 import com.eun.tutorial.dto.main.DataTableResult;
-import com.eun.tutorial.dto.main.RealEstatePriceItem.ItemsDTO;
-import com.eun.tutorial.dto.main.RealEstatePriceItem.RealEstatePriceItemDTO;
 import com.eun.tutorial.service.external.pubdata.RealEstatePriceService;
 import com.eun.tutorial.util.DataTableUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;

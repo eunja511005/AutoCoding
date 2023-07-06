@@ -1,4 +1,4 @@
-package com.eun.tutorial.dto.main;
+package com.eun.tutorial.dto.external.pubdata;
 
 import java.util.List;
 
