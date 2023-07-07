@@ -301,3 +301,8 @@ function setInitialMonthValue(inputElement) {
 
     inputElement.val(formattedMonth);
   }
+
+function handleCollapseClick() {
+	var $cardBody = $(this).parents('.card').find('.card-body');
+	$cardBody.slideToggle();
+}
