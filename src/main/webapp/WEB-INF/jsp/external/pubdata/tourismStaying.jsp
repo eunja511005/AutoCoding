@@ -6,11 +6,11 @@
         <ol class="breadcrumb mt-2 justify-content-end">
             <li class="breadcrumb-item">Interface</li>
             <li class="breadcrumb-item">Layout</li>
-            <li class="breadcrumb-item active"><fmt:message key="page.title.realEstatePrice" /></li>
+            <li class="breadcrumb-item active"><fmt:message key="tourismStaying" /></li>
         </ol>
     </div>
     
-    <h1 class="page-title mb-4"><fmt:message key="page.title.realEstatePrice" /></h1>    
+    <h1 class="page-title mb-4"><fmt:message key="tourismStaying" /></h1>    
 
 	<div class="card mb-4" style="width:100%">
 	  <div class="card-header">
@@ -19,15 +19,9 @@
 	  <div class="card-body">
 	    <form id="searchForm" >
 	      <div class="row mb-1">
-	        <label for="searchMonth" class="col-sm-1 col-form-label" style="padding-left: 20px;"><fmt:message key="search.label.dealMonth" /></label>
+	        <label for="sigunCd" class="col-sm-1 col-form-label" style="padding-left: 20px;"></i><fmt:message key="search.label.lawCode" /></label>
 	        <div class="col-sm-5">
-				<div class="col">
-					<input type="month" class="form-control" id="searchMonth" name="searchMonth">
-				</div>
-	        </div>
-	        <label for="lawCode" class="col-sm-1 col-form-label" style="padding-left: 20px;"></i><fmt:message key="search.label.lawCode" /></label>
-	        <div class="col-sm-5">
-	          <select class="form-select" id="lawCode" name="lawCode"></select>
+	          <select class="form-select" id="sigunCd" name="sigunCd"></select>
 	        </div>	        
 	      </div>
 	      <div class="row mt-3">
@@ -47,12 +41,13 @@
 			<table id="dataTable" class="table table-hover" style="width:100%">
 				<thead>
 					<tr>
-						<th><fmt:message key="field.label.transactionAmount" /></th>
-						<th><fmt:message key="field.label.constructionYear" /></th>
-						<th><fmt:message key="field.label.judicialDong" /></th>
-						<th><fmt:message key="field.label.apartment" /></th>
-						<th><fmt:message key="field.label.exclusiveArea" /></th>
-						<th><fmt:message key="field.label.floor" /></th>
+						<th><fmt:message key="field.label.SIGUN_CD" /></th>
+						<th><fmt:message key="field.label.SIGUN_NM" /></th>
+						<th><fmt:message key="field.label.BIZPLC_NM" /></th>
+						<th><fmt:message key="field.label.LICENSG_DE" /></th>
+						<th><fmt:message key="field.label.BSN_STATE_NM" /></th>
+						<th><fmt:message key="field.label.REFINE_ROADNM_ADDR" /></th>
+						<th><fmt:message key="field.label.REFINE_ZIP_CD" /></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -63,4 +58,4 @@
   
 </div>
 
-<script src="/js/external/pubdata/realEstatePrice.js"></script>
+<script src="/js/external/pubdata/tourismStaying.js"></script>
