@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eun.tutorial.mapper.external.pubdata.ApiHistoryMapper">
+
+	<select id="selectApiHistoryList" resultType="com.eun.tutorial.dto.external.pubdata.ApiHistoryDTO">
+		SELECT URL, METHOD, REQ_USER, REQ_IP, id, del_yn, create_id, TO_CHAR(create_dt, 'YYYY-MM-DD HH24:MI:SS') AS create_dt, update_id, TO_CHAR(update_dt, 'YYYY-MM-DD HH24:MI:SS') AS update_dt FROM ZTHH_APIHISTORY where del_yn='N' ORDER BY update_dt, create_dt
+	</select>
+
+	<insert id="insertApiHistory">
+		INSERT INTO ZTHH_APIHISTORY (SYSTEM_NAME, API_NAME, HTTP_METHOD, REQ_DATA, RES_DATA, id, del_yn, create_id, create_dt, update_id, update_dt)
+		VALUES (#{systemName}, #{apiName}, #{httpMethod}, #{reqData}, #{resData}, #{id}, 'N', 'wasadmin', CURRENT_TIMESTAMP, 'wasadmin', CURRENT_TIMESTAMP)
+	</insert>
+
+	<update id="updateApiHistory">
+		UPDATE ZTHH_APIHISTORY
+		SET URL = #{url}, METHOD = #{method}, REQ_USER = #{reqUser}, REQ_IP = #{reqIp}, REQ_DATA = #{reqData}, RES_DATA = #{resData}, update_id = #{updateId}, update_dt = CURRENT_TIMESTAMP
+		WHERE id = #{id}
+	</update>
+
+	<delete id="deleteApiHistory">
+		UPDATE ZTHH_APIHISTORY SET del_yn = 'Y', update_dt = CURRENT_TIMESTAMP WHERE id = #{id}
+	</delete>
+
+	<select id="getApiHistoryListById" parameterType="string" resultType="com.eun.tutorial.dto.external.pubdata.ApiHistoryDTO">
+		SELECT REQ_DATA, RES_DATA, id FROM ZTHH_APIHISTORY
+		WHERE id = #{id}
+		ORDER BY update_dt, create_dt
+	</select>
+	
+    <select id="getApiHistoryCountByDate" resultType="java.util.Map">
+        SELECT TO_CHAR(create_dt,'YYYY/MM/DD') AS request_date, COUNT(*) AS request_count
+        FROM ZTHH_APIHISTORY
+        WHERE create_dt >= TRUNC(SYSDATE) - 6 
+        GROUP BY TO_CHAR(create_dt,'YYYY/MM/DD')
+        ORDER BY TO_CHAR(create_dt,'YYYY/MM/DD')
+    </select>		
+	
+    <select id="getApiHistoryCountByCount" resultType="java.util.Map">
+		SELECT REQUEST_URL, REQUEST_COUNT
+		FROM (
+			   SELECT url AS REQUEST_URL, count(*) AS REQUEST_COUNT 
+			   FROM ZTHH_APIHISTORY
+			   group BY URL
+			   ORDER BY REQUEST_COUNT desc
+		) WHERE ROWNUM &lt;= 5
+    </select>		
+
+</mapper>
