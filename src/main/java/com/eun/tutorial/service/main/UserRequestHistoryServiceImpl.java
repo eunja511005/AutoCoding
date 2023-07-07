@@ -22,6 +22,7 @@ import com.eun.tutorial.aspect.annotation.SetCreateAndUpdateId;
 import com.eun.tutorial.aspect.annotation.SetUserTimeZoneAndFormat;
 import com.eun.tutorial.dto.main.UserRequestHistoryDTO;
 import com.eun.tutorial.mapper.main.UserRequestHistoryMapper;
+import com.eun.tutorial.util.ExceptionUtils;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 public class UserRequestHistoryServiceImpl implements UserRequestHistoryService {
 
 	private final UserRequestHistoryMapper userRequestHistoryMapper;
+	private final ExceptionUtils exceptionUtils;
 
 	@Override
 	@SetUserTimeZoneAndFormat
@@ -46,7 +48,7 @@ public class UserRequestHistoryServiceImpl implements UserRequestHistoryService 
     		userRequestHistoryDTO.setId("userRequestHistory_"+UUID.randomUUID());
     		return userRequestHistoryMapper.insertUserRequestHistory(userRequestHistoryDTO);
     	}catch (Exception e) {
-    		log.error(e.getMessage());
+    		exceptionUtils.saveErrorLog(e);
 		}
     	return 0;
 	}
