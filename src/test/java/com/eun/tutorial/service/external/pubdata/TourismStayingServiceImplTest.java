@@ -21,7 +21,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
 @SpringBootTest
-@Transactional
+//@Transactional
 class TourismStayingServiceImplTest {
 
 	@Autowired
@@ -71,6 +71,8 @@ class TourismStayingServiceImplTest {
 		postSearch.setValue("41110");
 		postSearch.setRegex(false);
 		searchMap.put("sigunCd", postSearch);
+		searchDTO.setStart(0);
+		searchDTO.setLength(10);
 		searchDTO.setSearch(searchMap );
 		
 		// 2. When

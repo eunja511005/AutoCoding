@@ -104,15 +104,15 @@ public class RestTemplateCallUtil {
 		}
 		
 		String requestData = sb.toString();
-		if (requestData.length() > 4000) {
-		    requestData = requestData.substring(0, 4000);
+		if (requestData.length() > 1000) {
+		    requestData = requestData.substring(0, 1000);
 		}
 		apiHistoryDTO.setReqData(requestData);
 
 		//response
 		String responseData = response.toString();
-		if (responseData.length() > 4000) {
-		    responseData = responseData.substring(0, 4000);
+		if (responseData.length() > 1000) {
+		    responseData = responseData.substring(0, 1000);
 		}
 		apiHistoryDTO.setResData(responseData);
 		
