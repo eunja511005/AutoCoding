@@ -41,13 +41,10 @@
 			<table id="dataTable" class="table table-hover" style="width:100%">
 				<thead>
 					<tr>
-						<th><fmt:message key="field.label.SIGUN_CD" /></th>
 						<th><fmt:message key="field.label.SIGUN_NM" /></th>
 						<th><fmt:message key="field.label.BIZPLC_NM" /></th>
-						<th><fmt:message key="field.label.LICENSG_DE" /></th>
 						<th><fmt:message key="field.label.BSN_STATE_NM" /></th>
 						<th><fmt:message key="field.label.REFINE_ROADNM_ADDR" /></th>
-						<th><fmt:message key="field.label.REFINE_ZIP_CD" /></th>
 					</tr>
 				</thead>
 				<tbody>

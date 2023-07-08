@@ -73,17 +73,14 @@ function searchDataTable() {
             },
 		},
 		columns: [
-			{ data: 'SIGUN_CD' },
 			{ data: 'SIGUN_NM' },
 			{ data: 'BIZPLC_NM' },
-			{ data: 'LICENSG_DE' },
 			{ data: 'BSN_STATE_NM' },
 			{ data: 'REFINE_ROADNM_ADDR' },
-			{ data: 'REFINE_ZIP_CD' },
 		],
 		columnDefs: [
-		    { "orderable": false, "targets": [0,1] }, // 1, 2, 3, 6, 7번째 컬럼은 정렬 불가능하도록 설정
-		    { "orderable": true, "targets": [0,1] } // 0번째와 5번째 컬럼은 정렬 가능하도록 설정
+		    //{ "orderable": false, "targets": [0,1] }, // 1, 2, 3, 6, 7번째 컬럼은 정렬 불가능하도록 설정
+		    //{ "orderable": true, "targets": [0,1] } // 0번째와 5번째 컬럼은 정렬 가능하도록 설정
 		],
 		order: [0, 'desc'], // 자동 정렬 비활성화
 	});
