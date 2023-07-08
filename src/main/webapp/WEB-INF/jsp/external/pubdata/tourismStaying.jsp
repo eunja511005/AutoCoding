@@ -44,7 +44,7 @@
 						<th><fmt:message key="field.label.SIGUN_NM" /></th>
 						<th><fmt:message key="field.label.BIZPLC_NM" /></th>
 						<th><fmt:message key="field.label.BSN_STATE_NM" /></th>
-						<th><fmt:message key="field.label.REFINE_ROADNM_ADDR" /></th>
+						<th style="white-space: normal;"><fmt:message key="field.label.REFINE_ROADNM_ADDR" /></th>
 					</tr>
 				</thead>
 				<tbody>
