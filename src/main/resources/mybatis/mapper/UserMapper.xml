@@ -30,7 +30,9 @@
 			UPDATE SET       
 				password = #{password, jdbcType=VARCHAR}
 				,email = #{email, jdbcType=VARCHAR}
+				<if test="role != null and role != ''">
 				,role = #{role, jdbcType=VARCHAR}
+				</if>
 				,picture = #{picture, jdbcType=VARCHAR}
 				,language = #{language, jdbcType=VARCHAR}
 		WHEN NOT MATCHED THEN /* ON 조건에 매칭되지 않으면 아래 실행(Insert)*/

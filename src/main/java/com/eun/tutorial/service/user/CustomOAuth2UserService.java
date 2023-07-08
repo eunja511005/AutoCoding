@@ -72,22 +72,23 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 									        	.language("ko")
 									        	.build();
         	userDao.addUser(userInfoDTO);
-        }else { // 이미지가 업데이트 되었을 수도 있으므로 merge 해주는게 맞을거 같음
+        }else { // 이미지, 이메일이 업데이트 되었을 수도 있으므로 merge 해주는게 맞을거 같음
         	
         	String salt = Base64.getEncoder().encodeToString(userInfoDTO.getSalt());
         	String encryptedEmail = encryptionUtils.encrypt(attributes.getEmail(), salt);
         	
-        	userInfoDTO = UserInfoDTO.builder().createId("OAuth2")
+        	UserInfoDTO updateUserInfoDTO = UserInfoDTO.builder().createId("OAuth2")
 				   	.updateId("OAuth2")
 		        	.isEnable(true)
 		        	.username(attributes.getName())
 		        	.email(encryptedEmail)
 		        	.picture(attributes.getPicture())
-		        	.role("ROLE_USER")
+		        	//.role("ROLE_USER") 카카오 로그인이 유저 롤은 업데이트 안되게 변경, 처음은 무조건 ROLE_USER 이나 DB에서 변경 하고 그 뒤로는 그 권한으로 유지되도록
 		        	.build();
-        	userDao.addUser(userInfoDTO);
+        	userDao.addUser(updateUserInfoDTO);
         }
         
+        userInfoDTO.setEmail(attributes.getPicture());
         userInfoDTO.setEmail(attributes.getEmail());
         
         return userInfoDTO;
