@@ -22,6 +22,7 @@ import com.eun.tutorial.aspect.annotation.SetCreateAndUpdateId;
 import com.eun.tutorial.aspect.annotation.SetUserTimeZoneAndFormat;
 import com.eun.tutorial.dto.external.pubdata.ApiHistoryDTO;
 import com.eun.tutorial.mapper.external.pubdata.ApiHistoryMapper;
+import com.eun.tutorial.util.ExceptionUtils;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ApiHistoryServiceImpl implements ApiHistoryService {
 
 	private final ApiHistoryMapper apiHistoryMapper;
+	private final ExceptionUtils exceptionUtils;
 
 	@Override
 	@SetUserTimeZoneAndFormat
@@ -47,7 +49,7 @@ public class ApiHistoryServiceImpl implements ApiHistoryService {
     		apiHistoryDTO.setId("apiHistory_"+UUID.randomUUID());
     		return apiHistoryMapper.insertApiHistory(apiHistoryDTO);
     	}catch (Exception e) {
-    		log.error(e.getMessage());
+    		exceptionUtils.saveErrorLog(e);
 		}
     	return 0;
 	}
