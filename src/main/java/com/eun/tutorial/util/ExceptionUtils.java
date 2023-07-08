@@ -21,8 +21,6 @@ public class ExceptionUtils {
     public void saveErrorLog(Exception exception) {
         String errorMessage = org.apache.tika.utils.ExceptionUtils.getStackTrace(exception);
         
-        log.error(errorMessage);
-
         if (errorMessage.length() > 2000) {
             errorMessage = errorMessage.substring(0, 2000);
         }
