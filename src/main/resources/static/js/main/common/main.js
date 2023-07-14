@@ -202,8 +202,8 @@ function callAjax(url, method, data, successCallback){
 		},
 		error: function(error) {
 	  	    swal({
-	    		  title: error.responseJSON.status + ", " +error.responseJSON.code,
-	    		  text: error.responseJSON.message,
+	    		  title: error.responseJSON.data,
+	    		  text: error.responseJSON.errorMessage,
 	    		  icon: "warning",
 	    		  button: "OK",
 	    	})

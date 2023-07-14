@@ -7,7 +7,9 @@ public enum ErrorCode {
     NOT_FOUND(404,"COMMON-ERR-404","PAGE NOT FOUND"),
     INTER_SERVER_ERROR(500,"COMMON-ERR-500","INTER SERVER ERROR"),
     EMAIL_DUPLICATION(400,"MEMBER-ERR-400","EMAIL DUPLICATED"),
-    NO_AUTHORIZATION(403,"NO AUTHORIZATION","You don't have access permission to the resource."),
+    NO_AUTHORIZATION(403,"NO AUTHORIZATION-403","You don't have access permission to the resource."),
+    ACCESS_DENIED(403,"SPRING-403","SPRING SECURITY CUSTOMFORBIDEN"),
+    NO_COMMON_CODE(501,"NO_COMMON_CODE-501","Failed to search the common code data."),
     ;
 
     private int status;

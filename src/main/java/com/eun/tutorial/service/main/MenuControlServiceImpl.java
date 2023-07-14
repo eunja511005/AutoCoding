@@ -24,6 +24,7 @@ import com.eun.tutorial.aspect.annotation.CreatePermission;
 import com.eun.tutorial.aspect.annotation.SetCreateAndUpdateId;
 import com.eun.tutorial.dto.main.MenuControlDTO;
 import com.eun.tutorial.exception.CustomException;
+import com.eun.tutorial.exception.ErrorCode;
 import com.eun.tutorial.mapper.main.MenuControlMapper;
 
 import lombok.AllArgsConstructor;
@@ -80,7 +81,7 @@ public class MenuControlServiceImpl implements MenuControlService {
         for (MenuControlDTO menuControlDTO : menuControlList) {
         	HttpMethod httpMethod = HttpMethod.resolve(menuControlDTO.getMethod());
             if (httpMethod == null) {
-                throw new CustomException(500, "No HTTP Method");
+                throw new CustomException(ErrorCode.INTER_SERVER_ERROR, new RuntimeException("No HTTP Method"));
             }
             
             String url = menuControlDTO.getUrl();

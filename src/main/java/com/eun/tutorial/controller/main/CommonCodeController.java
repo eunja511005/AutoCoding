@@ -13,6 +13,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.eun.tutorial.dto.main.ApiResponse;
 import com.eun.tutorial.dto.main.CommonCodeDTO;
+import com.eun.tutorial.exception.CustomException;
+import com.eun.tutorial.exception.ErrorCode;
 import com.eun.tutorial.service.main.CommonCodeService;
 
 import lombok.AllArgsConstructor;
@@ -69,11 +71,12 @@ public class CommonCodeController {
     }
     
     @GetMapping("/{codeGroup}")
-    public @ResponseBody ApiResponse getCommonCodesByCategory(@PathVariable String codeGroup) {
+    public @ResponseBody ApiResponse getCommonCodesByCategory(@PathVariable String codeGroup) throws CustomException {
         try {
             return new ApiResponse<>(true, "Successfully search the common code data.", commonCodeService.getCommonCodesByCategory(codeGroup));
         } catch (Exception e) {
-            return new ApiResponse<>(false, "Failed to search the common code data.", null);
+        	throw new CustomException(ErrorCode.NO_COMMON_CODE, e);
+//            return new ApiResponse<>(false, "Failed to search the common code data.", null);
         }
     }
 
