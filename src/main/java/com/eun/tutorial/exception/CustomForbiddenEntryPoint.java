@@ -8,6 +8,7 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
 import com.eun.tutorial.dto.ZthhErrorDTO;
+import com.eun.tutorial.dto.main.ApiResponse;
 import com.eun.tutorial.service.ZthhErrorService;
 
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,7 @@ public class CustomForbiddenEntryPoint implements AuthenticationEntryPoint {
     	log.error("Spring Security Access Denied : ", ex);
     	
     	String errorMessage = org.apache.tika.utils.ExceptionUtils.getStackTrace(ex);
+    	errorMessage = request.getRequestURI()+"\n"+errorMessage;
 
         if(errorMessage.length()>2000) {
         	errorMessage = errorMessage.substring(0, 2000);
@@ -41,11 +43,16 @@ public class CustomForbiddenEntryPoint implements AuthenticationEntryPoint {
                                 .errorMessage("CustomForbiddenEntryPoint Error : " + errorMessage)
                                 .build()
         );
+        
+        // [중요] data를 null로 해줘야 dataTable에서 다른 오류 발생 안함
+        ApiResponse<ErrorCode> apiResponse = new ApiResponse<>(false, ErrorCode.ACCESS_DENIED.getMessage(), null);
     	
-        Map<String, Object> res = new HashMap<>();
-        res.put("success", false);
-        res.put("errorMessage", "Spring Security Access Denied");
-        JSONObject json =  new JSONObject(res);
+//        Map<String, Object> res = new HashMap<>();
+//        res.put("success", false);
+//        res.put("errorMessage", "Spring Security Access Denied");
+        
+        
+        JSONObject json =  new JSONObject(apiResponse);
         response.setContentType("application/json; charset=utf-8");
         response.getWriter().print(json);
         

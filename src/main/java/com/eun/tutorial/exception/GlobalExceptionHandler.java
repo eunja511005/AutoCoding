@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.eun.tutorial.dto.ZthhErrorDTO;
+import com.eun.tutorial.dto.main.ApiResponse;
 import com.eun.tutorial.service.ZthhErrorService;
 
 import lombok.AllArgsConstructor;
@@ -19,7 +20,7 @@ public class GlobalExceptionHandler {
     private final ZthhErrorService zthhErrorService;
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleException(Exception ex){
+    public ResponseEntity<ApiResponse<ErrorCode>> handleException(Exception ex){
         log.error("handleException",ex);
         
         if (ex.getCause() instanceof CustomException) {
@@ -41,8 +42,11 @@ public class GlobalExceptionHandler {
             int errorCode = customEx.getErrorCode();
 
             if(errorCode==403) {
-            	ErrorResponse response = new ErrorResponse(ErrorCode.NO_AUTHORIZATION);
-            	return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
+            	
+            	ApiResponse<ErrorCode> apiResponse = new ApiResponse<>(false, ErrorCode.NO_AUTHORIZATION.getMessage(), ErrorCode.NO_AUTHORIZATION);
+            	return new ResponseEntity<>(apiResponse, HttpStatus.FORBIDDEN);
+//            	ErrorResponse response = new ErrorResponse(ErrorCode.NO_AUTHORIZATION);
+//            	return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
             }
         }else {
 //        	String errorMessage = org.apache.tika.utils.ExceptionUtils.getStackTrace(ex.getCause());
@@ -58,7 +62,10 @@ public class GlobalExceptionHandler {
             );
         }
         
-        ErrorResponse response = new ErrorResponse(ErrorCode.INTER_SERVER_ERROR);
-        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+    	ApiResponse<ErrorCode> apiResponse = new ApiResponse<>(false, ErrorCode.INTER_SERVER_ERROR.getMessage(), ErrorCode.INTER_SERVER_ERROR);
+    	return new ResponseEntity<>(apiResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        
+//        ErrorResponse response = new ErrorResponse(ErrorCode.INTER_SERVER_ERROR);
+//        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

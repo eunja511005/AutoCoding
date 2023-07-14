@@ -13,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import com.eun.tutorial.exception.CustomException;
+import com.eun.tutorial.exception.ErrorCode;
 import com.eun.tutorial.mapper.main.AccessControlMapper;
 import com.eun.tutorial.util.AuthUtils;
 
@@ -56,7 +57,7 @@ public class AuthorizationAspect {
             int mappingTable = accessControlMapper.getAccessControlListByResource(resourceId, loginId);
             
             if (mappingTable < 1) {
-                throw new CustomException(403, "Forbidden");
+                throw new CustomException(ErrorCode.NO_AUTHORIZATION, new RuntimeException("No Resource Authorization"));
             }
             
             Object result = joinPoint.proceed();
