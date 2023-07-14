@@ -2,32 +2,29 @@ var csrfheader = $("meta[name='_csrf_header']").attr("content");
 var csrftoken = $("meta[name='_csrf']").attr("content");
 
 $(document).ready(function() {
+	
+    // 이미지 선택 시 미리 보기 호출
+    $('#image').on('change', function(event) {
+        previewImage(event);
+    });
 
 	$('form#projectForm').one('submit', function(event) {
-
 		event.preventDefault(); // 이벤트 중지
-
-		var id = $('#id').val();
-		var name = $('#name').val();
-		var description = $('#description').val();
-		var startDate = $('#startDate').val();
-		var endDate = $('#endDate').val();
-		var status = $('#status').val();
-		var manager = $('#manager').val();
-		var participants = $('#participants').val();
-
-		var data = {
-			"id": id,
-			"name": name,
-			"description": description,
-			"startDate": startDate,
-			"endDate": endDate,
-			"status": status,
-			"manager": manager,
-			"participants": participants
-		};
+		debugger;
+		var formData = new FormData(this);
 		
-		callAjax("/project/create", "POST", data, createCallback);
+		formData.set('endDate', $('#endDate').val());
+		formData.set('startDate', $('#startDate').val());
+		
+		const fileInput = $('#formFile')[0];
+		const file = fileInput.files[0];
+		if (file) {
+			const resizedImage = compressImage(file, 300, 0.9);
+			formData.append('file', resizedImage);
+		}
+		
+		saveProject(formData);
+		
 	});
 
 
@@ -54,15 +51,22 @@ $(document).ready(function() {
 
 	});
 	
-	debugger;
 	var participantsArray = parseParticipants($('#project-participants').val());
 	console.log(participantsArray); // ["User1"]
+	var pictureUrl = $('#project-picture').val();
+	console.log(pictureUrl);
 	if ($('#project-participants').val() == null || $('#project-participants').val() == '') {
 	    //신규 페이지
 	    initSelectBox('participants', '/commonCode/PARTICIPANTS', false);
 	} else {
 	    // 수정 페이지 로직
 	    initSelectBox('participants', '/commonCode/PARTICIPANTS', false, participantsArray);
+	    
+		var preview = $('#imagePreview'); // 미리보기 이미지가 표시될 엘리먼트 선택
+		// 이미지 URL이 유효한 경우에만 미리보기 표시
+		if (pictureUrl) {
+			preview.html('<img src="' + pictureUrl + '" alt="Preview Image" class="img-fluid">');
+		}
 	}
 }); 
 
@@ -89,4 +93,70 @@ function parseParticipants(participantsStr) {
 	  }
 	  
 	  return participantsArray;
+}
+
+// 이미지 미리 보기 함수
+function previewImage(event) {
+    var input = event.target;
+    var preview = document.getElementById("imagePreview");
+
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function(e) {
+            preview.innerHTML = '<img src="' + e.target.result + '" alt="Preview Image" class="img-fluid">';
+        }
+
+        reader.readAsDataURL(input.files[0]);
+    } else {
+        preview.innerHTML = '';
+    }
+}
+
+function handleDragOver(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    document.getElementById("dragDropArea").classList.add("drag-drop-over");
+    document.querySelector(".drag-drop-message").textContent = "이미지를 여기에 놓아 업로드하세요";
+}
+
+function handleDragLeave(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    document.getElementById("dragDropArea").classList.remove("drag-drop-over");
+    document.querySelector(".drag-drop-message").textContent = "이미지를 드래그 앤 드롭하세요";
+}
+
+function handleFileDrop(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    var files = event.dataTransfer.files;
+    var input = document.getElementById("formFile");
+
+    if (files.length > 0) {
+        input.files = files;
+        previewImage({ target: input });
+    }
+    document.getElementById("dragDropArea").classList.remove("drag-drop-over");
+    document.querySelector(".drag-drop-message").textContent = "이미지를 드래그 앤 드롭하세요";
+}
+
+function saveProject(formData) {
+    $.ajax({
+        url: '/project/create',
+        type: 'POST',
+        data: formData,
+        contentType: false,
+        processData: false,
+        beforeSend : function(xhr){   
+			xhr.setRequestHeader(csrfheader, csrftoken);
+        },
+        success: function(response) {
+        	createCallback(response);
+        },
+        error: function(response) {
+        	debugger;
+            alert(response.responseText);
+        }
+    });
 }
