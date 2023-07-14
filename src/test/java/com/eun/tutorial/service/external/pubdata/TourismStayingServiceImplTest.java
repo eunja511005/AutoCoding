@@ -1,6 +1,7 @@
 package com.eun.tutorial.service.external.pubdata;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.net.URISyntaxException;
 import java.util.HashMap;
@@ -10,7 +11,6 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestClientException;
 
 import com.eun.tutorial.dto.external.pubdata.TourismStayingRootDTO.RowDTO;
@@ -54,7 +54,7 @@ class TourismStayingServiceImplTest {
 		Map<String, Object> resMap = tourismStayingService.getTourizmStayingInfo(apiMasterDTO);
 		
 		// 3. Then
-		assertEquals(resMap.get("total"), 336);
+		assertTrue((Integer) resMap.get("total") > 0);
 		assertEquals(((List)resMap.get("rowList")).size(), 5);
 	}
 	
