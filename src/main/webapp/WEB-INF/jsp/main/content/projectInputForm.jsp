@@ -3,7 +3,34 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
+<style>
+    .drag-drop-area {
+        border: 2px dashed #ddd;
+        padding: 20px;
+        text-align: center;
+        transition: border-color 0.3s;
+    }
+
+    .drag-drop-over {
+        border-color: #007bff;
+    }
+
+    .drag-drop-message {
+        display: block;
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+
+    .or-text {
+        display: block;
+        font-size: 14px;
+        margin-bottom: 10px;
+    }
+
+</style>
+
 <input type="hidden" id="project-participants" value="${project.participants}">
+<input type="hidden" id="project-picture" value="${project.picture}">
 
 		<div class="container my-5">
 			<!-- 페이지 제목 -->
@@ -94,6 +121,17 @@
 										<label for="participants">참여자</label> 
 										<select class="form-control" id="participants" name="participants[]" multiple required></select>
 									</div>
+									<div class="form-group mb-3">
+									    <label for="formFile">프로젝트 이미지</label>
+									    <div id="dragDropArea" class="drag-drop-area" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleFileDrop(event)">
+									        <span class="drag-drop-message">이미지를 드래그 앤 드롭하세요</span>
+									        <span class="or-text">또는</span>
+									        <input type="file" class="form-control-file" id="formFile" name="file" accept="image/*" onchange="previewImage(event)">
+									    </div>
+									</div>
+									<div class="form-group mb-3">
+									    <div id="imagePreview"></div>
+									</div>
 									<div class="text-center">
 										<button id="submitButton" type="submit" class="btn btn-primary btn-sm">
 											<c:if test="${empty project.id}">등록</c:if>
@@ -103,8 +141,6 @@
 										<c:if test="${not empty project}">
 										  <button class="btn btn-danger btn-sm delete-button" data-id="${project.id}">삭제</button>
 										</c:if>
-										
-										
 									</div>
 								</form>
 							</div>

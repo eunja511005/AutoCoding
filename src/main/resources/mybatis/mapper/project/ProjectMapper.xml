@@ -7,7 +7,7 @@
 	<!-- 프로젝트 조회 -->
 	<select id="selectProjects"
 		resultType="com.eun.tutorial.dto.project.ProjectDTO">
-		SELECT id, name, description, start_date, end_date, status, manager
+		SELECT id, name, description, start_date, end_date, status, manager, picture
 		FROM zthh_project
 		WHERE del_yn=0
 		ORDER BY CREATED_AT DESC
@@ -29,7 +29,7 @@
 	</select>
 	
 	<select id="selectProjectById" resultType="com.eun.tutorial.dto.project.ProjectDTO">
-		SELECT id, name, description, start_date, end_date, status, manager
+		SELECT id, name, description, start_date, end_date, status, manager, picture
 		FROM zthh_project
 		WHERE id = #{id} 
 		AND del_yn=0
@@ -47,13 +47,14 @@
 				,end_date= #{endDate}
 				,status= #{status}
 				,manager= #{manager}
+				,picture = #{picture}
 		WHEN NOT MATCHED THEN /* ON 조건에 매칭되지 않으면 아래 실행(Insert)*/
 		    INSERT (id, name, description,
 					start_date, end_date,
-					status, manager)
+					status, manager ,picture)
 		   		VALUES (#{id}, #{name},
 						#{description}, #{startDate},
-						#{endDate}, #{status}, #{manager})		
+						#{endDate}, #{status}, #{manager}, #{picture})		
 	</insert>
 
 	<insert id="insertProjectParticipants"

@@ -8,15 +8,7 @@ var currentCodeId;
 
 $(document).ready(function() {
 
-//	$(document).on('click', '.btn-secondary', function(event) {
-//		event.preventDefault();
-//		var id = $(this).data('project-id');
-//		$('#dynamic-content').load("/project/inputForm/"+id);
-//		
-//		$(this).off('click');
-//		$(this).on('click', handleClick);
-//		
-//	});
+	debugger;
 	
 	$('#dynamic-content').on('click', '.a-btn-projectListForm', function(event) {
 		  event.preventDefault();
@@ -54,6 +46,10 @@ function displayProjects(data) {
 		var col = $('<div class="col mb-3"></div>');
 		var card = $('<div class="card h-100"></div>');
 		var cardBody = $('<div class="card-body"></div>');
+		
+		var image = $('<img class="card-img-top">');
+		image.attr('src', project.picture);
+		cardBody.append(image);
 
 		var titleText = project.name.length > 10 ? project.name.substring(0, 10) + '...' : project.name;
 		var title = $('<h5 class="card-title">' + titleText + '</h5>');
@@ -62,7 +58,7 @@ function displayProjects(data) {
 		var descriptionText = project.description.length > 10 ? project.description.substring(0, 10) + '...' : project.description;
 		var description = $('<p class="card-text">' + descriptionText + '</p>');
 		cardBody.append(description);
-
+		
 		var viewBtn = $('<a class="btn btn-secondary a-btn-projectListForm">View Project</a>');
 		viewBtn.attr('data-project-id', project.id);
 		cardBody.append(viewBtn);
