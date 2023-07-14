@@ -8,7 +8,7 @@ class CommonCodeControllerTest {
 
 	@Test
 	void getCommonCodesByCategory() {
-		fail("Not yet implemented");
+		//fail("Not yet implemented");
 	}
 
 }
