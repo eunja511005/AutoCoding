@@ -16,16 +16,6 @@ $(document).ready(function() {
 		  loadDynamicContent("/project/inputForm/" + id);
 		});	
 
-	function loadProjects() {
-
-		var params = {
-			"page": currentPage,
-			"size": itemsPerPage
-		};
-		
-		callAjax("/project/list", "POST", params, listCallback);
-	}
-
 	loadProjects();
 
 });
@@ -132,4 +122,14 @@ function displayPagination(totalItems) {
 
 		pagination.append(paginationList);
 	}
+}
+
+function loadProjects() {
+
+	var params = {
+		"page": currentPage,
+		"size": itemsPerPage
+	};
+	
+	callAjax("/project/list", "POST", params, listCallback);
 }
