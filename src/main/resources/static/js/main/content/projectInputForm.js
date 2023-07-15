@@ -142,15 +142,15 @@ function previewImage(event) {
 function handleDragOver(event) {
     event.preventDefault();
     event.stopPropagation();
-    document.getElementById("dragDropArea").classList.add("drag-drop-over");
-    document.querySelector(".drag-drop-message").textContent = "이미지를 여기에 놓아 업로드하세요";
+    document.getElementById("dragDropArea").classList.add("drag-drop-over-file");
+    document.querySelector(".drag-drop-message-file").textContent = "이미지를 여기에 놓아 업로드하세요";
 }
 
 function handleDragLeave(event) {
     event.preventDefault();
     event.stopPropagation();
-    document.getElementById("dragDropArea").classList.remove("drag-drop-over");
-    document.querySelector(".drag-drop-message").textContent = "이미지를 드래그 앤 드롭하세요";
+    document.getElementById("dragDropArea").classList.remove("drag-drop-over-file");
+    document.querySelector(".drag-drop-message-file").textContent = "이미지를 드래그 앤 드롭하세요";
 }
 
 function handleFileDrop(event) {
@@ -163,8 +163,8 @@ function handleFileDrop(event) {
         input.files = files;
         previewImage({ target: input });
     }
-    document.getElementById("dragDropArea").classList.remove("drag-drop-over");
-    document.querySelector(".drag-drop-message").textContent = "이미지를 드래그 앤 드롭하세요";
+    document.getElementById("dragDropArea").classList.remove("drag-drop-over-file");
+    document.querySelector(".drag-drop-message-file").textContent = "이미지를 드래그 앤 드롭하세요";
 }
 
 function saveProject(formData) {

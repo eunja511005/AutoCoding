@@ -4,18 +4,18 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <style>
-    .drag-drop-area {
+    .drag-drop-area-file {
         border: 2px dashed #ddd;
         padding: 20px;
         text-align: center;
         transition: border-color 0.3s;
     }
 
-    .drag-drop-over {
+    .drag-drop-over-file {
         border-color: #007bff;
     }
 
-    .drag-drop-message {
+    .drag-drop-message-file {
         display: block;
         font-size: 16px;
         margin-bottom: 10px;
@@ -123,8 +123,8 @@
 									</div>
 									<div class="form-group mb-3">
 									    <label for="formFile">프로젝트 이미지</label>
-									    <div id="dragDropArea" class="drag-drop-area" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleFileDrop(event)">
-									        <span class="drag-drop-message">이미지를 드래그 앤 드롭하세요</span>
+									    <div id="dragDropArea" class="drag-drop-area-file" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleFileDrop(event)">
+									        <span class="drag-drop-message-file">이미지를 드래그 앤 드롭하세요</span>
 									        <span class="or-text">또는</span>
 									        <input type="file" class="form-control-file" id="formFile" name="file" accept="image/*" onchange="previewImage(event)">
 									    </div>
