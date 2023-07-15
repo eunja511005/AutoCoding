@@ -5,67 +5,41 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import com.eun.tutorial.dto.ZthhErrorDTO;
 import com.eun.tutorial.dto.main.ApiResponse;
-import com.eun.tutorial.service.ZthhErrorService;
+import com.eun.tutorial.util.ExceptionUtils;
 
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @ControllerAdvice
 @AllArgsConstructor
 public class GlobalExceptionHandler {
 
-    private final ZthhErrorService zthhErrorService;
+	private final ExceptionUtils exceptionUtils;
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiResponse<ErrorCode>> handleException(Exception ex){
-        log.error("handleException",ex);
-        
-        if (ex.getCause() instanceof CustomException) {
-//        	String errorMessage = org.apache.tika.utils.ExceptionUtils.getStackTrace(ex);
-            String errorMessage = org.apache.tika.utils.ExceptionUtils.getStackTrace(ex.getCause());
+	@ExceptionHandler(Exception.class)
+	public ResponseEntity<ApiResponse<ErrorCode>> handleException(Exception e) {
 
-            if(errorMessage.length()>2000) {
-            	errorMessage = errorMessage.substring(0, 2000);
-            }
-            
-            zthhErrorService.save(ZthhErrorDTO.builder()
-                                    .errorMessage("GlobalExceptionHandler Error : " + errorMessage)
-                                    .build()
-            );
-        	
-        	
-            // CustomException 클래스의 인스턴스인 경우 처리 로직
-            CustomException customEx = (CustomException) ex.getCause();
-            int errorCode = customEx.getErrorCode();
+		if (e instanceof CustomException) {
+			CustomException customEx = (CustomException) e;
+			int errorCode = customEx.getErrorCode();
+			e = customEx.getException();
+			
+			e.printStackTrace();
+			exceptionUtils.saveErrorLog(org.apache.tika.utils.ExceptionUtils.getStackTrace(e.getCause()));
+			
+			if (errorCode == 403) {
+				ApiResponse<ErrorCode> apiResponse = new ApiResponse<>(false, ErrorCode.NO_AUTHORIZATION.getMessage(),
+						ErrorCode.NO_AUTHORIZATION);
+				return new ResponseEntity<>(apiResponse, HttpStatus.FORBIDDEN);
+			}
+		} else {
+			e.printStackTrace();
+			exceptionUtils.saveErrorLog(org.apache.tika.utils.ExceptionUtils.getStackTrace(e));
+		}
 
-            if(errorCode==403) {
-            	
-            	ApiResponse<ErrorCode> apiResponse = new ApiResponse<>(false, ErrorCode.NO_AUTHORIZATION.getMessage(), ErrorCode.NO_AUTHORIZATION);
-            	return new ResponseEntity<>(apiResponse, HttpStatus.FORBIDDEN);
-//            	ErrorResponse response = new ErrorResponse(ErrorCode.NO_AUTHORIZATION);
-//            	return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
-            }
-        }else {
-//        	String errorMessage = org.apache.tika.utils.ExceptionUtils.getStackTrace(ex.getCause());
-            String errorMessage = org.apache.tika.utils.ExceptionUtils.getStackTrace(ex);
+		ApiResponse<ErrorCode> apiResponse = new ApiResponse<>(false, ErrorCode.INTER_SERVER_ERROR.getMessage(),
+				ErrorCode.INTER_SERVER_ERROR);
+		return new ResponseEntity<>(apiResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 
-            if(errorMessage.length()>2000) {
-            	errorMessage = errorMessage.substring(0, 2000);
-            }
-            
-            zthhErrorService.save(ZthhErrorDTO.builder()
-                                    .errorMessage("GlobalExceptionHandler Error : " + errorMessage)
-                                    .build()
-            );
-        }
-        
-    	ApiResponse<ErrorCode> apiResponse = new ApiResponse<>(false, ErrorCode.INTER_SERVER_ERROR.getMessage(), ErrorCode.INTER_SERVER_ERROR);
-    	return new ResponseEntity<>(apiResponse, HttpStatus.INTERNAL_SERVER_ERROR);
-        
-//        ErrorResponse response = new ErrorResponse(ErrorCode.INTER_SERVER_ERROR);
-//        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+	}
 }

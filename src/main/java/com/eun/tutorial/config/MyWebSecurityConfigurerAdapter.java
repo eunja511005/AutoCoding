@@ -128,8 +128,8 @@ public class MyWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter
             .anyRequest().authenticated()
             .and()
             .exceptionHandling()
-            //.authenticationEntryPoint(new Http403ForbiddenEntryPoint());
             .authenticationEntryPoint(customForbiddenEntryPoint);
+        
         /**
          * 5.로그인 설정
          *   1) 로그인 페이지 설정
