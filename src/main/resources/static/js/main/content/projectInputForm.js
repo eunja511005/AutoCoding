@@ -27,7 +27,33 @@ $(document).ready(function() {
 		
 	});
 
-
+	$('#description').summernote({
+  	    placeholder: 'Hello Summernote lite',
+  	    tabsize: 2,
+        height: 300,                 // set editor height
+        minHeight: null,             // set minimum height of editor
+        maxHeight: null,             // set maximum height of editor
+        focus: true,                  // set focus to editable area after
+										// initializing summernote
+        toolbar: [
+  		    ['fontname', ['fontname']],
+  		    ['fontsize', ['fontsize']],
+  		    ['style', ['bold', 'italic', 'underline','strikethrough', 'clear']],
+  		    ['color', ['forecolor','color']],
+  		    ['table', ['table']],
+  		    ['para', ['ul', 'ol', 'paragraph']],
+  		    ['height', ['height']],
+  		    ['insert',['picture','link','video']],
+  		    ['view', ['codeview','fullscreen', 'help']]
+  		  ],		  
+		  callbacks: {
+		      onImageUpload: onImageUpload
+		  },  		  
+  		// 추가한 글꼴
+  		fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New','맑은 고딕','궁서','굴림체','굴림','돋음체','바탕체'],
+  		 // 추가한 폰트사이즈
+  		fontSizes: ['8','9','10','11','12','14','16','18','20','22','24','28','30','36','50','72']
+    });	
 
 	$(document).on('click', '.delete-button', function() {
 		var button = $(this);
@@ -159,4 +185,33 @@ function saveProject(formData) {
             alert(response.responseText);
         }
     });
+}
+
+function onImageUpload(files) {
+	  for (var i = 0; i < files.length; i++) {
+		    // 이미지 파일을 압축합니다. (압축: 70% 수준 유지)
+		    compressImage(files[i], 300, 0.7).then(function (compressedImage) {
+		      // 압축된 이미지 파일을 서버에 업로드합니다.
+		      const formData = new FormData();
+		      formData.append('file', compressedImage);
+		      $.ajax({
+		        type: 'POST',
+		        url: '/posts/uploadImage',
+				beforeSend: function(xhr) {
+					xhr.setRequestHeader(csrfheader, csrftoken);
+				},
+		        data: formData,
+		        processData: false,
+		        contentType: false,
+		        success: function (data) {
+		          // 서버로부터 이미지 파일의 경로를 받아와 HTML 본문에 삽입합니다.
+		          const imgNode = $('<img>').attr('src', data.createdFilePath);
+		          $('#description').summernote('insertNode', imgNode[0]);
+		        },
+		        error: function () {
+		          alert('이미지 업로드에 실패했습니다.');
+		        }
+		      });
+		    });
+		  }
 }

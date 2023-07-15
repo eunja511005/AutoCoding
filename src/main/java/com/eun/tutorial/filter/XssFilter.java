@@ -54,8 +54,8 @@ public class XssFilter implements Filter {
 	 *       xssCustomUrlList : 댓글(.을 &quote로 치환해서 문제 되어서 Customer로 체크)
 	 *       sanitize : 나머지 
 	 */
-	private List<String> noXssUrlList = Arrays.asList("/posts/save", "/layout/save", "/url2", "/url3"); 
-	private List<String> xssCustomUrlList = Arrays.asList("/posts/comment", "/project/create", "/autoCoding/generate", "/autoCoding/save"); 
+	private List<String> noXssUrlList = Arrays.asList("/posts/save", "/layout/save", "/project/create", "/url2", "/url3"); 
+	private List<String> xssCustomUrlList = Arrays.asList("/posts/comment", "/autoCoding/generate", "/autoCoding/save"); 
 	
 	public XssFilter(ResourceLoader resourceLoader, ZthhErrorService zthhErrorService, 
 			MenuControlService menuControlService, UserRequestHistoryService userRequestHistoryService) {
