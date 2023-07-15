@@ -126,7 +126,7 @@
 									    <div id="dragDropArea" class="drag-drop-area-file" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleFileDrop(event)">
 									        <span class="drag-drop-message-file">이미지를 드래그 앤 드롭하세요</span>
 									        <span class="or-text">또는</span>
-									        <input type="file" class="form-control-file" id="formFile" name="file" accept="image/*" onchange="previewImage(event)">
+									        <input type="file" class="form-control-file" id="formFile" name="file" accept="image/*" onchange="previewImage(event)" required>
 									    </div>
 									</div>
 									<div class="form-group mb-3">
