@@ -172,7 +172,7 @@ public class PostServiceImpl implements PostService {
 	@Override
 	public Map<String, Object> saveImage(MultipartFile file) throws IOException {
 		Map<String, Object> res = new HashMap<>();
-		res.put("createdFilePath", fileUtil.saveImage(file));
+		res.put("createdFilePath", fileUtil.saveImage(file, "openImg/post"));
 		return res;
 	}
 

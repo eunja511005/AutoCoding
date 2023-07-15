@@ -128,7 +128,7 @@ public class LayoutServiceImpl implements LayoutService {
 	@Override
 	public Map<String, Object> saveFile(MultipartFile file) throws IOException {
 		Map<String, Object> res = new HashMap<>();
-		res.put("createdFilePath", fileUtil.saveImage(file));
+		res.put("createdFilePath", fileUtil.saveImage(file, "openImg/layout"));
 		return res;
 	}
 

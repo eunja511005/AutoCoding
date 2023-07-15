@@ -66,7 +66,7 @@ public class UserManageController {
 
 	@PostMapping("/save")
 	public @ResponseBody ApiResponse saveUserManage(@RequestParam("file") MultipartFile file, UserManageDTO userManageDTO) throws IOException {
-		userManageDTO.setPicture(fileUtil.saveImage(file));
+		userManageDTO.setPicture(fileUtil.saveImage(file, "openImg/user"));
 		userManageService.mergeUser(userManageDTO);
 		return new ApiResponse<>(true, "Success save", null);
 	}

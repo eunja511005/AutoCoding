@@ -50,7 +50,7 @@ public class FileUtil {
     	return file.getSize() <= maxSize;
     }
 
-    public String saveImage(MultipartFile file) throws IOException {
+    public String saveImage(MultipartFile file, String path) throws IOException {
         String originalFilename = file.getOriginalFilename();
         if (originalFilename == null) {
             throw new IllegalArgumentException("File name cannot be null");
@@ -77,7 +77,7 @@ public class FileUtil {
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
         String currentDate = now.format(dateTimeFormatter);
-        currentDate = "openImg/"+currentDate;
+        currentDate = path+"/"+currentDate;
 
         // 파일 저장
         String originalFileExtension = MimeTypeUtils.parseMimeType(mimeType).getSubtype();

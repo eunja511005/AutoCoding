@@ -73,7 +73,7 @@ public class ProjectController {
     public @ResponseBody ApiResponse<ProjectDTO> createProject(@RequestParam("file") MultipartFile file, 
     		ProjectDTO project) throws CustomException {
         try {
-        	project.setPicture(fileUtil.saveImage(file));
+        	project.setPicture(fileUtil.saveImage(file, "openImg/project"));
         	projectService.createProject(project);
             return new ApiResponse<>(true, "Created successfully.", null);
         } catch (Exception e) {
