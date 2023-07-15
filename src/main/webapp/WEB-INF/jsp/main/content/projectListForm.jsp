@@ -1,3 +1,10 @@
+<style>
+.card-img-top {
+  height: 200px; /* 원하는 세로 길이로 조정 */
+  object-fit: cover; /* 이미지 비율을 유지하면서 크기 조정 */
+}
+</style>
+
 		<div class="container my-5">
 
 			<!-- 페이지 제목 -->
