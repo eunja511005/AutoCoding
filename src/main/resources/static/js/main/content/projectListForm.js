@@ -37,7 +37,7 @@ function displayProjects(data) {
 		var card = $('<div class="card h-100"></div>');
 		var cardBody = $('<div class="card-body"></div>');
 		
-		var image = $('<img class="card-img-top">');
+		var image = $('<img class="card-img-top mb-3">');
 		image.attr('src', project.picture);
 		cardBody.append(image);
 
@@ -49,9 +49,11 @@ function displayProjects(data) {
 		var description = $('<p class="card-text">' + descriptionText + '</p>');
 		cardBody.append(description);
 		
+		var viewBtnWrapper = $('<div class="d-flex justify-content-center"></div>');
 		var viewBtn = $('<a class="btn btn-secondary a-btn-projectListForm">View Project</a>');
 		viewBtn.attr('data-project-id', project.id);
-		cardBody.append(viewBtn);
+		viewBtnWrapper.append(viewBtn);
+		cardBody.append(viewBtnWrapper);
 
 		card.append(cardBody);
 		col.append(card);
