@@ -45,7 +45,7 @@ function displayProjects(data) {
 		var title = $('<h5 class="card-title">' + titleText + '</h5>');
 		cardBody.append(title);
 
-		var descriptionText = project.description.length > 10 ? project.description.substring(0, 10) + '...' : project.description;
+		var descriptionText = project.description.length > 20 ? project.description.substring(0, 20) + '...' : project.description;
 		var description = $('<p class="card-text">' + descriptionText + '</p>');
 		cardBody.append(description);
 		
