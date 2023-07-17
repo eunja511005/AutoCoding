@@ -7,7 +7,8 @@ const MID_PAGES_DISPLAYED = 8; // 중간 페이지
     	
 $(document).ready(function(){
 	// 첫번째 페이지
-	$('#dynamic-content').load("/content1");
+	$('#dynamic-content').load("/initInit");
+	//$('#dynamic-content').load("/email/");
 	
 	// 로그인 여부를 체크합니다.
 	checkLoginStatus();
@@ -159,6 +160,9 @@ function initSelectBox(selectBoxId, url, includeAll, selectedValues) {
 
 
 function callAjax(url, method, data, successCallback){
+	
+	showLoadingBar();
+	
 	  // 입력값이 form 요소인 경우
 	  if (data instanceof FormData) {
 		// Convert FormData object to JSON object[(ex) var formData = new FormData(this);]
@@ -189,6 +193,9 @@ function callAjax(url, method, data, successCallback){
 	    data: data,
 	    contentType: 'application/json; charset=UTF-8',
 	    success: function(response) {
+	    	
+	    	hideLoadingBar();
+	    	
 			if (response.success) {
 				successCallback(response);
 		    } else {
@@ -201,6 +208,9 @@ function callAjax(url, method, data, successCallback){
 		    }
 		},
 		error: function(error) {
+			
+			hideLoadingBar();
+			
 	  	    swal({
 	    		  title: error.responseJSON.data,
 	    		  text: error.responseJSON.errorMessage,
@@ -305,4 +315,14 @@ function setInitialMonthValue(inputElement) {
 function handleCollapseClick() {
 	var $cardBody = $(this).parents('.card').find('.card-body');
 	$cardBody.slideToggle();
+}
+
+function showLoadingBar() {
+    // 로딩바 보이기
+    $(".spinner-border").removeClass("d-none");
+}
+
+function hideLoadingBar() {
+    // 로딩바 숨기기
+    $(".spinner-border").addClass("d-none");
 }
