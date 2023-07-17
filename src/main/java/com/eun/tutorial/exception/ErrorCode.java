@@ -10,6 +10,7 @@ public enum ErrorCode {
     NO_AUTHORIZATION(403,"NO AUTHORIZATION-403","You don't have access permission to the resource."),
     ACCESS_DENIED(403,"SPRING-403","SPRING SECURITY CUSTOMFORBIDEN"),
     NO_COMMON_CODE(501,"NO_COMMON_CODE-501","Failed to search the common code data."),
+    Fail_SEND_EMAIL(502,"Fail_SEND_EMAIL-502","Failed to send email."),
     ;
 
     private int status;
