@@ -10,27 +10,51 @@ $(document).ready(function() {
 
 	debugger;
 	
-	  // DOM이 로드된 후 자동으로 실행됩니다.
-	  document.addEventListener("DOMContentLoaded", function () {
-	    // 이미지 슬라이드 캐러셀 요소 가져오기
-	    const carouselElement = document.getElementById("carouselExampleInterval");
-
-	    // 캐러셀 시작
-	    const carousel = new bootstrap.Carousel(carouselElement, {
-	      interval: 3000, // 3초마다 이미지 변경
-	      pause: false, // 마우스 hover 시 자동 재생 멈춤 기능 해제
-	    });
-	  });	
-	
 	$('#dynamic-content').on('click', '.a-btn-projectListForm', function(event) {
 		  event.preventDefault();
 		  var id = $(this).data('project-id');
 		  loadDynamicContent("/project/inputForm/" + id);
 	});	
+	
+	$('#dynamic-content').on('click', '#submitButton', function(event) {
+		event.preventDefault();
+		
+		// Form 내용 가져오기
+		const name = document.getElementById('name').value;
+		const email = document.getElementById('email').value;
+		const phone = document.getElementById('phone').value;
+		const message = document.getElementById('message').value;
+
+		// 이메일 본문 생성
+		const mailBody = `Name: ${name}\nEmail: ${email}\nPhone: ${phone}\nMessage: ${message}`;
+
+		
+	    const data = {
+			to: 'ywbest.park@gmail.com',
+			subject: '[중요] AutoCoding 컨택 메일',
+			body: mailBody
+		};
+		
+		callAjax("/sendEmail", "POST", data, emailCallback);
+	});	
 
 	loadProjects();
 
 });
+
+function emailCallback(response){
+	swal({
+		title: "Success",
+		text: response.data,
+		icon: "success",
+		button: "OK",
+	});
+	
+    // 이메일 입력 필드 초기화
+    document.getElementById("email").value = "";
+    document.getElementById("phone").value = "";
+    document.getElementById("message").value = "";
+}
 
 function listCallback(data) {
 

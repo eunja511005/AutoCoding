@@ -141,6 +141,8 @@
 										<c:if test="${not empty project}">
 										  <button class="btn btn-danger btn-sm delete-button" data-id="${project.id}">삭제</button>
 										</c:if>
+										
+										<button class="btn btn-dark btn-sm list-button">목록</button>
 									</div>
 								</form>
 							</div>

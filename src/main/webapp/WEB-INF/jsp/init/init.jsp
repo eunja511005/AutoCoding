@@ -27,27 +27,41 @@
         <header class="masthead bg-primary text-white text-center">
             <div class="container d-flex align-items-center flex-column">
                 <!-- Masthead Avatar Image-->
-				<div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
-				  <div class="carousel-inner">
-				    <div class="carousel-item active">
-				      <img src="/openImg/project/20230716/71eeb025-5923-4c16-a93c-75cc76f891f5.jpeg" class="d-block w-100" alt="...">
-				    </div>
-				    <div class="carousel-item">
-				      <img src="/openImg/20230715/c332de74-9618-48fd-8d29-169f283ec744.jpeg" class="d-block w-100" alt="...">
-				    </div>
-				    <div class="carousel-item">
-				      <img src="/openImg/20230715/f298f279-af68-40b0-9252-765ccdfbb9eb.jpeg" class="d-block w-100" alt="...">
-				    </div>
-				  </div>
-				  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">
-				    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-				    <span class="visually-hidden">Previous</span>
-				  </button>
-				  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="next">
-				    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-				    <span class="visually-hidden">Next</span>
-				  </button>
-				</div>
+<!-- <div id="carouselExampleSlidesOnly" class="carousel slide my-5" data-bs-ride="carousel">
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img src="/openImg/project/20230716/71eeb025-5923-4c16-a93c-75cc76f891f5.jpeg" class="d-block w-100" alt="...">
+    </div>
+    <div class="carousel-item">
+      <img src="/openImg/20230715/c332de74-9618-48fd-8d29-169f283ec744.jpeg" class="d-block w-100" alt="...">
+    </div>
+    <div class="carousel-item">
+      <img src="/openImg/20230715/f298f279-af68-40b0-9252-765ccdfbb9eb.jpeg" class="d-block w-100" alt="...">
+    </div>
+  </div>
+</div>   -->
+
+<div id="carouselExampleAutoplaying" class="carousel slide my-5" data-bs-ride="carousel">
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img src="/openImg/project/20230716/71eeb025-5923-4c16-a93c-75cc76f891f5.jpeg" class="d-block w-100" alt="...">
+    </div>
+    <div class="carousel-item">
+      <img src="/openImg/20230715/c332de74-9618-48fd-8d29-169f283ec744.jpeg" class="d-block w-100" alt="...">
+    </div>
+    <div class="carousel-item">
+      <img src="/openImg/20230715/f298f279-af68-40b0-9252-765ccdfbb9eb.jpeg" class="d-block w-100" alt="...">
+    </div>
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+</div>              
 
 
 
@@ -154,28 +168,12 @@
                             <!-- Message input-->
                             <div class="form-floating mb-3">
                                 <textarea class="form-control" id="message" type="text" placeholder="Enter your message here..." style="height: 10rem" data-sb-validations="required"></textarea>
-                                <label for="message">Message</label>
+                                <label for="message">안녕하세요.<br>같이 일해 보고 싶습니다.</label>
                                 <div class="invalid-feedback" data-sb-feedback="message:required">A message is required.</div>
                             </div>
-                            <!-- Submit success message-->
-                            <!---->
-                            <!-- This is what your users will see when the form-->
-                            <!-- has successfully submitted-->
-                            <div class="d-none" id="submitSuccessMessage">
-                                <div class="text-center mb-3">
-                                    <div class="fw-bolder">Form submission successful!</div>
-                                    To activate this form, sign up at
-                                    <br />
-                                    <a href="https://startbootstrap.com/solution/contact-forms">https://startbootstrap.com/solution/contact-forms</a>
-                                </div>
-                            </div>
-                            <!-- Submit error message-->
-                            <!---->
-                            <!-- This is what your users will see when there is-->
-                            <!-- an error submitting the form-->
-                            <div class="d-none" id="submitErrorMessage"><div class="text-center text-danger mb-3">Error sending message!</div></div>
-                            <!-- Submit Button-->
-                            <button class="btn btn-primary btn-xl disabled" id="submitButton" type="submit">Send</button>
+                            <button class="btn btn-primary btn-xl" id="submitButton" type="submit">Send 
+                            	<span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                            </button>
                         </form>
                     </div>
                 </div>
