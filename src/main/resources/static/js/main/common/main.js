@@ -4,6 +4,10 @@ var csrftoken = $("meta[name='_csrf']").attr("content");
 // 카드 리스트 페이징 CBO 처리를 위한 변수
 const MAX_PAGES_DISPLAYED = 10; // 10개 페이지씩 보여줌
 const MID_PAGES_DISPLAYED = 8; // 중간 페이지
+
+// 로딩바 타임아웃 설정
+const LOADING_TIMEOUT = 5000; // 타임아웃 시간 (10초)
+let loadingTimer; // 타임아웃 타이머
     	
 $(document).ready(function(){
 	// 첫번째 페이지
@@ -161,7 +165,7 @@ function initSelectBox(selectBoxId, url, includeAll, selectedValues) {
 
 function callAjax(url, method, data, successCallback){
 	
-	showLoadingBar();
+	//showLoadingBar();
 	
 	  // 입력값이 form 요소인 경우
 	  if (data instanceof FormData) {
@@ -194,7 +198,7 @@ function callAjax(url, method, data, successCallback){
 	    contentType: 'application/json; charset=UTF-8',
 	    success: function(response) {
 	    	
-	    	hideLoadingBar();
+	    	//hideLoadingBar();
 	    	
 			if (response.success) {
 				successCallback(response);
@@ -209,7 +213,7 @@ function callAjax(url, method, data, successCallback){
 		},
 		error: function(error) {
 			
-			hideLoadingBar();
+			//hideLoadingBar();
 			
 	  	    swal({
 	    		  title: error.responseJSON.data,
@@ -317,7 +321,7 @@ function handleCollapseClick() {
 	$cardBody.slideToggle();
 }
 
-function showLoadingBar() {
+/*function showLoadingBar() {
     // 로딩바 보이기
     $(".spinner-border").removeClass("d-none");
 }
@@ -325,4 +329,18 @@ function showLoadingBar() {
 function hideLoadingBar() {
     // 로딩바 숨기기
     $(".spinner-border").addClass("d-none");
+}*/
+
+// 로딩바 표시 함수
+function showLoadingBar() {
+  var loadingContainer = document.getElementById('loadingContainer');
+  loadingContainer.style.display = 'flex';
+  loadingTimer = setTimeout(hideLoadingBar, LOADING_TIMEOUT);
+}
+
+// 로딩바 숨김 함수
+function hideLoadingBar() {
+  var loadingContainer = document.getElementById('loadingContainer');
+  loadingContainer.style.display = 'none';
+  clearTimeout(loadingTimer); // 타임아웃 타이머 제거
 }

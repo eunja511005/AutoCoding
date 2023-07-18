@@ -72,10 +72,13 @@ function deleteFile(index) {
 function sendEmail(event) {
 	event.preventDefault();
 	
+	showLoadingBar();
+	
     var files = $('#fileInput').prop('files');
 
     if (files.length === 0) {
         alert('Please select files to upload.');
+        hideLoadingBar();
         return;
     }
 
@@ -100,11 +103,10 @@ function sendEmail(event) {
       data: formData,
       processData: false,
       contentType: false,
-      success: function emailCallback() {
-        // 성공 처리
-      },
+      success: emailCallback,
       error: function (error) {
-        // 에러 처리
+    	  // 에러 처리
+    	  hideLoadingBar();
       },
     });
 	
@@ -113,6 +115,8 @@ function sendEmail(event) {
 }
 
 function emailCallback(response){
+	hideLoadingBar();
+	
 	swal({
 		title: "Success",
 		text: response.data,
@@ -124,5 +128,6 @@ function emailCallback(response){
     document.getElementById("to").value = "";
     document.getElementById("subject").value = "";
     document.getElementById("body").value = "";
+    
 }
 

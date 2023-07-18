@@ -11,6 +11,24 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
+        
+		<style type="text/css">
+			/* 로딩바를 감싸는 컨테이너 스타일 */
+			.loading-container {
+			  position: fixed;
+			  top: 0;
+			  left: 0;
+			  width: 100%;
+			  height: 100%;
+			  background-color: rgba(255, 255, 255, 0.7);
+			  display: flex;
+			  align-items: center;
+			  justify-content: center;
+			  z-index: 9999;
+			  display: none; /* 초기에는 보이지 않도록 설정 */
+			}
+		</style>        
+        
         <!-- Favicon-->
     	<link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
         <title>Auto Coding Main</title>
@@ -28,6 +46,12 @@
 	<body class="sb-nav-fixed">
     <%-- Top Menu --%>
     <%@ include file="/WEB-INF/jsp/main/common/nav.jsp" %>
+    
+	<!-- 로딩바를 감싸는 컨테이너 -->
+	<div id="loadingContainer" class="loading-container">
+	  <!-- GIF 파일을 표시하는 이미지 태그 -->
+	  <img src="/assets/img/1488.gif" alt="Loading...">
+	</div>
     
     <div id="layoutSidenav">
     	<%-- Left Menu --%>

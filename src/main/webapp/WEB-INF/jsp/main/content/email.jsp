@@ -35,12 +35,6 @@
 		          <textarea type="text" class="form-control" id="body" name="body" rows="10" required></textarea>
 		        </div>
 		      </div>
-		      <div class="row mt-3">
-		        <div class="col text-end">
-		          <button class="btn btn-primary" id="sendEmailButton"><i class="fas fa-envelope"></i> Send Email 
-		          <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span></button>
-		        </div>	        
-		      </div>	
 	    </form>
 	  </div>
 	</div>
@@ -65,7 +59,14 @@
 		                
 		    </div>
 		</div>
-    </div>	  	
+    </div>	 
+    
+	<div class="row mt-3">
+		<div class="col text-end">
+			<button class="btn btn-primary" id="sendEmailButton"><i class="fas fa-envelope"></i> Send Email 
+			<span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span></button>
+		</div>	        
+	</div> 	
 	
 	
 </div>
