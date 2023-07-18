@@ -12,6 +12,7 @@
 var csrfheader = $("meta[name='_csrf_header']").attr("content");
 var csrftoken = $("meta[name='_csrf']").attr("content");
 var table;
+var selectedFiles = [];
 
 $(document).ready(function() {
 	
@@ -19,18 +20,95 @@ $(document).ready(function() {
 	
 	// 카드 헤더 클릭시 바디 토글
 	$('.card-header').on('click', handleCollapseClick);
+	
+    // 파일 선택시 선택한 파일 리스트 제목 보여주기
+    $('#fileInput').on('change', function(event) {
+        var fileList = event.target.files;
+        displayFileList(fileList);
+    });
+
+    // 파일 삭제 버튼 클릭 이벤트 처리
+    $(document).on('click', '.delete-button', function() {
+        var index = $(this).data('index');
+        deleteFile(index);
+    });
 });
+
+function displayFileList(fileList) {
+    var listContainer = $('#fileList');
+    listContainer.empty(); // 기존 목록 초기화
+    selectedFiles = []; // 선택된 파일 배열 초기화
+
+    for (var i = 0; i < fileList.length; i++) {
+        var fileName = fileList[i].name;
+        selectedFiles.push(fileList[i]); // 선택된 파일 배열에 추가
+
+        var listItem = $('<li>', {
+            class: 'list-group-item',
+            'data-index': i // 파일의 인덱스를 data 속성으로 저장
+        });
+
+        var fileNameSpan = $('<span>', {
+            text: fileName
+        });
+
+        var deleteButton = $('<button>', {
+            text: 'Delete',
+            class: 'btn btn-danger btn-sm float-end delete-button',
+            'data-index': i // 삭제 버튼의 인덱스를 data 속성으로 저장
+        });
+
+        listItem.append(fileNameSpan);
+        listItem.append(deleteButton);
+        listContainer.append(listItem);
+    }
+}
+
+function deleteFile(index) {
+    selectedFiles.splice(index, 1); // 선택된 파일 배열에서 해당 인덱스의 파일 삭제
+    $('[data-index="' + index + '"]').remove(); // 해당 파일 목록 항목 삭제
+}
 
 function sendEmail(event) {
 	event.preventDefault();
 	
-    const data = {
-		to: document.getElementById("to").value,
-		subject: document.getElementById("subject").value,
-		body: document.getElementById("body").value
-	};
+    var files = $('#fileInput').prop('files');
+
+    if (files.length === 0) {
+        alert('Please select files to upload.');
+        return;
+    }
+
+    var formData = new FormData();
+    for (var i = 0; i < files.length; i++) {
+      formData.append('files', files[i]);
+    }
 	
-	callAjax("/sendEmail", "POST", data, emailCallback);
+    // 추가 필드 추가
+    formData.append('to', document.getElementById('to').value);
+    formData.append('subject', document.getElementById('subject').value);
+    formData.append('body', document.getElementById('body').value);
+
+    // formData를 서버로 전송하는 코드를 작성하세요
+    // 예: jQuery를 사용하는 경우 아래와 같이 사용할 수 있습니다.
+    $.ajax({
+      url: '/sendEmail',
+      type: 'POST',
+	  beforeSend: function(xhr) {
+		  xhr.setRequestHeader(csrfheader, csrftoken);
+	  },       
+      data: formData,
+      processData: false,
+      contentType: false,
+      success: function emailCallback() {
+        // 성공 처리
+      },
+      error: function (error) {
+        // 에러 처리
+      },
+    });
+	
+	//callAjax("/sendEmail", "POST", data, emailCallback);
 	
 }
 

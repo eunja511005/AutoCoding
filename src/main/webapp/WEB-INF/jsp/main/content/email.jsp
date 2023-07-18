@@ -44,6 +44,30 @@
 	    </form>
 	  </div>
 	</div>
+	
+    <div class="card mb-4">
+		<div class="card-body">
+		    <div class="container mt-5">
+		        <div class="mb-3">
+		        	<div class="row">
+		            	<div class="col">
+		                	<div class="form-group">
+		                    	<input type="file" class="form-control-file" id="fileInput" name="file" multiple>
+		                	</div>
+		               </div>
+		        	</div>
+		        </div>
+		        
+		        <div class="border p-3">
+		            <h4>Selected Files</h4>
+		            <ul class="list-group" id="fileList"></ul>
+		        </div>
+		                
+		    </div>
+		</div>
+    </div>	  	
+	
+	
 </div>
 
 <script src="/js/main/content/email.js"></script>
