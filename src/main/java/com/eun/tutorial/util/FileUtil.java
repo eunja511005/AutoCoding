@@ -24,18 +24,7 @@ public class FileUtil {
     @Value("${spring.servlet.multipart.max-file-size}")
     private long maxSize;
 
-    private static final String[] ALLOWED_IMAGE_TYPES = {"image/jpeg", "image/png", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/vnd.ms-excel"};
-
-    public boolean isAllowedImageType(String contentType) {
-        for (String allowedType : ALLOWED_IMAGE_TYPES) {
-            if (allowedType.equals(contentType)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private static final String[] ALLOWED_MIME_TYPES = {"image/jpeg", "image/png", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/vnd.ms-excel", "application/x-tika-msoffice"};
+    private static final String[] ALLOWED_MIME_TYPES = {"image/jpeg", "image/png", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/vnd.ms-excel", "application/x-tika-msoffice", "text/plain"};
 
     public boolean isAllowedMimeType(String mimeType) {
         for (String allowedType : ALLOWED_MIME_TYPES) {
@@ -54,12 +43,6 @@ public class FileUtil {
         String originalFilename = file.getOriginalFilename();
         if (originalFilename == null) {
             throw new IllegalArgumentException("File name cannot be null");
-        }
-
-        // 파일 타입 체크
-        String contentType = file.getContentType();
-        if (!isAllowedImageType(contentType)) {
-            throw new IllegalArgumentException("File type not allowed: " + contentType);
         }
 
         // mimeType 체크

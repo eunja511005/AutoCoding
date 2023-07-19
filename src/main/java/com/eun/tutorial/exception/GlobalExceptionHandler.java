@@ -25,12 +25,20 @@ public class GlobalExceptionHandler {
 			e = customEx.getException();
 			
 			e.printStackTrace();
-			exceptionUtils.saveErrorLog(org.apache.tika.utils.ExceptionUtils.getStackTrace(e.getCause()));
+			if(e.getCause()==null) {
+				exceptionUtils.saveErrorLog(org.apache.tika.utils.ExceptionUtils.getStackTrace(e));
+			}else {
+				exceptionUtils.saveErrorLog(org.apache.tika.utils.ExceptionUtils.getStackTrace(e.getCause()));
+			}
 			
 			if (errorCode == 403) {
 				ApiResponse<ErrorCode> apiResponse = new ApiResponse<>(false, ErrorCode.NO_AUTHORIZATION.getMessage(),
 						ErrorCode.NO_AUTHORIZATION);
 				return new ResponseEntity<>(apiResponse, HttpStatus.FORBIDDEN);
+			}else if (errorCode == 502) {
+				ApiResponse<ErrorCode> apiResponse = new ApiResponse<>(false, ErrorCode.Fail_SEND_EMAIL.getMessage(),
+						ErrorCode.Fail_SEND_EMAIL);
+				return new ResponseEntity<>(apiResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 		} else {
 			e.printStackTrace();

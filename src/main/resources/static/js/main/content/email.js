@@ -15,7 +15,7 @@ var table;
 var selectedFiles = [];
 
 $(document).ready(function() {
-	
+	debugger;
 	$('#sendEmailButton').on('click', sendEmail);
 	
 	// 카드 헤더 클릭시 바디 토글
@@ -107,6 +107,13 @@ function sendEmail(event) {
       error: function (error) {
     	  // 에러 처리
     	  hideLoadingBar();
+    	  
+	  	  swal({
+	    	title: error.responseJSON.data,
+	    	text: error.responseJSON.errorMessage,
+	    	icon: "warning",
+	    	button: "OK",
+	  	  })
       },
     });
 	

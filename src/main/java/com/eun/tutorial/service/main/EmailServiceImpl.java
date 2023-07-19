@@ -39,7 +39,7 @@ public class EmailServiceImpl implements EmailService{
 	        filePaths.add(fileUtil.saveImage(file, "openImg/email"));
 	    }
 	    
-		emailUtils.sendEmailWithAttachments(emailRequest.getTo(), emailRequest.getSubject(), emailRequest.getBody(), filePaths);
+		emailUtils.sendEmailWithAttachments(emailRequest.getTo(), emailRequest.getSubject(), emailRequest.getBody(), filePaths, fileNames);
     	return "Email sent successfully!";
 	}
 }

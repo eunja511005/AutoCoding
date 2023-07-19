@@ -69,7 +69,7 @@ public class EmailUtils {
     }
     
     // 이메일 발송을 위한 메서드 (여러 개의 파일 첨부 가능)
-    public void sendEmailWithAttachments(String to, String subject, String body, List<String> filePaths) throws MessagingException {
+    public void sendEmailWithAttachments(String to, String subject, String body, List<String> filePaths, List<String> fileNames) throws MessagingException {
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
@@ -78,9 +78,9 @@ public class EmailUtils {
         helper.setText(body);
 
         // 여러 개의 파일 첨부
-        for (String filePath : filePaths) {
-            FileSystemResource file = new FileSystemResource(multiPathPath+filePath);
-            helper.addAttachment(file.getFilename(), file);
+        for (int i = 0; i < filePaths.size(); i++) {
+            FileSystemResource file = new FileSystemResource(multiPathPath + filePaths.get(i));
+            helper.addAttachment(fileNames.get(i), file);
         }
 
         javaMailSender.send(message);
