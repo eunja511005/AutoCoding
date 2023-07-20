@@ -13,7 +13,7 @@ $(document).ready(function() {
     	$('#submitButton').prop('disabled', true);
     	
         event.preventDefault();
-
+        
         var fileInput = $('input[type=file]')[0];
         var file = fileInput.files[0];
 
@@ -29,6 +29,15 @@ $(document).ready(function() {
             var form = document.getElementById('uploadForm'); //id of form
             var formData = new FormData(form);
             formData.set('file', compressedFile, compressedFile.name);
+            
+            // 민감 정보(패스워드) 암호화
+            debugger;
+            var publicKey = $('#publicKeyString').val();
+            var encrypt = new JSEncrypt();
+            encrypt.setPublicKey(publicKey);
+            var dataToEncrypt = document.getElementById('password').value;
+            var encryptedData = encrypt.encrypt(dataToEncrypt);
+            formData.set('password', encryptedData);
 
             $.ajax({
                 url: '/join',
@@ -74,8 +83,8 @@ function compressImage(file) {
                 // Calculate the new width and height of the image
                 var width = img.width;
                 var height = img.height;
-                var maxWidth = 800;
-                var maxHeight = 800;
+                var maxWidth = 50;
+                var maxHeight = 50;
                 if (width > height) {
                     if (width > maxWidth) {
                         height *= maxWidth / width;
@@ -96,7 +105,7 @@ function compressImage(file) {
                 // Convert the canvas image to a Blob object and resolve the Promise
                 canvas.toBlob(function(blob) {
                     resolve(new File([blob], file.name, { type: file.type, lastModified: Date.now() }));
-                }, file.type, 0.5);
+                }, file.type, 1);
             };
         };
         reader.onerror = function(error) {

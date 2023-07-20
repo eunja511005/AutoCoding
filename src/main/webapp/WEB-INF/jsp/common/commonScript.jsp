@@ -51,5 +51,9 @@
 <!-- DataTable -->
 <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
 
+<!-- JSEncrypt 라이브러리 로드 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsencrypt/3.1.0/jsencrypt.min.js"></script>
+
+
 <!-- nav's javascript 
 <script type="text/javascript" src="/js/init/nav.js"></script>-->

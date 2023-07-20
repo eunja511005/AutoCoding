@@ -2,6 +2,8 @@ package com.eun.tutorial.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.GeneralSecurityException;
+import java.security.PrivateKey;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -43,6 +45,7 @@ import com.eun.tutorial.service.UserService;
 import com.eun.tutorial.service.ZthhFileAttachService;
 import com.eun.tutorial.service.user.PrincipalDetails;
 import com.eun.tutorial.util.AuthUtils;
+import com.eun.tutorial.util.EncryptionUtils;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -60,6 +63,7 @@ public class MyWebInitController {
     private final BCryptPasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
     private final LogoutHandler logoutHandler;
+    private final EncryptionUtils encryptionUtils;
     
     @Value("${spring.servlet.multipart.location}")
     private String multiPathPath;
@@ -128,6 +132,7 @@ public class MyWebInitController {
 		logger.debug("request url : /joinInit");
 		
         ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("publicKey", "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA5HGkxvPg1NVA4Rb5wsyPnQs+6AmMIGeFLE4edLGjWuvWZVuck6tIZCmMaWs6GWho/vcyTO/lC4UaRUm3egIE5duHytVZPe14kpSWyV9ilmUEMu/5SqLFlCpxGp/gOel1+aE6/fr1sjxoMUGvZuiQe222el1O/SSukhMIRnGDHBQTMoKwd0imv7keMyxKCGKfMJD9VEc4EbZ8e/at3chPZhKmJSjdAGQc3sGAo384vdpBNdTr/YHm8rQ/82fUDoxouvS7xlenDdRRgFrdmxWC2E24L8n9vSyU4zjRvvRlJ/NNW08xpCCWdEk8RU4sNCbW/v7Q8doDB4XAD92i35l4UQIDAQAB");
         modelAndView.setViewName("join4");
 
         return modelAndView;
@@ -135,9 +140,20 @@ public class MyWebInitController {
 	
     @PostMapping("/join")
     public @ResponseBody Map<String, Object> join(MultipartHttpServletRequest multipartFiles, 
-    		UserInfoDTO userInfoDTO) throws IOException {
+    		UserInfoDTO userInfoDTO) throws IOException, GeneralSecurityException {
     	
     	logger.debug("request url : /join");
+    	
+    	//민감 정보(패스워드) 복호화
+    	String encryptedDataStr = userInfoDTO.getPassword();
+
+		// 비밀키를 사용하여 암호화된 데이터를 복호화 (AES-CBC 알고리즘 사용)
+    	String privateKey = "MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDkcaTG8+DU1UDhFvnCzI+dCz7oCYwgZ4UsTh50saNa69ZlW5yTq0hkKYxpazoZaGj+9zJM7+ULhRpFSbd6AgTl24fK1Vk97XiSlJbJX2KWZQQy7/lKosWUKnEan+A56XX5oTr9+vWyPGgxQa9m6JB7bbZ6XU79JK6SEwhGcYMcFBMygrB3SKa/uR4zLEoIYp8wkP1URzgRtnx79q3dyE9mEqYlKN0AZBzewYCjfzi92kE11Ov9gebytD/zZ9QOjGi69LvGV6cN1FGAWt2bFYLYTbgvyf29LJTjONG+9GUn801bTzGkIJZ0STxFTiw0Jtb+/tDx2gMHhcAP3aLfmXhRAgMBAAECggEAT7Re+5OHtHqbYm2zwwXAbdjIoAkEvSGhU24GLkz0Y/q5GTA3l0ZBwcDFXtqssMS/LYZuJG3nCnfsTJSF0an2r4RDAsAhnPvH/8ycN7JyIWspZeRYpHPaX/HW+KUjhNEx+mEIxijTpNZyvAzg+BTYpFgJPPRlZOlxh0Hgt0NPrXGiv5AGsZKHeMNR6ZmgIGRT38BwQat4e3azvqNGV89axfuWOktJByyWYT4A9P/Euse3zK93p1Q2vyATwBgnX3CT64xdShaUXaxuBmezoWF3gEXNoh2rVkDsD2IKZG1AF+t6CLJomeZwEfJnZYPtX5z42EUJobTw9AZWCXsZ5g3wiQKBgQDniOOaifJ88H6finbhaVksC10aMTxa57DBkPhCC7GKeWt651cbQBu68zoACi4SSgaBT302k/pEw1BAqslmAJkjJrdW4SP6gYJUzNyIkENHw86t5b8+fQqqhHdgHsvx5Mdr9eVlvyoyX/gZKN/tHgoD/VZdEgSpEP57DEW/DiDcvwKBgQD8lSWnlk9pbmCNbU9DNIQsdHyi9k7Asb7NpPy1XS/uOLCdniFA7b3OvmgQDIMhc/qXkYhRAChhR7LIT6DgY566tOfT1tm5FZ1tRn7eg0vwrTZ+TLEko6i1L/Tm0QrSGVOrnDjm0+N+NKrG54zHOxOpO5XvpS8iG7S5KO3m5TMe7wKBgQC3wKBCCbD1DzivDYkDpEQs/GfLXb/0tWRGevNMF1Oz/mEajXdIHTzkxhwF5A5kXXOENL2/DvnUkN2kNObZmSfwCc3/mXagXSA+hMeRaky7K99fi7KXuU05vx+unUJmm5bZS7HfajPm/ts7vIDbArgYKnrcKmygcOhGZ5sC4geaqQKBgQDMKgrL0fXStQOajdbZ7eNAw8/TMeEqZQJj247hUrfhiTVJ0n3yq7kXGlWnU1XTfpn6Vgqn3sbFC116CNNzTVMKfBw/4ZUPxGcB40+9sMd7fadko700bo16F4+P2z0x4oL9XkOoYXGrnArGyHfEuv4Dd0SU9yKIIXkNigXy8yVFRQKBgE3ooHkxRnuyG8zzXOGNdhyRFL41NBMdSQaWMVhO8g8WBW3apVbyytknc0JAFUnxEsJjsgLIugHx+rtr1wmsYzHXpSH6coS3jFR/iAStkSrCcNuB+FQi70vkrtUcptmWkRXU29SACVZhApZskLBcFZUXDpTaAKYz+M60Y04v+0we";
+        String decryptedData = encryptionUtils.decryptWithPrivateKey(encryptedDataStr, privateKey);
+
+        logger.info("decryptedData : {}", decryptedData);
+        
+        userInfoDTO.setPassword(decryptedData);
     	
     	Map<String, Object> res = new HashMap<>();
     	

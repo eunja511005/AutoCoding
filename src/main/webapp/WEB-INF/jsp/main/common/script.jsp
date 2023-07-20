@@ -19,3 +19,7 @@
     
     <!-- 카카오 지도 -->
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=7958aa3f959496831caffb4f1575bf92"></script>
+    
+    <!-- 민감정보 암호화 -->
+    <!-- JSEncrypt 라이브러리 로드 -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jsencrypt/3.1.0/jsencrypt.min.js"></script>

@@ -80,11 +80,11 @@
 }
 </style>
 
-
 <!-- Custom styles for this template -->
-<link href="checkout.css" rel="stylesheet">
 </head>
 <body class="bg-body-tertiary">
+
+	<input type="hidden" id="publicKeyString" value="${publicKey}">
 
 	<div class="container my-4">
 		<main>
