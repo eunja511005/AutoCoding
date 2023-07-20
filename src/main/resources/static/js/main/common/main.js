@@ -187,42 +187,41 @@ function callAjax(url, method, data, successCallback){
 		  data = JSON.stringify(data);
 	  }
 	  
-	  // AJAX 호출 수행
-	  $.ajax({
-	    url: url,
-	    type: method,
-	    beforeSend: function(xhr) {
+	  var ajaxOptions = {
+		url: url,
+		type: method,
+		beforeSend: function(xhr) {
 			xhr.setRequestHeader(csrfheader, csrftoken);
 		},
-	    data: data,
-	    contentType: 'application/json; charset=UTF-8',
-	    success: function(response) {
-	    	
-	    	//hideLoadingBar();
-	    	
+		contentType: 'application/json; charset=UTF-8',
+		success: function(response) {
 			if (response.success) {
 				successCallback(response);
-		    } else {
-		    	swal({
-		      		  title: "Application Error",
-		      		  text: response.errorMessage,
-		      		  icon: "warning",
-		      		  button: "OK",
-		      	})
-		    }
+			} else {
+				swal({
+					title: "Application Error",
+					text: response.errorMessage,
+					icon: "warning",
+					button: "OK",
+				});
+			}
 		},
 		error: function(error) {
-			
-			//hideLoadingBar();
-			
-	  	    swal({
-	    		  title: error.responseJSON.data,
-	    		  text: error.responseJSON.errorMessage,
-	    		  icon: "warning",
-	    		  button: "OK",
-	    	})
+			swal({
+				title: error.responseJSON.data,
+				text: error.responseJSON.errorMessage,
+				icon: "warning",
+			 	button: "OK",
+			});
 		},
-	  });
+	};
+
+	// data가 존재하면서 비어있지 않을 때만 data 필드 추가
+	if (!isBlank(data)) {
+		ajaxOptions.data = data;
+	}
+
+	$.ajax(ajaxOptions);
 }
 
 function loadNav(){
@@ -343,4 +342,9 @@ function hideLoadingBar() {
   var loadingContainer = document.getElementById('loadingContainer');
   loadingContainer.style.display = 'none';
   clearTimeout(loadingTimer); // 타임아웃 타이머 제거
+}
+
+//null, 빈 문자열, undefined 체크하는 공통 메서드
+function isBlank(data) {
+  return data === null || data === "" || data === "null" || typeof data === "undefined";
 }
