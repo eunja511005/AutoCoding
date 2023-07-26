@@ -17,8 +17,6 @@
 	/* Custom styles for buttons */
 	.btn-custom {
 	    background-color: #c0c0c0; /* 기본 배경색 (회색 계통) */
-	    background-image: linear-gradient(to bottom, #c0c0c0, #a0a0a0); /* 그라데이션 효과 */
-	    box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.2); /* 그림자 효과 */
 	    border-radius: 5px; /* 라운드 모서리 */
 	    color: #ffffff; /* 텍스트 색상 (흰색) */
 	}
@@ -76,27 +74,30 @@
 	        <div>
 	            <i class="fas fa-border-all"></i> <fmt:message key="table.list" />
 	        </div>
-		    <div>
-		        <!-- 우측 정렬된 버튼 추가 -->
-		        <button class="btn btn-custom mr-2" id="addRowButton">
-		            <i class="fas fa-plus"></i> <fmt:message key="table.add" />
-		        </button>
-		        <button class="btn btn-custom mr-2" id="editRowButton">
-		            <i class="fas fa-edit"></i> <fmt:message key="table.edit" />
-		        </button>
-		        <button class="btn btn-custom mr-2" id="deleteRowsButton">
-		            <i class="fas fa-trash-alt"></i> <fmt:message key="table.delete" />
-		        </button>
-		        <button class="btn btn-custom" id="saveRowsButton">
-		            <i class="fas fa-save"></i> <fmt:message key="table.save" />
-		        </button>
-		    </div>
 	    </div>
 		<div class="card-body" style="width:100%">
+			<div class="row">
+			    <div class="col text-end">
+			        <!-- 우측 정렬된 버튼 추가 -->
+			        <button class="btn btn-custom mr-2" id="addRowButton">
+			            <i class="fas fa-plus"></i> <fmt:message key="table.add" />
+			        </button>
+			        <button class="btn btn-custom mr-2" id="editRowButton">
+			            <i class="fas fa-edit"></i> <fmt:message key="table.edit" />
+			        </button>
+			        <button class="btn btn-custom mr-2" id="deleteRowsButton">
+			            <i class="fas fa-trash-alt"></i> <fmt:message key="table.delete" />
+			        </button>
+			        <button class="btn btn-custom" id="saveRowsButton">
+			            <i class="fas fa-save"></i> <fmt:message key="table.save" />
+			        </button>
+			    </div>		
+			</div>
 			<table id="dataTable" class="table table-hover" style="width:100%">
 				<thead>
 					<tr>
-						<th><fmt:message key="field.label.checkBox" /></th>
+						<th><input type="checkbox" class="form-check-input" id="selectAllCheckBox"></th>
+						<th><fmt:message key="field.label.no" /></th>
 						<th><fmt:message key="field.label.Name" /></th>
 						<th><fmt:message key="field.label.Age" /></th>
 						<th><fmt:message key="field.label.email" /></th>

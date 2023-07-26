@@ -15,6 +15,7 @@ var csrftoken = $("meta[name='_csrf']").attr("content");
 var table;
 var newRowId = 0; // 새로 추가된 행의 ID를 관리하기 위한 변수
 var rowDataArray = []; //서버에서 받아온 데이터와 임시로 추가된 데이터를 저장할 배열 변수
+var deletedRowData = [];
 var columnDefinitions;
 
 $(document).ready(function() {
@@ -23,6 +24,7 @@ $(document).ready(function() {
 	// 컬럼 정보를 별도의 변수로 정의
 	columnDefinitions = [
 		{ data: null, name: "", searchable: true, orderable: false, search: { value: "", regex: false } },
+		{ data: "no", name: "", searchable: true, orderable: false, search: { value: "", regex: false } },
 	    { data: "BIZPLC_NM", name: "", searchable: true, orderable: true, search: { value: "", regex: false } },
 	    { data: "BSN_STATE_NM", name: "", searchable: true, orderable: true, search: { value: "", regex: false } },
 	    { data: "REFINE_ROADNM_ADDR", name: "", searchable: true, orderable: true, search: { value: "", regex: false } }
@@ -37,7 +39,8 @@ $(document).ready(function() {
 	$('#editRowButton').on('click', editRow);
 	$('#deleteRowsButton').on('click', deleteRows);
 	$('#saveRowsButton').on('click', saveRows);
-	
+	$('#selectAllCheckBox').on('click', toggleAllCheckbox);
+	$('#dataTable').on('blur', ':input:not(:checkbox)', temporarySave);
 	$('#searchButton').on('click', function(event) {
 		event.preventDefault();
 		searchDataTable();
@@ -110,17 +113,23 @@ function drawTable() {
             },
             // 각 데이터 필드에 input 필드 추가 (숨겨둠)
             {
-                targets: [1, 2, 3],
+                targets: [1],
                 render: function(data, type, row, meta) {
-                    if (row.editing) {
-                        // Render editable input fields when the row is in edit mode
-                        return '<input type="text" class="form-control" value="' + data + '">';
-                    } else {
-                        // Render non-editable input fields for other rows
-                        return '<input type="text" class="form-control" value="' + data + '" readonly>';
-                    }
+                	return '<span>' + (meta.row + 1) + '</span>';
                 }
-            }            
+            },            
+            {
+            	targets: [2, 3, 4],
+            	render: function(data, type, row, meta) {
+            		if (row.editing) {
+            			// Render editable input fields when the row is in edit mode
+            			return '<input type="text" class="form-control" value="' + data + '">';
+            		} else {
+            			// Render non-editable input fields for other rows
+            			return '<span>' + data + '</span>';
+            		}
+            	}
+            },            
         ]
     });
 }
@@ -176,6 +185,7 @@ function addRow(event) {
 
     var newRowData = {
         id: 'new_' + newRowId++, // 새로운 행에 고유한 ID 부여
+        no:'',
         BIZPLC_NM: '', // 빈 값으로 초기화
         BSN_STATE_NM: '', // 빈 값으로 초기화
         REFINE_ROADNM_ADDR: '', // 빈 값으로 초기화
@@ -190,12 +200,32 @@ function addRow(event) {
     drawTable();
 }
 
+function temporarySave() {
+	  var cell = $(this).closest('td');
+	  var row = cell.parent();
+	  var rowId = row.index();
+
+	  var rowData = rowDataArray[rowId] || {}; // 기존 데이터 가져오거나 빈 객체 생성
+
+	  // columnDefinitions에 따라 각 열의 데이터를 추출하여 rowData 객체에 업데이트
+	  $.each(columnDefinitions, function(index, column) {
+	    var columnName = column.data;
+	    var cellData = row.find('td').eq(index).find(':input').val();
+	    
+	    
+	    if (columnName !== null && typeof cellData !== 'undefined') {
+	    	rowData[columnName] = cellData;
+	    }
+	    
+	  });
+
+}
+
 
 function editRow(event) {
     event.stopPropagation();
 
     var selectedRowsData = [];
-    var checkedRowCount = 0; 
 
     $('#dataTable tbody input[type="checkbox"]').each(function () {
         var checkbox = $(this);
@@ -204,32 +234,17 @@ function editRow(event) {
 
         if (checkbox.prop('checked')) {
             // checkbox가 체크된 경우 editing 모드를 토글합니다.
-            rowData.editing = true;
-            checkedRowCount++;
-        } else {
-            // checkbox가 체크되어 있지 않은 경우 editing 모드를 해제합니다.
-            rowData.editing = false;
-        }
+            rowData.editing = !rowData.editing;
+            selectedRowsData.push(rowData);
+        } 
 
         // editing 모드에 따라 checkboxValue를 업데이트합니다.
         rowData.checkboxValue = rowData.editing;
 
-        selectedRowsData.push(rowData);
     });
 
-    // 선택된 행이 두 개 이상인지 확인합니다.
-    if (checkedRowCount > 1) {
-        swal({
-            title: alertTitle,
-            text: multiRowSelectedMessage,
-            icon: "warning",
-            button: "OK",
-        });
-        return;
-    }
-
     // 선택된 행이 없는 경우
-    if (checkedRowCount === 0) {
+    if (selectedRowsData.length === 0) {
         swal({
             title: alertTitle,
             text: noRowSelectedMessage,
@@ -239,54 +254,110 @@ function editRow(event) {
         return;
     }
 
+    var currentPage = table.page.info().page;
+    
     // 변경된 editing 상태를 반영하여 테이블을 다시 그립니다.
     table.rows().invalidate().draw();
+    
+    goToPage(currentPage);
 }
 
 
 // 선택된 행 삭제 함수
 function deleteRows(event) {
+	debugger;
 	event.stopPropagation();
 	
-    var selectedRows = table.rows('.selected').data();
+	swal({
+		  title: "Delete Confirmation",
+		  text: "Are you sure you want to delete it?",
+		  icon: "warning",
+		  buttons: true,
+		  dangerMode: true,
+		})
+		.then((willDelete) => {
+		  if (willDelete) {
+			  
+			var selectedRowsData = [];
+			  
+		    $('#dataTable tbody input[type="checkbox"]').each(function () {
+		        var checkbox = $(this);
+		        var row = checkbox.closest('tr');
+		        var rowData = table.row(row).data();
+		        var rowIndex = table.page.info().start + row.index();
 
-    // 선택된 행이 없으면 삭제할 행이 없다고 알림
-    if (selectedRows.length === 0) {
-        alert("선택된 행이 없습니다.");
-        return;
-    }
+		        if (checkbox.prop('checked')) {
+		            selectedRowsData.push(rowData);
+		            deletedRowData.push(rowData);
+		            
+		            table.row(rowIndex).remove().draw();
+		            
+		            rowDataArray.splice(rowIndex, 1);
+		        } 
 
-    // 선택된 행들을 순회하며 삭제
-    for (var i = 0; i < selectedRows.length; i++) {
-        table.row(selectedRows[i]).remove().draw();
-    }
+		        // editing 모드에 따라 checkboxValue를 업데이트합니다.
+		        rowData.checkboxValue = rowData.editing;
+
+		    });
+		    
+		    // 선택된 행이 없는 경우
+		    if (selectedRowsData.length === 0) {
+		        swal({
+		            title: alertTitle,
+		            text: oneRowSelectedMessage,
+		            icon: "warning",
+		            button: "OK",
+		        });
+		        return;
+		    }  		    
+		    
+		    
+		   /* if (deletedRowData.length > 0) {
+		    	showLoadingBar();
+		    	callAjax("/palceOrder", "DELETE", deletedRowData, deleteTableCallback);
+		    }*/
+		    drawTable();
+
+		  }else{
+			  console.log("Deletion canceled.");
+		  }
+  	});
+	
+}
+
+function deleteTableCallback(response){
+/*	deletedRowData = [];
+	initSearchCondition();
+	
+    swal({
+        title: "Delete",
+        text: response.errorMessage,
+        icon: "success",
+        button: "OK",
+    });	
+	
+	hideLoadingBar();
+*/	
 }
 
 function saveRows(event) {
     event.stopPropagation();
 
-    // 사용자가 입력한 값을 가져오기 위해 추가적인 처리가 필요합니다.
-    // 새로운 행의 데이터는 DOM에서 직접 가져와야 합니다.
+    //showLoadingBar();
+    
+	var selectedRowsData = [];
+	  
+    $('#dataTable tbody input[type="checkbox"]').each(function () {
+        var checkbox = $(this);
+        var row = checkbox.closest('tr');
+        var rowData = table.row(row).data();
 
-    var selectedRowsData = [];
+        if (checkbox.prop('checked')) {
+            selectedRowsData.push(rowData);
+        } 
 
-    $('#dataTable tbody tr').each(function () {
-        var row = $(this);
-        var checkbox = row.find('input.form-check-input');
-        var bizplcNmInput = row.find('input#bizplcNmInput');
-        var bsnStateNmInput = row.find('input#bsnStateNmInput');
-        var refineRoadnmAddrInput = row.find('input#refineRoadnmAddrInput');
-
-        var newRowData = {
-            checkboxValue: checkbox.prop('checked'),
-            BIZPLC_NM: bizplcNmInput.val(),
-            BSN_STATE_NM: bsnStateNmInput.val(),
-            REFINE_ROADNM_ADDR: refineRoadnmAddrInput.val(),
-        };
-
-        selectedRowsData.push(newRowData);
     });
-
+    
     // 선택된 행이 없는 경우
     if (selectedRowsData.length === 0) {
         swal({
@@ -295,14 +366,20 @@ function saveRows(event) {
             icon: "warning",
             button: "OK",
         });
+        
+        //hideLoadingBar();
+        
         return;
-    }
+    }  	
 
-    // 여기에서 저장 로직을 구현합니다.
-    // 선택된 행들의 데이터를 서버로 전송하거나 필요한 작업을 수행합니다.
-    // 예시를 위해 콘솔에 로그를 출력하는 것으로 대체하겠습니다.
-    for (var i = 0; i < selectedRowsData.length; i++) {
-        var data = selectedRowsData[i];
-        console.log("checkboxValue:", data.checkboxValue, "BIZPLC_NM:", data.BIZPLC_NM, "BSN_STATE_NM:", data.BSN_STATE_NM, "REFINE_ROADNM_ADDR:", data.REFINE_ROADNM_ADDR);
-    }
+  //callAjax("/palceOrder/save", "POST", selectedRowsData, deleteTableCallback);
+}
+
+function goToPage(pageNumber){
+	table.page(pageNumber).draw('page');
+}
+
+function toggleAllCheckbox(){
+	const isChecked = $(this).prop('checked');
+	$('#dataTable tbody input[type="checkbox"]').prop('checked', isChecked);
 }
