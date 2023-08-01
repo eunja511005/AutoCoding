@@ -141,7 +141,7 @@ function initSelectBox(selectBoxId, url, includeAll, selectedValues) {
 	selectBox.empty();
 
 	if (includeAll) {
-	  selectBox.append($('<option>').val('').text('ALL'));
+	  selectBox.append($('<option>').val('').text('Select'));
 	}
 
 	return new Promise((resolve, reject) => {
