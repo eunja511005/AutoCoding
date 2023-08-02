@@ -263,28 +263,7 @@ function drawTable() {
             	},
             	className: "dt-body-right",
             },             
-        ],
-        drawCallback: function (settings) {
-            // 테이블이 다시 그려진 후 실행되는 콜백 함수
-            // 클래스 변경 로직 추가
-        	table.rows().every(function () {
-                var rowData = this.data();
-                var rowNode = this.node();
-
-                $.each(columnDefinitions, function (index, definition) {
-                    if (definition.required) {
-                        var value = rowData[definition.data];
-                        if (isBlank(value)) {
-                            // 필수 입력값이 비어있는 경우
-                            // 해당 셀을 강조 표시
-                            $(rowNode).find('td').eq(index).addClass('is-invalid');
-                        } else {
-                            $(rowNode).find('td').eq(index).removeClass('is-invalid');
-                        }
-                    }
-                });
-            });
-        }        
+        ],       
     });
 }
 

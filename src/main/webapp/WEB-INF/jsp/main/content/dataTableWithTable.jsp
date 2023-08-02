@@ -201,13 +201,11 @@
 			</table>
 		</div>
 	</div>
-	<div class="container">
-		<div class="row">
-			<div class="col text-end">
-				<button class="btn btn-custom" id="saveOrderButton">
-					<i class="fas fa-cart-plus"></i> <fmt:message key="saveOrder" />
-				</button>
-			</div>
+	<div class="row">
+		<div class="col text-end">
+			<button class="btn btn-custom" id="saveOrderButton">
+				<i class="fas fa-cart-plus"></i> <fmt:message key="saveOrder" />
+			</button>
 		</div>
 	</div>
 	
