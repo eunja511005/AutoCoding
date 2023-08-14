@@ -141,7 +141,7 @@
 	        </div>
 	    </div>
 		<div class="card-body" style="width:100%">
-			<div class="row">
+			<div class="row mb-4">
 			    <div class="col text-end">
 			        <!-- 우측 정렬된 버튼 추가 -->
 			        <button class="btn btn-custom mr-2" id="addRowButton">
