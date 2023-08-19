@@ -7,7 +7,7 @@
 <fmt:setBundle basename="messages" var="msg" />
 
 <!-- JavaScript 내부에 다국어 메시지 변수 선언 -->
-<script>
+<script charset="UTF-8">
 	var alertTitle = '<fmt:message key="alert_title" bundle="${msg}" />';
     var noRowSelectedMessage = '<fmt:message key="no_row_selected" bundle="${msg}" />';
     var multiRowSelectedMessage = '<fmt:message key="multi_row_selected" bundle="${msg}" />';
