@@ -11,7 +11,7 @@
 	var alertTitle = '<fmt:message key="alert_title" bundle="${msg}" />';
     var noRowSelectedMessage = '<fmt:message key="no_row_selected" bundle="${msg}" />';
     var multiRowSelectedMessage = '<fmt:message key="multi_row_selected" bundle="${msg}" />';
-    var designer = '<fmt:message key="role.designer" bundle="${msg}" />';
+    var designer = '디자인';
     var publisher = '<fmt:message key="role.publisher" bundle="${msg}" />';
     var frontendDeveloper = '<fmt:message key="role.frontendDeveloper" bundle="${msg}" />';
     var backendDeveloper = '<fmt:message key="role.backendDeveloper" bundle="${msg}" />';
