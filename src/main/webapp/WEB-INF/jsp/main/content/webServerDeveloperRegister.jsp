@@ -11,6 +11,7 @@
 	var alertTitle = '<fmt:message key="alert_title" bundle="${msg}" />';
     var noRowSelectedMessage = '<fmt:message key="no_row_selected" bundle="${msg}" />';
     var multiRowSelectedMessage = '<fmt:message key="multi_row_selected" bundle="${msg}" />';
+    var designer = '<fmt:message key="role.designer" bundle="${msg}" />';
     var designer = '디자인';
     var publisher = '<fmt:message key="role.publisher" bundle="${msg}" />';
     var frontendDeveloper = '<fmt:message key="role.frontendDeveloper" bundle="${msg}" />';
@@ -181,11 +182,11 @@
 	            <meta charset="UTF-8"> <!-- 메타 태그를 추가하여 문자 인코딩 설정 -->
 	        </head>        
             <div class="modal-header">
-                <h5 class="modal-title" id="applicationModalLabel"></h5>
+                <h5 class="modal-title" id="applicationModalLabel">디자인</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="font-size: 0.5rem;"></button>
             </div>
             <div class="modal-body">
-            	<p id="applicationModalDescription"></p>
+            	<p id="applicationModalDescription">디자인</p>
                 <!-- Application form goes here -->
                 <form id="uploadForm" method="post" enctype="multipart/form-data">
                     <div class="mb-3">
