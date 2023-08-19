@@ -219,4 +219,4 @@
 </div>
 
 
-<script src="/js/main/content/webServerDeveloperRegister.js"></script>
+<script src="/js/main/content/webServerDeveloperRegister.js" charset="UTF-8"></script>
