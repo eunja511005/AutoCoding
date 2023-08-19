@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%> 
+    pageEncoding="UTF-8"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>  
 
 
@@ -7,12 +7,11 @@
 <fmt:setBundle basename="messages" var="msg" />
 
 <!-- JavaScript 내부에 다국어 메시지 변수 선언 -->
-<script charset="UTF-8">
+<script>
 	var alertTitle = '<fmt:message key="alert_title" bundle="${msg}" />';
     var noRowSelectedMessage = '<fmt:message key="no_row_selected" bundle="${msg}" />';
     var multiRowSelectedMessage = '<fmt:message key="multi_row_selected" bundle="${msg}" />';
     var designer = '<fmt:message key="role.designer" bundle="${msg}" />';
-    var designer = '디자인';
     var publisher = '<fmt:message key="role.publisher" bundle="${msg}" />';
     var frontendDeveloper = '<fmt:message key="role.frontendDeveloper" bundle="${msg}" />';
     var backendDeveloper = '<fmt:message key="role.backendDeveloper" bundle="${msg}" />';
@@ -178,15 +177,12 @@
 <div class="modal fade" id="applicationModal" tabindex="-1" aria-labelledby="applicationModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-	        <head>
-	            <meta charset="UTF-8"> <!-- 메타 태그를 추가하여 문자 인코딩 설정 -->
-	        </head>        
             <div class="modal-header">
-                <h5 class="modal-title" id="applicationModalLabel">디자인</h5>
+                <h5 class="modal-title" id="applicationModalLabel"></h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="font-size: 0.5rem;"></button>
             </div>
             <div class="modal-body">
-            	<p id="applicationModalDescription">디자인</p>
+            	<p id="applicationModalDescription"></p>
                 <!-- Application form goes here -->
                 <form id="uploadForm" method="post" enctype="multipart/form-data">
                     <div class="mb-3">
@@ -223,4 +219,4 @@
 </div>
 
 
-<script src="/js/main/content/webServerDeveloperRegister.js" charset="UTF-8"></script>
+<script src="/js/main/content/webServerDeveloperRegister.js"></script>
