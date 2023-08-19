@@ -9,29 +9,25 @@
  * Please read the license and usage permissions carefully before using.
  */
 
-package com.eun.tutorial.dto.main;
+package com.eun.tutorial.controller.main;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Data
-@NoArgsConstructor
+@Controller
+@RequestMapping("/webServerDeveloperRegister")
 @AllArgsConstructor
-public class UserManageDTO {
-	private String username;
-	private String password;
-	private String email;
-	private byte[] salt;
-	private String role;
-	private String picture;
-	private String userComment;
-	private boolean isEnable;
-    private String lastLoginDt;
-    private String userTimeZone;
-    private String dateTimeFormatter;
-	private String createId;
-	private String createTime;
-	private String updateId;
-	private String updateTime;
+public class WebServerDeveloperRegisterController {
+
+	@GetMapping("/list")
+	public ModelAndView list() {
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.setViewName("jsp/main/content/webServerDeveloperRegister");
+		return modelAndView;
+	}
+
 }

@@ -3,7 +3,7 @@
 <mapper namespace="com.eun.tutorial.mapper.main.UserManageMapper">
 
 	<select id="selectUserManageList" resultType="com.eun.tutorial.dto.main.UserManageDTO">
-		SELECT USERNAME, PASSWORD, EMAIL, SALT, ROLE, PICTURE, ENABLE, 
+		SELECT USERNAME, PASSWORD, EMAIL, SALT, ROLE, PICTURE, ENABLE, USER_COMMENT,
 		TO_CHAR(last_login_dt, 'YYYY-MM-DD HH24:MI:SS') AS last_login_dt, 
 		user_time_zone, date_time_formatter,
 		create_id, TO_CHAR(TO_DATE(create_time, 'YYYYMMDDHH24MISS'), 'YYYY-MM-DD HH24:MI:SS') AS create_time, 
@@ -12,13 +12,13 @@
 	</select>
 
 	<insert id="insertUserManage">
-		INSERT INTO ZTHM_USER (USERNAME, PASSWORD, EMAIL, ROLE, PICTURE, SALT, ENABLE, create_id, create_time, update_id, update_time)
-		VALUES (#{username}, #{password}, #{email}, #{role}, #{picture}, #{salt}, #{isEnable}, #{createId}, to_char(CURRENT_DATE,'yyyymmddhh24miss'), #{updateId}, to_char(CURRENT_DATE,'yyyymmddhh24miss'))
+		INSERT INTO ZTHM_USER (USERNAME, PASSWORD, EMAIL, ROLE, PICTURE, SALT, ENABLE, USER_COMMENT, create_id, create_time, update_id, update_time)
+		VALUES (#{username}, #{password}, #{email}, #{role}, #{picture}, #{salt}, #{isEnable}, #{userComment}, #{createId}, to_char(CURRENT_DATE,'yyyymmddhh24miss'), #{updateId}, to_char(CURRENT_DATE,'yyyymmddhh24miss'))
 	</insert>
 
 	<update id="updateUserManage">
 		UPDATE ZTHM_USER
-		SET PASSWORD = #{password}, EMAIL = #{email}, ROLE = #{role}, PICTURE = #{picture}, ENABLE = #{isEnable}, update_id = #{updateId}, update_time = to_char(CURRENT_DATE,'yyyymmddhh24miss')
+		SET PASSWORD = #{password}, EMAIL = #{email}, ROLE = #{role}, PICTURE = #{picture}, ENABLE = #{isEnable}, USER_COMMENT = #{userComment}, update_id = #{updateId}, update_time = to_char(CURRENT_DATE,'yyyymmddhh24miss')
 		WHERE username = #{username}
 	</update>
 
@@ -27,7 +27,7 @@
 	</delete>
 
 	<select id="getUserManageListById" parameterType="string" resultType="com.eun.tutorial.dto.main.UserManageDTO">
-		SELECT USERNAME, PASSWORD, EMAIL, SALT, ROLE, PICTURE, ENABLE, 
+		SELECT USERNAME, PASSWORD, EMAIL, SALT, ROLE, PICTURE, ENABLE, USER_COMMENT, 
 		TO_CHAR(last_login_dt, 'YYYY-MM-DD HH24:MI:SS') AS last_login_dt, 
 		user_time_zone, date_time_formatter,
 		create_id, TO_CHAR(TO_DATE(create_time, 'YYYYMMDDHH24MISS'), 'YYYY-MM-DD HH24:MI:SS') AS create_time, 
