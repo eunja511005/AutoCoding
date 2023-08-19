@@ -1,10 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8"%> 
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>  
 
 
 <!-- 다국어 번들 설정(JSP 페이지에서 .properties 파일을 사용) -->
-<fmt:setBundle basename="messages" var="msg" />
+<fmt:setBundle basename="messages" var="msg" encoding="UTF-8" />
 
 <!-- JavaScript 내부에 다국어 메시지 변수 선언 -->
 <script charset="UTF-8">
