@@ -71,23 +71,23 @@ function openModalAndModifyContent(role) {
     $('#roleName').text(role);
 
     if (role === 'designer') {
-        $('#applicationModalLabel').text(designer);
-        $('#applicationModalDescription').text(descriptionDesigner);
+        $('#applicationModalLabel').html(designer);
+        $('#applicationModalDescription').html(descriptionDesigner);
     } else if (role === 'publisher') {
-        $('#applicationModalLabel').text(publisher);
-        $('#applicationModalDescription').text(descriptionPublisher);
+        $('#applicationModalLabel').html(publisher);
+        $('#applicationModalDescription').html(descriptionPublisher);
     } else if (role === 'frontendDeveloper') {
-        $('#applicationModalLabel').text(frontendDeveloper);
-        $('#applicationModalDescription').text(descriptionFrontendDeveloper);
+        $('#applicationModalLabel').html(frontendDeveloper);
+        $('#applicationModalDescription').html(descriptionFrontendDeveloper);
     } else if (role === 'backendDeveloper') {
-        $('#applicationModalLabel').text(backendDeveloper);
-        $('#applicationModalDescription').text(descriptionBackendDeveloper);
+        $('#applicationModalLabel').html(backendDeveloper);
+        $('#applicationModalDescription').html(descriptionBackendDeveloper);
     } else if (role === 'databaseAdmin') {
-        $('#applicationModalLabel').text(databaseAdmin);
-        $('#applicationModalDescription').text(descriptionDatabaseAdmin);
+        $('#applicationModalLabel').html(databaseAdmin);
+        $('#applicationModalDescription').html(descriptionDatabaseAdmin);
     } else if (role === 'systemAdmin') {
-        $('#applicationModalLabel').text(systemAdmin);
-        $('#applicationModalDescription').text(descriptionSystemAdmin);
+        $('#applicationModalLabel').html(systemAdmin);
+        $('#applicationModalDescription').html(descriptionSystemAdmin);
     }
 
     $('#applicationModal').modal('show');
