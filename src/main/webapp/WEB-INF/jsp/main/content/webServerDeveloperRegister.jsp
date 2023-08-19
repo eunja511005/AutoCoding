@@ -177,6 +177,9 @@
 <div class="modal fade" id="applicationModal" tabindex="-1" aria-labelledby="applicationModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
+	        <head>
+	            <meta charset="UTF-8"> <!-- 메타 태그를 추가하여 문자 인코딩 설정 -->
+	        </head>        
             <div class="modal-header">
                 <h5 class="modal-title" id="applicationModalLabel"></h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="font-size: 0.5rem;"></button>
