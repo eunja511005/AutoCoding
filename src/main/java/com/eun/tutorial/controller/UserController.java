@@ -1,5 +1,6 @@
 package com.eun.tutorial.controller;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,11 +17,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.eun.tutorial.dto.UserInfoDTO;
+import com.eun.tutorial.dto.main.ApiResponse;
+import com.eun.tutorial.dto.main.UserManageDTO;
 import com.eun.tutorial.mapper.UserMapper;
 import com.eun.tutorial.service.user.PrincipalDetails;
+import com.eun.tutorial.util.FileUtil;
 import com.eun.tutorial.util.JwtTokenUtil;
 
 import lombok.RequiredArgsConstructor;
@@ -34,6 +40,7 @@ public class UserController {
     private final SessionRegistry sessionRegistry;
     private final BCryptPasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
+    private final FileUtil fileUtil;
     
     @GetMapping("/active-sessions")
     public List<String> getActiveSessions() {
@@ -86,5 +93,12 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
+    
+	@PostMapping("/mobile/image/save")
+	public @ResponseBody ApiResponse saveUserManage(@RequestParam("file") MultipartFile file, UserManageDTO userManageDTO) throws IOException {
+		userManageDTO.setPicture(fileUtil.saveImage(file, "openImg/mobile"));
+		//userManageService.mergeUser(userManageDTO);
+		return new ApiResponse<>(true, "Success save", null);
+	}
     
 }
