@@ -77,4 +77,33 @@ public class FileUtil {
         // 이미지 URL 반환
         return "/" + currentDate + "/" + newFileName;
     }
+    
+    public String saveImageWithOriginName(MultipartFile file, String path) throws IOException {
+        String originalFilename = file.getOriginalFilename();
+        if (originalFilename == null) {
+            throw new IllegalArgumentException("File name cannot be null");
+        }
+
+        // mimeType 체크
+        String mimeType = new Tika().detect(file.getInputStream());
+        if (!isAllowedMimeType(mimeType)) {
+            throw new IllegalArgumentException("MIME type not allowed: " + mimeType);
+        }
+
+        // 파일 크기 체크
+        if (!isAllowedFileSize(file)) {
+            throw new IllegalArgumentException("File size too large: " + file.getSize());
+        }
+
+        Path uploadPathObj = Paths.get(multiPathPath + path);
+        if (!Files.exists(uploadPathObj)) {
+            Files.createDirectories(uploadPathObj);
+        }
+        Path filePath = uploadPathObj.resolve(originalFilename);
+        Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+        // 이미지 URL 반환
+        return "/" + path + "/" + originalFilename;
+    }
+
 }

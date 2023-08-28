@@ -24,7 +24,10 @@ import org.springframework.web.multipart.MultipartFile;
 import com.eun.tutorial.dto.UserInfoDTO;
 import com.eun.tutorial.dto.main.ApiResponse;
 import com.eun.tutorial.dto.main.UserManageDTO;
+import com.eun.tutorial.dto.project.ProjectListRequest;
+import com.eun.tutorial.dto.project.ProjectListResponse;
 import com.eun.tutorial.mapper.UserMapper;
+import com.eun.tutorial.service.project.ProjectService;
 import com.eun.tutorial.service.user.PrincipalDetails;
 import com.eun.tutorial.util.FileUtil;
 import com.eun.tutorial.util.JwtTokenUtil;
@@ -41,6 +44,7 @@ public class UserController {
     private final BCryptPasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
     private final FileUtil fileUtil;
+    private final ProjectService projectService;
     
     @GetMapping("/active-sessions")
     public List<String> getActiveSessions() {
@@ -96,9 +100,14 @@ public class UserController {
     
 	@PostMapping("/mobile/image/save")
 	public @ResponseBody ApiResponse saveUserManage(@RequestParam("file") MultipartFile file, UserManageDTO userManageDTO) throws IOException {
-		userManageDTO.setPicture(fileUtil.saveImage(file, "openImg/mobile"));
+		userManageDTO.setPicture(fileUtil.saveImageWithOriginName(file, "openImg/mobile"));
 		//userManageService.mergeUser(userManageDTO);
 		return new ApiResponse<>(true, "Success save", null);
 	}
+	
+    @PostMapping("/project/list")
+    public @ResponseBody ProjectListResponse getProjectList(@RequestBody ProjectListRequest projectListRequest) {
+        return projectService.getProjects(projectListRequest);
+    }
     
 }
