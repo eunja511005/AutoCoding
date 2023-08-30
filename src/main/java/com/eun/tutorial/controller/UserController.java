@@ -1,11 +1,17 @@
 package com.eun.tutorial.controller;
 
+import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.session.SessionInformation;
@@ -24,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.eun.tutorial.dto.UserInfoDTO;
 import com.eun.tutorial.dto.main.ApiResponse;
 import com.eun.tutorial.dto.main.UserManageDTO;
+import com.eun.tutorial.dto.project.ProjectDTO;
 import com.eun.tutorial.dto.project.ProjectListRequest;
 import com.eun.tutorial.dto.project.ProjectListResponse;
 import com.eun.tutorial.mapper.UserMapper;
@@ -40,6 +47,9 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("/api")
 public class UserController {
+    @Value("${spring.servlet.multipart.location}")
+    private String multiPathPath;
+	
     private final SessionRegistry sessionRegistry;
     private final BCryptPasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
@@ -100,14 +110,82 @@ public class UserController {
     
 	@PostMapping("/mobile/image/save")
 	public @ResponseBody ApiResponse saveUserManage(@RequestParam("file") MultipartFile file, UserManageDTO userManageDTO) throws IOException {
-		userManageDTO.setPicture(fileUtil.saveImageWithOriginName(file, "openImg/mobile"));
+		userManageDTO.setPicture(fileUtil.saveImageWithOriginName(file, "openImg/mobile_resizing"));
 		//userManageService.mergeUser(userManageDTO);
 		return new ApiResponse<>(true, "Success save", null);
 	}
 	
     @PostMapping("/project/list")
     public @ResponseBody ProjectListResponse getProjectList(@RequestBody ProjectListRequest projectListRequest) {
-        return projectService.getProjects(projectListRequest);
+//    	String path = multiPathPath+"openImg/mobile";
+    	String path = multiPathPath+"openImg/mobile_resizing";
+        File directory = new File(path);
+        
+        // 디렉토리 하위의 파일명 전체 이름 출력
+        SortedSet<String> fileNameSet = new TreeSet<>();
+        printAllFiles(directory, fileNameSet);
+        
+        SortedSet<String> result = getItemsByPage(fileNameSet, projectListRequest.getPage(), projectListRequest.getSize());
+    	
+        
+		List<ProjectDTO> projects = new ArrayList<>();
+		ProjectDTO projectDTO;
+		for (String fileName : result) {
+			projectDTO = new ProjectDTO();
+			
+			fileName = fileName.replace(multiPathPath, "");
+			
+			projectDTO.setName(fileName);
+			projectDTO.setPicture(fileName);
+			projectDTO.setStatus("Active");
+			projectDTO.setDescription("test");
+			LocalDate specificDate = LocalDate.of(2023, 8, 29);
+			projectDTO.setStartDate(specificDate);
+			
+			projects.add(projectDTO);
+		}
+		
+		long totalElements = result.size();
+		return new ProjectListResponse(true, projects, totalElements);
+        
+    }
+    
+    private void printAllFiles(File directory, SortedSet<String> fileNameSet) {
+        // 디렉토리가 존재하는 경우
+        if (directory.exists() && directory.isDirectory()) {
+            // 디렉토리 하위의 파일과 디렉토리 목록 얻기
+            File[] files = directory.listFiles();
+            
+            // 파일과 디렉토리 목록 출력
+            for (File file : files) {
+                if (file.isFile()) { // 파일인 경우 파일명 출력
+                	fileNameSet.add(file.getAbsolutePath().replace("D:\\Users\\ywbes\\git\\Tutorial\\user-photos\\", ""));
+                } else { // 디렉토리인 경우 재귀호출
+                    printAllFiles(file, fileNameSet);
+                }
+            }
+        }
+    }
+    
+    public static SortedSet<String> getItemsByPage(SortedSet<String> set, int currentPage, int itemsPerPage) {
+        int startIndex = (currentPage - 1) * itemsPerPage;
+        int endIndex = startIndex + itemsPerPage;
+        int currentIndex = 0;
+
+        TreeSet<String> result = new TreeSet<>();
+
+        for (String item : set) {
+            if (currentIndex >= startIndex && currentIndex < endIndex) {
+                result.add(item);
+            }
+            currentIndex++;
+
+            if (currentIndex >= endIndex) {
+                break; // 해당 페이지의 아이템 수에 도달하면 종료
+            }
+        }
+
+        return result;
     }
     
 }
