@@ -159,7 +159,7 @@ public class UserController {
             // 파일과 디렉토리 목록 출력
             for (File file : files) {
                 if (file.isFile()) { // 파일인 경우 파일명 출력
-                	fileNameSet.add(file.getAbsolutePath().replace("D:\\Users\\ywbes\\git\\Tutorial\\user-photos\\", ""));
+                	fileNameSet.add(file.getAbsolutePath().replace(multiPathPath, ""));
                 } else { // 디렉토리인 경우 재귀호출
                     printAllFiles(file, fileNameSet);
                 }
