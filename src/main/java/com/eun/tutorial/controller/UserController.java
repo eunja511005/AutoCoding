@@ -155,11 +155,15 @@ public class UserController {
         if (directory.exists() && directory.isDirectory()) {
             // 디렉토리 하위의 파일과 디렉토리 목록 얻기
             File[] files = directory.listFiles();
-            
+
             // 파일과 디렉토리 목록 출력
             for (File file : files) {
-                if (file.isFile()) { // 파일인 경우 파일명 출력
-                	fileNameSet.add(file.getAbsolutePath().replace(multiPathPath, ""));
+                if (file.isFile()) { // 파일인 경우 파일명 추가
+                    String path = file.getAbsolutePath();
+                    path = path.replace(File.separator, "/");
+                    path = path.replaceAll(multiPathPath, "");
+                   
+                    fileNameSet.add(path);
                 } else { // 디렉토리인 경우 재귀호출
                     printAllFiles(file, fileNameSet);
                 }
