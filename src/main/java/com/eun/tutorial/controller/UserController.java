@@ -160,11 +160,8 @@ public class UserController {
             for (File file : files) {
                 if (file.isFile()) { // 파일인 경우 파일명 추가
                     String path = file.getAbsolutePath();
-                    log.info("##### 1 : "+path);
                     path = path.replace(File.separator, "/");
-                    log.info("##### 2 : "+path);
                     path = path.replaceAll(multiPathPath, "");
-                    log.info("##### 3 : "+path);
                    
                     fileNameSet.add(path);
                 } else { // 디렉토리인 경우 재귀호출
