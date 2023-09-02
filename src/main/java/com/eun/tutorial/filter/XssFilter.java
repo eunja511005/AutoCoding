@@ -217,8 +217,8 @@ public class XssFilter implements Filter {
 		menuControlDTO.setMethod(method);
 		menuControlDTO.setRoleId("ANY");
 		menuControlDTO.setUrl(url);
-		menuControlDTO.setCreateId("UserRequestLoggingAspect.java");
-		menuControlDTO.setUpdateId("UserRequestLoggingAspect.java");
+		menuControlDTO.setCreateId("XssFilter.java");
+		menuControlDTO.setUpdateId("XssFilter.java");
 		menuControlService.saveMenuControl(menuControlDTO);
 	}
 	

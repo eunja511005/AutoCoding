@@ -11,6 +11,16 @@
   	       create_id, create_time, update_id, update_time
   	FROM ZTHH_FILE_ATTACH 
   </select>
+
+  <select id="selectFiles" resultType="com.eun.tutorial.dto.ZthhFileAttachDTO">
+  	SELECT ATTACH_ID, SEQUENCE, ORIGINAL_FILE_NAME, FILE_NAME,
+  		   FILE_TYPE, FILE_SIZE, FILE_PATH,
+  	       create_id, create_time, update_id, update_time
+  	FROM ZTHH_FILE_ATTACH 
+  	where update_id = #{creator}
+  	ORDER BY update_time DESC
+  	OFFSET #{offset} ROWS FETCH NEXT #{limit} ROWS ONLY
+  </select>
   
   <select id="getOne" parameterType="hashMap" resultType="com.eun.tutorial.dto.ZthhFileAttachDTO">
   	SELECT ATTACH_ID, SEQUENCE, ORIGINAL_FILE_NAME, FILE_NAME,
@@ -39,9 +49,9 @@
 			#{fileSize, jdbcType=VARCHAR},
 			#{filePath, jdbcType=VARCHAR},
 			#{createId, jdbcType=VARCHAR}, 
-	   		to_char(CURRENT_DATE,'yyyymmddhh24mmss'), 
+	   		to_char(CURRENT_DATE,'YYYYMMDDHH24MISS'), 
 	   		#{updateId, jdbcType=VARCHAR}, 
-	   		to_char(CURRENT_DATE,'yyyymmddhh24mmss'))
+	   		to_char(CURRENT_DATE,'YYYYMMDDHH24MISS'))
   </insert>    
   
 </mapper>

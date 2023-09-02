@@ -61,5 +61,10 @@ public class JwtTokenUtil {
         String username = extractUsername(token);
         return (username.equals(userInfoDTO.getUsername()) && !isTokenExpired(token));
     }
+    
+    // 토큰의 유효성을 검사하는 메소드
+    public static boolean validateToken(String token) {
+    	return (!isTokenExpired(token));
+    }
 }
 
