@@ -23,3 +23,8 @@
     <!-- 민감정보 암호화 -->
     <!-- JSEncrypt 라이브러리 로드 -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jsencrypt/3.1.0/jsencrypt.min.js"></script>
+
+	<!-- 웹소켓 활용한 채팅 -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.2/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+	

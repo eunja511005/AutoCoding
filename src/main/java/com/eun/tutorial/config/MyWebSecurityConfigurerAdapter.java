@@ -123,7 +123,7 @@ public class MyWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter
             		"/h2-console/**", "/error/**", "/favicon.ico", "/layout/test",
             		"/main/**", "/content1", "/content2", "/content3", "/posts/**", 
             		"/login-status", "/commonCode/**", "/menu/loadMenu", "/", 
-            		"/api/**",
+            		"/api/**", "/ws-service/**", "/chat",
             		"/signout", "/signin", "/signout2", "/sessionExpire").permitAll() // 누구나 접근 허용
             .anyRequest().authenticated()
             .and()
