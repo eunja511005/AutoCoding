@@ -47,7 +47,7 @@ public class MyFilterConfiguration {
     public FilterRegistrationBean<WebSocketFilter> webSocketFilter() {
     	FilterRegistrationBean<WebSocketFilter> registration = new FilterRegistrationBean<>();
     	registration.setFilter(new WebSocketFilter());
-    	registration.addUrlPatterns("/ws-service/*"); // Set the URL patterns for the filter
+    	registration.addUrlPatterns("/ws-service"); // Set the URL patterns for the filter
     	registration.setName("WebSocketFilter");
     	registration.setOrder(3); // Set the order in which the filter should be applied
     	return registration;

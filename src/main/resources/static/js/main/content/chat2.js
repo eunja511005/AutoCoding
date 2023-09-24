@@ -16,38 +16,86 @@ var showButton = true; // 이 부분을 원하는 조건에 따라 true 또는 f
 
 $(document).ready(function() {
 	debugger;
-    // WebSocket 연결 설정
-    var socket = new SockJS('/ws-service');
-    var stompClient = Stomp.over(socket);
-    
-    // WebSocket 연결이 완료된 후에 메시지 전송 및 구독 설정
-    stompClient.connect({}, function(frame) {
-        console.log('WebSocket 연결 성공');
+	
+	// getToken 함수를 호출하여 JWT 토큰을 얻음
+	getToken('autoCoding1', 'jw0713!@')
+	    .then((jwtToken) => {
+	    	
+	        // WebSocket 연결 설정
+	        var socket = new SockJS('/ws-service');
+	        var stompClient = Stomp.over(socket);
+	        
+	     // STOMP 클라이언트에 연결할 때 사용할 헤더 설정
+	        var headers = {
+	            'Authorization': 'Bearer ' + jwtToken, // 예시: JWT 토큰을 헤더에 추가
+	        };
+	        
+	        // WebSocket 연결이 완료된 후에 메시지 전송 및 구독 설정
+	        stompClient.connect({ Authorization: 'Bearer ' + jwtToken }, function(frame) {
+	            console.log('WebSocket 연결 성공');
 
-        // 메시지 전송
-        function sendMessage() {
-            var messageInput = $('#message');
-            var message = messageInput.val();
-            if (message) {
-                var chatMessage = {
-                	message: message,
-                    sender: 'Admin'
-                };
-                stompClient.send("/app/chat/send", {}, JSON.stringify(chatMessage));
-                messageInput.val('');
-                
-            }
+	            // 메시지 전송
+	            function sendMessage() {
+	                var messageInput = $('#message');
+	                var message = messageInput.val();
+	                if (message) {
+	                    var chatMessage = {
+	                    	message: message,
+	                        sender: 'Admin'
+	                    };
+	                    stompClient.send("/app/chat/send", {}, JSON.stringify(chatMessage));
+	                    messageInput.val('');
+	                    
+	                }
+	            }
+
+	            // 전송 버튼 클릭 이벤트에 메시지 전송 함수 연결
+	            $('#send-button').click(sendMessage);
+
+	            // 메시지 수신 처리
+	            stompClient.subscribe('/topic/chat', function(response) {
+	                var message = JSON.parse(response.body);
+	                var chatMessages = $('#chat-messages');
+	                var messageElement = $('<li>').text(message.sender + ": " + message.message);
+	                chatMessages.append(messageElement);
+	            });
+	        }, function(error) {
+	            // 연결이 실패한 경우 실행되는 콜백 함수
+	            console.error('Error in STOMP connection', error);
+	        });
+	    	
+	    })
+	    .catch((error) => {
+	        // 토큰 얻기 실패
+	        console.error('Token retrieval error:', error);
+	    });
+});
+
+//로그인 요청을 보내서 JWT 토큰을 얻는 함수
+async function getToken(userId, pass) {
+    try {
+    	
+        const userInfo = {
+                username: userId,
+                password: pass
+            };
+    	
+        const response = await fetch('/api/getToken', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(userInfo),
+        });
+
+        if (!response.ok) {
+            throw new Error('Authentication failed');
         }
 
-        // 전송 버튼 클릭 이벤트에 메시지 전송 함수 연결
-        $('#send-button').click(sendMessage);
-
-        // 메시지 수신 처리
-        stompClient.subscribe('/topic/chat', function(response) {
-            var message = JSON.parse(response.body);
-            var chatMessages = $('#chat-messages');
-            var messageElement = $('<li>').text(message.sender + ": " + message.message);
-            chatMessages.append(messageElement);
-        });
-    });
-});
+        const token = await response.text();
+        return token;
+    } catch (error) {
+        console.error('Authentication error:', error);
+        throw error;
+    }
+}
