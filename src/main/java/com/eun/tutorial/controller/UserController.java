@@ -108,6 +108,19 @@ public class UserController {
         }
     }
     
+    @GetMapping("/check_token")
+    public ResponseEntity<Boolean> checkTokenValidity(@RequestHeader("Authorization") String authToken) {
+    	String token = authToken.substring(7); // "Bearer " 이후의 토큰 부분 추출
+    	
+    	if (JwtTokenUtil.validateToken(token)) {
+            // 토큰이 유효한 경우 데이터 반환
+    		return ResponseEntity.ok(true);
+        } else {
+            // 토큰이 유효하지 않은 경우 예외 처리
+            throw new IllegalArgumentException("Invalid token");
+        }
+    }
+    
 	@PostMapping("/mobile/image/save")
 	public @ResponseBody ApiResponse saveUserManage(@RequestParam("file") MultipartFile file, UserManageDTO userManageDTO) throws IOException {
 		userManageDTO.setPicture(fileUtil.saveImageWithOriginName(file, "openImg/mobile_resizing"));
