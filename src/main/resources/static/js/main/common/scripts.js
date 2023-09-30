@@ -7,8 +7,10 @@
 // Scripts
 // 
 document.addEventListener('DOMContentLoaded', event => {
-
+	debugger;
+	
     let isSidebarOpen = true; // 초기에 사이드바를 열린 상태로 시작합니다.
+    document.addEventListener('click', outsideSidebarClick);
 
     const sidebarToggle = document.querySelector('#sidebarToggle');
     const sidebar = document.querySelector('#sidenavAccordion');
@@ -22,16 +24,18 @@ document.addEventListener('DOMContentLoaded', event => {
     }
 
     function toggleSidebar() {
+    	debugger;
         // 사이드바 상태를 토글
+		event.preventDefault();
         document.body.classList.toggle('sb-sidenav-toggled');
         localStorage.setItem(localStorageKey, isSidebarOpen);
         isSidebarOpen = !isSidebarOpen;
 
         // 이벤트 핸들러를 등록 또는 해제
         if (isSidebarOpen) {
-        	document.removeEventListener('click', outsideSidebarClick);
+        	document.addEventListener('click', outsideSidebarClick);
         } else {
-            document.addEventListener('click', outsideSidebarClick);
+        	document.removeEventListener('click', outsideSidebarClick);
         }
     }
 
@@ -51,4 +55,3 @@ document.addEventListener('DOMContentLoaded', event => {
     }
 
 });
-
