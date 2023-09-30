@@ -9,8 +9,15 @@
 document.addEventListener('DOMContentLoaded', event => {
 	debugger;
 	
-    let isSidebarOpen = true; // 초기에 사이드바를 열린 상태로 시작합니다.
-    document.addEventListener('click', outsideSidebarClick);
+	// 초기에 사이드바를 열린 상태로 시작합니다.
+	let isSidebarOpen = true; 
+	document.addEventListener('click', outsideSidebarClick);
+	
+	// 모바일 화면일 경우 사이드바를 닫힌 상태로 시작
+	if (window.innerWidth < 768) {
+	    isSidebarOpen = false;
+	    document.removeEventListener('click', outsideSidebarClick);
+	}
 
     const sidebarToggle = document.querySelector('#sidebarToggle');
     const sidebar = document.querySelector('#sidenavAccordion');
