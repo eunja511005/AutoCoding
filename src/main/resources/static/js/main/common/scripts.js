@@ -6,21 +6,49 @@
     // 
 // Scripts
 // 
+document.addEventListener('DOMContentLoaded', event => {
 
-window.addEventListener('DOMContentLoaded', event => {
+    let isSidebarOpen = true; // 초기에 사이드바를 열린 상태로 시작합니다.
 
-    // Toggle the side navigation
-    const sidebarToggle = document.body.querySelector('#sidebarToggle');
+    const sidebarToggle = document.querySelector('#sidebarToggle');
+    const sidebar = document.querySelector('#sidenavAccordion');
+    const localStorageKey = 'sb|sidebar-toggle';
+
     if (sidebarToggle) {
-        // Uncomment Below to persist sidebar toggle between refreshes
-        // if (localStorage.getItem('sb|sidebar-toggle') === 'true') {
-        //     document.body.classList.toggle('sb-sidenav-toggled');
-        // }
         sidebarToggle.addEventListener('click', event => {
             event.preventDefault();
-            document.body.classList.toggle('sb-sidenav-toggled');
-            localStorage.setItem('sb|sidebar-toggle', document.body.classList.contains('sb-sidenav-toggled'));
+            toggleSidebar();
         });
     }
 
+    function toggleSidebar() {
+        // 사이드바 상태를 토글
+        document.body.classList.toggle('sb-sidenav-toggled');
+        localStorage.setItem(localStorageKey, isSidebarOpen);
+        isSidebarOpen = !isSidebarOpen;
+
+        // 이벤트 핸들러를 등록 또는 해제
+        if (isSidebarOpen) {
+        	document.removeEventListener('click', outsideSidebarClick);
+        } else {
+            document.addEventListener('click', outsideSidebarClick);
+        }
+    }
+
+    function outsideSidebarClick(event) {
+        // 사이드바 외부를 클릭할 때 사이드바를 닫습니다.
+        if (!isClickInsideSidebar(event) && !isClickInsideToggle(event)) {
+            toggleSidebar();
+        }
+    }
+
+    function isClickInsideSidebar(event) {
+        return sidebar && sidebar.contains(event.target);
+    }
+
+    function isClickInsideToggle(event) {
+        return sidebarToggle && sidebarToggle.contains(event.target);
+    }
+
 });
+
