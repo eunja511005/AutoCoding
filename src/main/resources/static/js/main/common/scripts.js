@@ -21,7 +21,6 @@ document.addEventListener('DOMContentLoaded', event => {
 
     const sidebarToggle = document.querySelector('#sidebarToggle');
     const sidebar = document.querySelector('#sidenavAccordion');
-    const localStorageKey = 'sb|sidebar-toggle';
 
     if (sidebarToggle) {
         sidebarToggle.addEventListener('click', event => {
@@ -35,7 +34,6 @@ document.addEventListener('DOMContentLoaded', event => {
         // 사이드바 상태를 토글
 		event.preventDefault();
         document.body.classList.toggle('sb-sidenav-toggled');
-        localStorage.setItem(localStorageKey, isSidebarOpen);
         isSidebarOpen = !isSidebarOpen;
 
         // 이벤트 핸들러를 등록 또는 해제
