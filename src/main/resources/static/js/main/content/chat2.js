@@ -13,13 +13,14 @@
 var csrfheader = $("meta[name='_csrf_header']").attr("content");
 var csrftoken = $("meta[name='_csrf']").attr("content");
 var showButton = true; // 이 부분을 원하는 조건에 따라 true 또는 false로 변경하세요.
-
+var token;
 $(document).ready(function() {
 	debugger;
 	
 	// getToken 함수를 호출하여 JWT 토큰을 얻음
 	getToken('autoCoding1', 'jw0713!@')
 	    .then((jwtToken) => {
+	    	token = jwtToken;
 	    	
 	        // WebSocket 연결 설정
 	        var socket = new SockJS('/ws-service');
@@ -40,8 +41,10 @@ $(document).ready(function() {
 	                var message = messageInput.val();
 	                if (message) {
 	                    var chatMessage = {
+	                    	roomId: 'ROOM_001',	
+	                    	sender: 'Admin',
 	                    	message: message,
-	                        sender: 'Admin'
+	                    	timestamp: getCurrentTimestamp()
 	                    };
 	                    stompClient.send("/app/chat/send", {}, JSON.stringify(chatMessage));
 	                    messageInput.val('');
@@ -56,9 +59,12 @@ $(document).ready(function() {
 	            stompClient.subscribe('/topic/chat', function(response) {
 	                var message = JSON.parse(response.body);
 	                var chatMessages = $('#chat-messages');
-	                var messageElement = $('<li>').text(message.sender + ": " + message.message);
+	                var messageElement = $('<li>').text(message.sender+"("+message.timestamp + ") : " + message.message);
 	                chatMessages.append(messageElement);
 	            });
+	            
+	            // 기존 메세지 조회
+	            getPreviousMessages();
 	        }, function(error) {
 	            // 연결이 실패한 경우 실행되는 콜백 함수
 	            console.error('Error in STOMP connection', error);
@@ -99,3 +105,56 @@ async function getToken(userId, pass) {
         throw error;
     }
 }
+
+function getCurrentTimestamp() {
+    const now = new Date();
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+    const period = hours >= 12 ? '오후' : '오전';
+    const formattedHours = hours % 12 || 12; // 0시를 12시로 표시
+
+    const formattedTimestamp = `${period} ${formattedHours}:${minutes}`;
+
+    return formattedTimestamp;
+}
+
+function getPreviousMessages() {
+
+	var params = {
+		"roomId": "ROOM_001",	
+		"page": 1,
+		"size": 100
+	};
+	
+	callAjax("/api/chat/list", "POST", params, getPreviousMessagesCallback, token);
+}
+
+function getPreviousMessagesCallback(data) {
+
+	if (data.messages != undefined && data.messages != "") {
+		displayPreviousMessages(data.messages);
+	}
+}
+
+//이전 메시지 조회 및 표시 (역순으로 표시)
+function displayPreviousMessages(data) {
+    var chatMessages = $('#chat-messages');
+    var currentUpdateDt = ''; // 현재 날짜를 저장할 변수
+
+    data.reverse().forEach(function (message) { // 데이터를 역순으로 반복
+        var updateDt = message.updateDt.split(' ')[0]; // 날짜 부분만 추출
+
+        // updateDt가 변경되었을 때, 해당 날짜를 표시하는 엘리먼트 추가
+        if (updateDt !== currentUpdateDt) {
+            currentUpdateDt = updateDt;
+            var dateElement = $('<li>').text('[' + updateDt + ']');
+            chatMessages.append(dateElement); // 날짜 엘리먼트를 하단에 추가
+        }
+
+        // 메시지 표시
+        var messageElement = $('<li>').text(message.sender + " (" + message.timestamp + ") : " + message.message);
+        chatMessages.append(messageElement); // 메시지 엘리먼트를 하단에 추가
+    });
+}
+
+

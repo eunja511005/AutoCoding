@@ -1,25 +1,32 @@
 package com.eun.tutorial.controller.chat;
 
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.context.request.async.DeferredResult;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.eun.tutorial.config.chat.BookMessage;
-import com.eun.tutorial.config.chat.ChatMessage;
+import com.eun.tutorial.dto.chat.ChatListRequest;
+import com.eun.tutorial.dto.chat.ChatListResponse;
+import com.eun.tutorial.dto.chat.ChatMessage;
+import com.eun.tutorial.service.chat.ChatService;
+import com.eun.tutorial.util.JwtTokenUtil;
+
+import lombok.RequiredArgsConstructor;
 
 @RestController
+@RequiredArgsConstructor
 public class ChatController {
 
-    private final Queue<DeferredResult<ChatMessage>> chatQueue = new LinkedList<>();
+    private final ChatService chatService;
     
 	@GetMapping("/chat/list")
 	public ModelAndView list() {
@@ -28,11 +35,25 @@ public class ChatController {
 		return modelAndView;
 	}
 	
+	@PostMapping("/api/chat/list")
+    public @ResponseBody ChatListResponse getChatList(@RequestHeader("Authorization") String authToken, @RequestBody ChatListRequest chatListRequest) {
+		String token = authToken.substring(7); // "Bearer " 이후의 토큰 부분 추출
+    	
+    	if (JwtTokenUtil.validateToken(token)) {
+    		List<ChatMessage> messages = chatService.getChatList(chatListRequest);
+    		long totalElements = chatService.getTotalChatMessages(chatListRequest.getRoomId());
+    		return new ChatListResponse(true, messages, totalElements);
+    	}else {
+    		 // 토큰이 유효하지 않은 경우 예외 처리
+            throw new IllegalArgumentException("Invalid token");
+    	}
+    }
+	
     @MessageMapping("/chat/send")
     @SendTo("/topic/chat")
     public ChatMessage sendChatMessage(@Payload ChatMessage message) {
-        // 받은 메시지를 "/topic/chat" 주제로 브로드캐스팅하여 모든 클라이언트에게 전송
-        return message;
+    	chatService.saveChatMessage(message); // 받은 메시지 DB에 저장
+        return message; // 받은 메시지를 "/topic/chat" 주제로 브로드캐스팅하여 모든 클라이언트에게 전송
     }
 
     @MessageMapping("/book/send")

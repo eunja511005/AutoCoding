@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eun.tutorial.mapper.chat.ChatMapper">
+
+	<select id="selectChatList" resultType="com.eun.tutorial.dto.chat.ChatMessage">
+		SELECT ID, ROOM_ID, SENDER, MESSAGE, TIMESTAMP, del_yn, create_id, TO_CHAR(create_dt, 'YYYY-MM-DD HH24:MI:SS') AS create_dt, update_id, TO_CHAR(update_dt, 'YYYY-MM-DD HH24:MI:SS') AS update_dt 
+		FROM ZTHH_CHAT 
+		where ROOM_ID = #{roomId} 
+		AND del_yn='N' 
+		ORDER BY update_dt, create_dt DESC
+		OFFSET #{offset} ROWS FETCH NEXT #{limit} ROWS ONLY
+	</select>
+	
+	<select id="selectTotalChatMessages" resultType="java.lang.Long">
+		SELECT COUNT(ID) FROM
+		ZTHH_CHAT
+		where ROOM_ID = #{roomId} 
+		AND del_yn='N' 
+	</select>	
+
+	<insert id="insertChat">
+		INSERT INTO ZTHH_CHAT (ID, ROOM_ID, SENDER, MESSAGE, TIMESTAMP, del_yn, create_id, create_dt, update_id, update_dt)
+		VALUES (#{id}, #{roomId}, #{sender}, #{message}, #{timestamp}, 'N', #{createId}, CURRENT_TIMESTAMP, #{updateId}, CURRENT_TIMESTAMP)
+	</insert>
+
+	<update id="updateChat">
+		UPDATE ZTHH_CHAT
+		SET MESSAGE = #{message}, SENDER = #{sender}, ROOM_ID = #{roomId}, update_id = #{updateId}, update_dt = CURRENT_TIMESTAMP
+		WHERE id = #{id}
+	</update>
+
+	<delete id="deleteChat">
+		UPDATE ZTHH_CHAT SET del_yn = 'Y', update_dt = CURRENT_TIMESTAMP WHERE id = #{id}
+	</delete>
+
+	<select id="getChatMessageById" parameterType="string" resultType="com.eun.tutorial.dto.chat.ChatMessage">
+		SELECT ID, ROOM_ID, SENDER, MESSAGE, TIMESTAMP, del_yn, create_id, TO_CHAR(create_dt, 'YYYY-MM-DD HH24:MI:SS') AS create_dt, update_id, TO_CHAR(update_dt, 'YYYY-MM-DD HH24:MI:SS') AS update_dt FROM ZTHH_CHAT
+		WHERE id = #{id}
+		ORDER BY update_dt, create_dt
+	</select>
+
+</mapper>

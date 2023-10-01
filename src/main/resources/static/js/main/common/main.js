@@ -163,7 +163,7 @@ function initSelectBox(selectBoxId, url, includeAll, selectedValues) {
 }
 
 
-function callAjax(url, method, data, successCallback){
+function callAjax(url, method, data, successCallback, jwtToken){
 	
 	//showLoadingBar();
 	
@@ -192,6 +192,11 @@ function callAjax(url, method, data, successCallback){
 		type: method,
 		beforeSend: function(xhr) {
 			xhr.setRequestHeader(csrfheader, csrftoken);
+			
+            // jwtToken 값이 존재하는 경우에만 Authorization 헤더 설정
+            if (jwtToken) {
+                xhr.setRequestHeader('Authorization', 'Bearer ' + jwtToken);
+            }
 		},
 		contentType: 'application/json; charset=UTF-8',
 		success: function(response) {
