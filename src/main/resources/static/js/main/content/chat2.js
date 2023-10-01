@@ -112,9 +112,11 @@ function getCurrentTimestamp() {
     const hours = now.getHours();
     const minutes = now.getMinutes();
     const period = hours >= 12 ? '오후' : '오전';
-    const formattedHours = hours % 12 || 12; // 0시를 12시로 표시
+    const formattedHours = (hours % 12 || 12).toString().padStart(2, '0'); // 0시를 12시로 표시하고 두 자리로 패딩
 
-    const formattedTimestamp = `${period} ${formattedHours}:${minutes}`;
+    const formattedMinutes = minutes.toString().padStart(2, '0'); // 두 자리로 패딩
+
+    const formattedTimestamp = `${period} ${formattedHours}:${formattedMinutes}`;
 
     return formattedTimestamp;
 }
