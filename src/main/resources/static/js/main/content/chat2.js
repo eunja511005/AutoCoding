@@ -44,7 +44,8 @@ $(document).ready(function() {
 	                    	roomId: 'ROOM_001',	
 	                    	sender: 'Admin',
 	                    	message: message,
-	                    	timestamp: getCurrentTimestamp()
+	                    	timestamp: getCurrentTimestamp(),
+	                    	updateDt: getCurrentTimestamp2()
 	                    };
 	                    stompClient.send("/app/chat/send", {}, JSON.stringify(chatMessage));
 	                    messageInput.val('');
@@ -117,6 +118,18 @@ function getCurrentTimestamp() {
 
     return formattedTimestamp;
 }
+
+function getCurrentTimestamp2() {
+	  const now = new Date();
+	  const year = now.getFullYear();
+	  const month = String(now.getMonth() + 1).padStart(2, '0');
+	  const day = String(now.getDate()).padStart(2, '0');
+	  const hours = String(now.getHours()).padStart(2, '0');
+	  const minutes = String(now.getMinutes()).padStart(2, '0');
+	  const seconds = String(now.getSeconds()).padStart(2, '0');
+
+	  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+	}
 
 function getPreviousMessages() {
 
