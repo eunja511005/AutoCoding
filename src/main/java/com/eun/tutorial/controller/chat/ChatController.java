@@ -1,6 +1,8 @@
 package com.eun.tutorial.controller.chat;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -11,13 +13,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.eun.tutorial.config.chat.BookMessage;
 import com.eun.tutorial.dto.chat.ChatListRequest;
 import com.eun.tutorial.dto.chat.ChatListResponse;
 import com.eun.tutorial.dto.chat.ChatMessage;
+import com.eun.tutorial.dto.main.ApiResponse;
 import com.eun.tutorial.service.chat.ChatService;
+import com.eun.tutorial.util.FileUtil;
 import com.eun.tutorial.util.JwtTokenUtil;
 
 import lombok.RequiredArgsConstructor;
@@ -27,6 +32,7 @@ import lombok.RequiredArgsConstructor;
 public class ChatController {
 
     private final ChatService chatService;
+    private final FileUtil fileUtil;
     
 	@GetMapping("/chat/list")
 	public ModelAndView list() {
@@ -48,6 +54,23 @@ public class ChatController {
             throw new IllegalArgumentException("Invalid token");
     	}
     }
+	
+	@PostMapping("/api/chat/image")
+	public @ResponseBody ApiResponse<Map<String, Object>> saveUserManage(@RequestHeader("Authorization") String token,
+			MultipartHttpServletRequest multipartFiles) throws IOException {
+		
+		String authToken = token.substring(7); // "Bearer " 이후의 토큰 부분 추출
+		
+		Map<String, Object> res;
+    	if (JwtTokenUtil.validateToken(authToken)) {// 토큰이 유효한 경우 
+    		String username = JwtTokenUtil.extractUsername(authToken);
+    		res = fileUtil.saveImageWithTableWithPath(multipartFiles, "openImg/chat");
+    		return new ApiResponse<>(true, "Success save", res);
+        } else {
+            // 토큰이 유효하지 않은 경우 예외 처리
+            throw new IllegalArgumentException("Invalid token");
+        }
+	}
 	
     @MessageMapping("/chat/send")
     @SendTo("/topic/chat")
