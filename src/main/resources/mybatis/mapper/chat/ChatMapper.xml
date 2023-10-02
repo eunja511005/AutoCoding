@@ -7,7 +7,7 @@
 		FROM ZTHH_CHAT 
 		where ROOM_ID = #{roomId} 
 		AND del_yn='N' 
-		ORDER BY update_dt, create_dt DESC
+		ORDER BY update_dt DESC
 		OFFSET #{offset} ROWS FETCH NEXT #{limit} ROWS ONLY
 	</select>
 	
