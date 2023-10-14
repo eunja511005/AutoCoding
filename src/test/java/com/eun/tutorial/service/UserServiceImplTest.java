@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.eun.tutorial.dto.UserInfoDTO;
 import com.eun.tutorial.mapper.UserMapper;
+import com.eun.tutorial.service.main.EmailService;
 import com.eun.tutorial.util.AuthUtils;
 import com.eun.tutorial.util.EncryptionUtils;
 
@@ -31,12 +32,15 @@ class UserServiceImplTest {
 	
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private EmailService emailService;
 
     @Test
     void testUpdateLastLoginDt() {
 
         // Create an instance of UserServiceImpl with mocked dependency
-        UserServiceImpl userService = new UserServiceImpl(userDao, encryptionUtils, passwordEncoder);
+        UserServiceImpl userService = new UserServiceImpl(userDao, encryptionUtils, passwordEncoder, emailService);
 
         // Define the test username
         String username = "autoCoding";
