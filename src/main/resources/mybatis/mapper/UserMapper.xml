@@ -57,5 +57,11 @@
   		sessionID = #{sessionID}
         WHERE username = #{username}
   </update>    
+  
+  <update id="updatePassword"> 
+  		UPDATE ZTHM_USER SET last_login_dt=CURRENT_TIMESTAMP,
+  		password = #{password}
+        WHERE username = #{username}
+  </update>    
 
 </mapper>

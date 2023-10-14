@@ -3,7 +3,6 @@ package com.eun.tutorial.controller;
 import java.io.File;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.security.PrivateKey;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -40,6 +39,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.eun.tutorial.dto.UserInfoDTO;
 import com.eun.tutorial.dto.ZthhFileAttachDTO;
+import com.eun.tutorial.dto.main.ApiResponse;
+import com.eun.tutorial.exception.CustomException;
+import com.eun.tutorial.exception.ErrorCode;
 import com.eun.tutorial.mapper.UserMapper;
 import com.eun.tutorial.service.UserService;
 import com.eun.tutorial.service.ZthhFileAttachService;
@@ -137,6 +139,53 @@ public class MyWebInitController {
 
         return modelAndView;
     }
+	
+	@GetMapping("/recoveryPassword")
+	public ModelAndView recoveryPasswordInit() {
+		logger.debug("request url : /recoveryPassword");
+		
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.addObject("publicKey", "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA5HGkxvPg1NVA4Rb5wsyPnQs+6AmMIGeFLE4edLGjWuvWZVuck6tIZCmMaWs6GWho/vcyTO/lC4UaRUm3egIE5duHytVZPe14kpSWyV9ilmUEMu/5SqLFlCpxGp/gOel1+aE6/fr1sjxoMUGvZuiQe222el1O/SSukhMIRnGDHBQTMoKwd0imv7keMyxKCGKfMJD9VEc4EbZ8e/at3chPZhKmJSjdAGQc3sGAo384vdpBNdTr/YHm8rQ/82fUDoxouvS7xlenDdRRgFrdmxWC2E24L8n9vSyU4zjRvvRlJ/NNW08xpCCWdEk8RU4sNCbW/v7Q8doDB4XAD92i35l4UQIDAQAB");
+		modelAndView.setViewName("recoveryPassword");
+		
+		return modelAndView;
+	}
+	
+	@PostMapping("/recoveryPassword")
+	public @ResponseBody ApiResponse<String> recoveryPassword(@RequestBody UserInfoDTO userInfoDTO) throws CustomException {
+		logger.debug("request url : /recoveryPassword");
+    	
+		try {
+			return userService.recoveryPassword(userInfoDTO);
+        } catch (Exception e) {
+        	throw new CustomException(ErrorCode.Fail_SEND_EMAIL, e);
+        }
+        
+    }
+	
+	@GetMapping("/resetPassword")
+	public ModelAndView resetPasswordInit() {
+		logger.debug("request url : /resetPassword");
+		
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.addObject("publicKey", "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA5HGkxvPg1NVA4Rb5wsyPnQs+6AmMIGeFLE4edLGjWuvWZVuck6tIZCmMaWs6GWho/vcyTO/lC4UaRUm3egIE5duHytVZPe14kpSWyV9ilmUEMu/5SqLFlCpxGp/gOel1+aE6/fr1sjxoMUGvZuiQe222el1O/SSukhMIRnGDHBQTMoKwd0imv7keMyxKCGKfMJD9VEc4EbZ8e/at3chPZhKmJSjdAGQc3sGAo384vdpBNdTr/YHm8rQ/82fUDoxouvS7xlenDdRRgFrdmxWC2E24L8n9vSyU4zjRvvRlJ/NNW08xpCCWdEk8RU4sNCbW/v7Q8doDB4XAD92i35l4UQIDAQAB");
+		modelAndView.setViewName("resetPassword");
+		
+		return modelAndView;
+	}
+	
+	@PostMapping("/resetPassword")
+	public @ResponseBody ApiResponse<String> resetPassword(@RequestBody UserInfoDTO userInfoDTO) throws CustomException {
+		logger.debug("request url : /resetPassword");
+    	
+		try {
+			return userService.resetPassword(userInfoDTO);
+        } catch (Exception e) {
+        	throw new CustomException(ErrorCode.Fail_SEND_EMAIL, e);
+        }
+        
+    }
+	
 	
     @PostMapping("/join")
     public @ResponseBody Map<String, Object> join(MultipartHttpServletRequest multipartFiles, 
@@ -286,4 +335,5 @@ public class MyWebInitController {
 
         return modelAndView;
     }
+    
 }

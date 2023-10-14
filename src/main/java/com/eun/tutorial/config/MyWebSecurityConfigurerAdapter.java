@@ -119,7 +119,7 @@ public class MyWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter
         http
         	.authorizeRequests() // 접근에 대한 인증 설정
             .antMatchers("/signinInit", "/assets/**",
-            		"/joinInit", "/join", "/js/**", "/img/**", "/css/**",
+            		"/joinInit", "/join", "/recoveryPassword", "/resetPassword", "/js/**", "/img/**", "/css/**",
             		"/h2-console/**", "/error/**", "/favicon.ico", "/layout/test",
             		"/main/**", "/content1", "/content2", "/content3", "/posts/**", 
             		"/login-status", "/commonCode/**", "/menu/loadMenu", "/", 

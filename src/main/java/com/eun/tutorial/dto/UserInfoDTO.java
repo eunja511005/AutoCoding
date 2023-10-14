@@ -19,6 +19,7 @@ public class UserInfoDTO implements Serializable {
     private Long id;
     private String username;
     private String password;
+    private String newPassword;
     private String email;
     private byte[] salt;
     private String role;

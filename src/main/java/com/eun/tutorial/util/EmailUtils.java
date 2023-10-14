@@ -68,6 +68,23 @@ public class EmailUtils {
         javaMailSender.send(message);
     }
     
+    // 이메일 본문이 HTML 이어도 전송 가능하도록 수정
+    public void sendHTMLEmail(String to, String subject, String body) {
+        MimeMessage message = javaMailSender.createMimeMessage(); // MimeMessage 생성
+
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            helper.setTo(to);
+            helper.setSubject(subject);
+            helper.setText(body, true); // HTML 형식으로 설정
+
+            javaMailSender.send(message); // 이메일 보내기
+        } catch (MessagingException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to send HTML email: " + e.getMessage());
+        }
+    }
+    
     // 이메일 발송을 위한 메서드 (여러 개의 파일 첨부 가능)
     public void sendEmailWithAttachments(String to, String subject, String body, List<String> filePaths, List<String> fileNames) throws MessagingException {
         MimeMessage message = javaMailSender.createMimeMessage();

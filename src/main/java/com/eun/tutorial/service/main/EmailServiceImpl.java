@@ -24,7 +24,7 @@ public class EmailServiceImpl implements EmailService{
 
     @Override
     public String sendSimpleEmail(String to, String subject, String body) {
-    	emailUtils.sendEmail(to, subject, body);
+    	emailUtils.sendHTMLEmail(to, subject, body);
     	return "Email sent successfully!";
     }
 

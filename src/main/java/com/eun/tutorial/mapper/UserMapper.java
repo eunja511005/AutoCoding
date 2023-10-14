@@ -11,4 +11,5 @@ public interface UserMapper {
     UserInfoDTO getUser(Map<String, Object> map);
     int addUser(UserInfoDTO userInfoDTO);
     int updateLastLoginDt(String username, String sessionID);
+	void updatePassword(String username, String password);
 }
