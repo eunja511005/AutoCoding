@@ -21,7 +21,7 @@
 		INSERT INTO ZTMA_IDEA 
 		(ID, TITLE, EXPLANATION, START_DATE, END_DATE, STATUS, MANAGER, PARTICIPANTS, ATTACH_ID,
 		del_yn, create_id, create_dt, update_id, update_dt)
-		VALUES (#{id}, #{title}, #{explanation}, #{startDate}, #{endDate}, #{status}, #{manager}, #{participants}, #{attachId}, 
+		VALUES (#{id}, #{title}, #{explanation}, TO_DATE(#{startDate}, 'YYYY-MM-DD'), TO_DATE(#{endDate}, 'YYYY-MM-DD'), #{status}, #{manager}, #{participants}, #{attachId}, 
 		'N', #{createId}, CURRENT_TIMESTAMP, #{updateId}, CURRENT_TIMESTAMP)
 	</insert>
 
