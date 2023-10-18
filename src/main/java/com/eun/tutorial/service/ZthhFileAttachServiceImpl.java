@@ -79,4 +79,9 @@ public class ZthhFileAttachServiceImpl implements ZthhFileAttachService {
         Path path = Paths.get(filePath);
         return Files.readAllBytes(path);
     }
+
+	@Override
+	public List<ZthhFileAttachDTO> getFileListByAttachId(String attachId) {
+		return zthhFileAttachMapper.selectFileListByAttachId(attachId);
+	}
 }

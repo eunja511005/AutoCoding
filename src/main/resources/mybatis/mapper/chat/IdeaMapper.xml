@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eun.tutorial.mapper.chat.IdeaMapper">
+
+	<select id="selectIdeaList" resultType="com.eun.tutorial.dto.chat.IdeaDTO">
+		SELECT ID, TITLE, EXPLANATION, TO_CHAR(START_DATE, 'yyyy-MM-dd') AS START_DATE, TO_CHAR(END_DATE, 'yyyy-MM-dd') AS END_DATE, STATUS, MANAGER, PARTICIPANTS, ATTACH_ID,
+		del_yn, create_id, TO_CHAR(create_dt, 'YYYY-MM-DD HH24:MI:SS') AS create_dt, update_id, TO_CHAR(update_dt, 'YYYY-MM-DD HH24:MI:SS') AS update_dt 
+		FROM ZTMA_IDEA 
+		where del_yn='N' 
+		ORDER BY update_dt DESC
+		OFFSET #{offset} ROWS FETCH NEXT #{limit} ROWS ONLY
+	</select>
+	
+	<select id="selectTotalIdeas" resultType="java.lang.Long">
+		SELECT COUNT(ID) FROM
+		ZTMA_IDEA
+		where del_yn='N' 
+	</select>	
+
+	<insert id="insertIdea">
+		INSERT INTO ZTMA_IDEA 
+		(ID, TITLE, EXPLANATION, START_DATE, END_DATE, STATUS, MANAGER, PARTICIPANTS, ATTACH_ID,
+		del_yn, create_id, create_dt, update_id, update_dt)
+		VALUES (#{id}, #{title}, #{explanation}, #{startDate}, #{endDate}, #{status}, #{manager}, #{participants}, #{attachId}, 
+		'N', #{createId}, CURRENT_TIMESTAMP, #{updateId}, CURRENT_TIMESTAMP)
+	</insert>
+
+	<update id="updateIdea">
+		UPDATE ZTHH_CHAT
+		SET MESSAGE = #{message}, SENDER = #{sender}, ROOM_ID = #{roomId}, update_id = #{updateId}, update_dt = CURRENT_TIMESTAMP
+		WHERE id = #{id}
+	</update>
+
+	<delete id="deleteIdea">
+		UPDATE ZTMA_IDEA SET del_yn = 'Y', update_dt = CURRENT_TIMESTAMP WHERE id = #{id}
+	</delete>
+
+	<select id="getIdeaById" parameterType="string" resultType="com.eun.tutorial.dto.chat.IdeaDTO">
+		SELECT ID, TITLE, EXPLANATION, TO_CHAR(START_DATE, 'yyyy-MM-dd'), TO_CHAR(END_DATE, 'yyyy-MM-dd'), STATUS, MANAGER, PARTICIPANTS, ATTACH_ID,
+		del_yn, create_id, TO_CHAR(create_dt, 'YYYY-MM-DD HH24:MI:SS') AS create_dt, update_id, TO_CHAR(update_dt, 'YYYY-MM-DD HH24:MI:SS') AS update_dt  
+		FROM ZTMA_IDEA
+		WHERE id = #{id}
+		ORDER BY update_dt, create_dt
+	</select>
+
+</mapper>

@@ -27,7 +27,15 @@
   		   FILE_TYPE, FILE_SIZE, FILE_PATH,
   	       create_id, create_time, update_id, update_time
   	FROM ZTHH_FILE_ATTACH 
-  	WHERE id = #{attachId, jdbcType=VARCHAR}
+  	WHERE ATTACH_ID = #{attachId, jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectFileListByAttachId" resultType="com.eun.tutorial.dto.ZthhFileAttachDTO">
+  	SELECT ATTACH_ID, SEQUENCE, ORIGINAL_FILE_NAME, FILE_NAME,
+  		   FILE_TYPE, FILE_SIZE, FILE_PATH,
+  	       create_id, create_time, update_id, update_time
+  	FROM ZTHH_FILE_ATTACH
+  	WHERE ATTACH_ID = #{attachId, jdbcType=VARCHAR}
   </select>
   
   <insert id="save" parameterType="com.eun.tutorial.dto.ZthhFileAttachDTO"> 

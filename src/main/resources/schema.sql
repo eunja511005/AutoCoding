@@ -488,4 +488,22 @@ CREATE TABLE ZTHH_CHAT (
 );
 CREATE INDEX idx_room_id ON ZTHH_CHAT (ROOM_ID);
 
+drop table ZTMA_IDEA;
+CREATE TABLE ZTMA_IDEA (
+    id VARCHAR2(200),
+    title VARCHAR2(255) NOT NULL,
+    explanation VARCHAR2(1000) NOT NULL,
+    start_date DATE,
+    end_date DATE,
+	status VARCHAR2(50),
+	manager VARCHAR2(100),
+	participants VARCHAR2(1000),
+	attach_id VARCHAR2(500),
+	del_yn CHAR(1),
+	create_id VARCHAR2(50),
+	create_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
+	update_id VARCHAR2(50),
+	update_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
+	CONSTRAINT pk_ztma_idea PRIMARY KEY (id)
+);
 **/

@@ -30,6 +30,8 @@ import org.springframework.web.util.ContentCachingResponseWrapper;
 import com.eun.tutorial.dto.ZthhErrorDTO;
 import com.eun.tutorial.dto.main.MenuControlDTO;
 import com.eun.tutorial.dto.main.UserRequestHistoryDTO;
+import com.eun.tutorial.exception.CustomException;
+import com.eun.tutorial.exception.ErrorCode;
 import com.eun.tutorial.service.ZthhErrorService;
 import com.eun.tutorial.service.main.MenuControlService;
 import com.eun.tutorial.service.main.UserRequestHistoryService;
@@ -39,13 +41,16 @@ import com.eun.tutorial.util.JwtTokenUtil;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class WebSocketFilter implements Filter {
+public class JwtTokenCheckFilter implements Filter {
 
 	@Override
 	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
 			throws IOException, ServletException {
 		
 		HttpServletRequest request = ((HttpServletRequest) servletRequest);
+		HttpServletResponse response = ((HttpServletResponse) servletResponse);
+		
+		String uri = request.getRequestURI();
 		
         Enumeration<String> headerNames = request.getHeaderNames();
         while (headerNames.hasMoreElements()) {
@@ -57,6 +62,7 @@ public class WebSocketFilter implements Filter {
 		String header = request.getHeader("Authorization");
 		
         if (header == null || !header.startsWith("Bearer ")) {
+        	response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "No Resource Authorization");
             return;
         }
 

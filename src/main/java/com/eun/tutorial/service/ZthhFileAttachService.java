@@ -11,6 +11,7 @@ import com.eun.tutorial.dto.ZthhFileAttachDTO;
 public interface ZthhFileAttachService {
 	int save(ZthhFileAttachDTO zthmError);
 	List<ZthhFileAttachDTO> findAll();
+	List<ZthhFileAttachDTO> getFileListByAttachId(String attachId);
 	ZthhFileAttachDTO getOne(Map<String, Object> map);
 	List<ImageResponseDTO> getFiles(ImageRequestDTO imageRequestDTO, String username) throws IOException;
 }

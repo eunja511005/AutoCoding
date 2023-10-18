@@ -265,10 +265,10 @@ public class FileUtil {
                     				
                     zthhFileAttachService.save(zthhFileAttachDTO);
                     
-                    res.put("attachId", attachId);
                     res.put("attachUri", new_file_name);
 				}
-    	
+
+                res.put("attachId", attachId);
         }
     	
         // 임시 파일 지우기

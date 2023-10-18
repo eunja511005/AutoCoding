@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ResourceLoader;
 
 import com.eun.tutorial.filter.LoggingFilter;
-import com.eun.tutorial.filter.WebSocketFilter;
+import com.eun.tutorial.filter.JwtTokenCheckFilter;
 import com.eun.tutorial.filter.XssFilter;
 import com.eun.tutorial.service.ZthhErrorService;
 import com.eun.tutorial.service.main.MenuControlService;
@@ -44,11 +44,11 @@ public class MyFilterConfiguration {
     }
     
     @Bean
-    public FilterRegistrationBean<WebSocketFilter> webSocketFilter() {
-    	FilterRegistrationBean<WebSocketFilter> registration = new FilterRegistrationBean<>();
-    	registration.setFilter(new WebSocketFilter());
-    	registration.addUrlPatterns("/ws-service"); // Set the URL patterns for the filter
-    	registration.setName("WebSocketFilter");
+    public FilterRegistrationBean<JwtTokenCheckFilter> webSocketFilter() {
+    	FilterRegistrationBean<JwtTokenCheckFilter> registration = new FilterRegistrationBean<>();
+    	registration.setFilter(new JwtTokenCheckFilter());
+    	registration.addUrlPatterns("/ws-service", "/openImg/chat/*", "/openImg/idea/*"); // Set the URL patterns for the filter
+    	registration.setName("JwtTokenCheckFilter");
     	registration.setOrder(3); // Set the order in which the filter should be applied
     	return registration;
     }
