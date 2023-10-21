@@ -36,11 +36,10 @@
 	</delete>
 
 	<select id="getIdeaById" parameterType="string" resultType="com.eun.tutorial.dto.chat.IdeaDTO">
-		SELECT ID, TITLE, EXPLANATION, TO_CHAR(START_DATE, 'yyyy-MM-dd'), TO_CHAR(END_DATE, 'yyyy-MM-dd'), STATUS, MANAGER, PARTICIPANTS, ATTACH_ID,
-		del_yn, create_id, TO_CHAR(create_dt, 'YYYY-MM-DD HH24:MI:SS') AS create_dt, update_id, TO_CHAR(update_dt, 'YYYY-MM-DD HH24:MI:SS') AS update_dt  
-		FROM ZTMA_IDEA
+		SELECT ID, TITLE, EXPLANATION, TO_CHAR(START_DATE, 'yyyy-MM-dd') AS START_DATE, TO_CHAR(END_DATE, 'yyyy-MM-dd') AS END_DATE, STATUS, MANAGER, PARTICIPANTS, ATTACH_ID,
+		del_yn, create_id, TO_CHAR(create_dt, 'YYYY-MM-DD HH24:MI:SS') AS create_dt, update_id, TO_CHAR(update_dt, 'YYYY-MM-DD HH24:MI:SS') AS update_dt 
+		FROM ZTMA_IDEA 
 		WHERE id = #{id}
-		ORDER BY update_dt, create_dt
 	</select>
 
 </mapper>

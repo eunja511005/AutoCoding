@@ -15,5 +15,5 @@ public interface IdeaMapper {
 	int insertIdea(IdeaDTO ideaDTO);
 	int updateIdea(IdeaDTO ideaDTO);
 	int deleteIdea(String id);
-	ChatMessage getIdeaById(String id);
+	IdeaDTO getIdeaById(String id);
 }

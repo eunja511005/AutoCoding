@@ -60,13 +60,19 @@ public class IdeaServiceImpl implements IdeaService{
 	}
 
 	@Override
-	public int deleteIdea(String id) {
-		return ideaMapper.deleteIdea(id);
+	public int deleteIdea(String id, String username) {
+		
+		if(username.equals(getIdeaById(id).getCreateId())){
+			return ideaMapper.deleteIdea(id);
+		}
+		
+		return 0;
+				
 	}
 
 	@Override
-	public ChatMessage getIdeaById(String id) {
-		return getIdeaById(id);
+	public IdeaDTO getIdeaById(String id) {
+		return ideaMapper.getIdeaById(id);
 	}
 
 	@Override

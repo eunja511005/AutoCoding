@@ -12,6 +12,6 @@ public interface IdeaService {
 	long getTotalIdeas();
 	int saveIdea(IdeaDTO ideaDTO);
 	int updateIdea(IdeaDTO ideaDTO);
-	int deleteIdea(String id);
-	ChatMessage getIdeaById(String id);
+	int deleteIdea(String id, String username);
+	IdeaDTO getIdeaById(String id);
 }
