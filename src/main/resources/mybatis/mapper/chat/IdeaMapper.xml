@@ -26,8 +26,8 @@
 	</insert>
 
 	<update id="updateIdea">
-		UPDATE ZTHH_CHAT
-		SET MESSAGE = #{message}, SENDER = #{sender}, ROOM_ID = #{roomId}, update_id = #{updateId}, update_dt = CURRENT_TIMESTAMP
+		UPDATE ZTMA_IDEA
+		SET TITLE = #{title}, EXPLANATION = #{explanation}, ATTACH_ID = #{attachId}, update_id = #{updateId}, update_dt = CURRENT_TIMESTAMP
 		WHERE id = #{id}
 	</update>
 

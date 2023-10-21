@@ -13,6 +13,7 @@ import com.eun.tutorial.dto.chat.IdeaDTO;
 import com.eun.tutorial.dto.chat.IdeaListRequest;
 import com.eun.tutorial.mapper.ZthhFileAttachMapper;
 import com.eun.tutorial.mapper.chat.IdeaMapper;
+import com.eun.tutorial.util.StringUtils;
 
 import lombok.AllArgsConstructor;
 
@@ -45,8 +46,12 @@ public class IdeaServiceImpl implements IdeaService{
 
 	@Override
 	public int saveIdea(IdeaDTO ideaDTO) {
-		ideaDTO.setId("CHAT_"+UUID.randomUUID());
-		return ideaMapper.insertIdea(ideaDTO);
+		if (StringUtils.isBlank(ideaDTO.getId())) {
+			ideaDTO.setId("IDEA_"+UUID.randomUUID());
+			return ideaMapper.insertIdea(ideaDTO);
+		} else {
+			return ideaMapper.updateIdea(ideaDTO);
+		}
 	}
 
 	@Override
