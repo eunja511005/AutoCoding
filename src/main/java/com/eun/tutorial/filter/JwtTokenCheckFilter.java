@@ -51,6 +51,9 @@ public class JwtTokenCheckFilter implements Filter {
 		HttpServletResponse response = ((HttpServletResponse) servletResponse);
 		
 		String uri = request.getRequestURI();
+        if (uri.equals("/api/getToken")) { // 토큰을 얻을때는 토큰 체크 안하도록 함. 토큰 얻고 나서부터 토큰 체크해야 함.
+        	filterChain.doFilter(servletRequest, servletResponse);
+        }
 		
         Enumeration<String> headerNames = request.getHeaderNames();
         while (headerNames.hasMoreElements()) {
