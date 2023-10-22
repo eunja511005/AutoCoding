@@ -47,7 +47,7 @@ public class MyFilterConfiguration {
     public FilterRegistrationBean<JwtTokenCheckFilter> webSocketFilter() {
     	FilterRegistrationBean<JwtTokenCheckFilter> registration = new FilterRegistrationBean<>();
     	registration.setFilter(new JwtTokenCheckFilter());
-    	registration.addUrlPatterns("/ws-service", "/openImg/chat/*", "/openImg/idea/*"); // Set the URL patterns for the filter
+    	registration.addUrlPatterns("/ws-service", "/api/*", "/openImg/chat/*", "/openImg/idea/*"); // Set the URL patterns for the filter
     	registration.setName("JwtTokenCheckFilter");
     	registration.setOrder(3); // Set the order in which the filter should be applied
     	return registration;

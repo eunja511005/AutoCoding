@@ -1,6 +1,7 @@
 package com.eun.tutorial.controller.chat;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,7 +17,6 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.eun.tutorial.dto.chat.IdeaDTO;
 import com.eun.tutorial.dto.chat.IdeaListRequest;
-import com.eun.tutorial.dto.chat.IdeaListResponse;
 import com.eun.tutorial.dto.main.ApiResponse;
 import com.eun.tutorial.service.chat.IdeaService;
 import com.eun.tutorial.util.FileUtil;
@@ -28,26 +28,33 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class IdeaController {
 
-    private final IdeaService ideaService;
+	private final IdeaService ideaService;
     private final FileUtil fileUtil;
+    private static final String INVALID_TOKEN = "Invalid token";
     
 	@PostMapping("/api/idea/list")
-    public @ResponseBody IdeaListResponse getChatList(@RequestHeader("Authorization") String authToken, @RequestBody IdeaListRequest ideaListRequest) {
+    public @ResponseBody ApiResponse<Map<String, Object>> getChatList(@RequestHeader("Authorization") String authToken, @RequestBody IdeaListRequest ideaListRequest) {
 		String token = authToken.substring(7); // "Bearer " 이후의 토큰 부분 추출
     	
+		Map<String, Object> res = new HashMap<>();
     	if (JwtTokenUtil.validateToken(token)) {
-    		List<IdeaDTO> messages = ideaService.getIdeaList(ideaListRequest);
+    		List<IdeaDTO> ideaDTOList = ideaService.getIdeaList(ideaListRequest);
     		long totalElements = ideaService.getTotalIdeas();
-    		return new IdeaListResponse(true, messages, totalElements);
+    		
+    		res.put("ideaDTOList", ideaDTOList);
+    		res.put("totalElements", totalElements);
+    		return new ApiResponse<>(true, "Success search", res);
     	}else {
     		 // 토큰이 유효하지 않은 경우 예외 처리
-            throw new IllegalArgumentException("Invalid token");
+            throw new IllegalArgumentException(INVALID_TOKEN);
     	}
     }
 	
 	@PostMapping("/api/idea")
-	public @ResponseBody ApiResponse<Map<String, Object>> saveIdea(@RequestHeader("Authorization") String token,
-			MultipartHttpServletRequest multipartFiles, @RequestPart("idea") IdeaDTO ideaDTO) throws IOException {
+	public @ResponseBody ApiResponse<Map<String, Object>> saveIdea(
+			@RequestHeader("Authorization") String token,
+			MultipartHttpServletRequest multipartFiles, 
+			@RequestPart("idea") IdeaDTO ideaDTO) throws IOException {
 		
 		String authToken = token.substring(7); // "Bearer " 이후의 토큰 부분 추출
 		
@@ -64,7 +71,7 @@ public class IdeaController {
     		return new ApiResponse<>(true, "Success save", res);
         } else {
             // 토큰이 유효하지 않은 경우 예외 처리
-            throw new IllegalArgumentException("Invalid token");
+            throw new IllegalArgumentException(INVALID_TOKEN);
         }
 	}
 	
@@ -83,7 +90,7 @@ public class IdeaController {
 			return new ApiResponse<>(true, "Success delete", null);
 		} else {
 			// 토큰이 유효하지 않은 경우 예외 처리
-			throw new IllegalArgumentException("Invalid token");
+			throw new IllegalArgumentException(INVALID_TOKEN);
 		}
 	}
 }
