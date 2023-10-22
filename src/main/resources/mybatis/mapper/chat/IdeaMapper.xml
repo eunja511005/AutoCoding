@@ -26,9 +26,15 @@
 	</insert>
 
 	<update id="updateIdea">
-		UPDATE ZTMA_IDEA
-		SET TITLE = #{title}, EXPLANATION = #{explanation}, ATTACH_ID = #{attachId}, update_id = #{updateId}, update_dt = CURRENT_TIMESTAMP
-		WHERE id = #{id}
+	    UPDATE ZTMA_IDEA
+	    	SET TITLE = #{title},
+	        EXPLANATION = #{explanation},
+	        <if test="attachId != null">
+	            ATTACH_ID = #{attachId},
+	        </if>
+	        update_id = #{updateId},
+	        update_dt = CURRENT_TIMESTAMP
+	    WHERE id = #{id}
 	</update>
 
 	<delete id="deleteIdea">
