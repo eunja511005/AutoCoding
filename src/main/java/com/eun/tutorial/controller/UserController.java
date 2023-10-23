@@ -117,7 +117,8 @@ public class UserController {
     		return ResponseEntity.ok(true);
         } else {
             // 토큰이 유효하지 않은 경우 예외 처리
-            throw new IllegalArgumentException("Invalid token");
+            //throw new IllegalArgumentException("Invalid token");
+        	return ResponseEntity.ok(false);
         }
     }
     
