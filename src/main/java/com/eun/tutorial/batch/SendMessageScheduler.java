@@ -10,6 +10,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.eun.tutorial.dto.chat.ChatMessage;
+import com.eun.tutorial.service.chat.ChatService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -23,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 public class SendMessageScheduler {
 	
 	private final SimpMessagingTemplate simpMessagingTemplate;
+	private final ChatService chatService;
 	
     public void sendToTopic(String topic, String message) {
         simpMessagingTemplate.convertAndSend(topic, message);
@@ -41,8 +43,9 @@ public class SendMessageScheduler {
     	chatMessage.setTimestamp(currentTime);
     	chatMessage.setMessage("안녕, 나는 매시 정각에 인사하는 스케쥴러야!");
     	
-    	ObjectMapper objectMapper = new ObjectMapper();
+    	chatService.saveChatMessage(chatMessage); // 메시지 DB에 저장
     	
+    	ObjectMapper objectMapper = new ObjectMapper();
         sendToTopic("/topic/chat", objectMapper.writeValueAsString(chatMessage));
     }
 }
