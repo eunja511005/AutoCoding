@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eun.tutorial.mapper.batch.ZthmBatchMasterMapper">
+
+	<select id="selectBatchMasterList" resultType="com.eun.tutorial.dto.batch.BatchMasterDTO">
+		<![CDATA[
+			SELECT ID, BATCH_NAME, DESCRIPTION, BATCH_CYCLE, TO_CHAR(START_DATE, 'yyyyMMddHH24mmss') AS START_DATE, TO_CHAR(END_DATE, 'yyyyMMddHH24mmss') AS END_DATE, STATUS, MANAGER, LOG_YN, 
+			del_yn, create_id, TO_CHAR(create_dt, 'YYYY-MM-DD HH24:MI:SS') AS create_dt, update_id, TO_CHAR(update_dt, 'YYYY-MM-DD HH24:MI:SS') AS update_dt 
+			FROM ZTHM_BATCH_MASTER 
+			where del_yn='N'
+			and status='R'
+			and NOT (CURRENT_TIMESTAMP < TRUNC(start_date, 'MI') + NUMTODSINTERVAL(batch_cycle, 'MINUTE'))
+		]]>
+	</select>
+	
+	<update id="updateBatchMasterInprogress">
+		<![CDATA[
+		    UPDATE ZTHM_BATCH_MASTER
+		    SET status = 'I',
+		    start_date = CURRENT_TIMESTAMP,
+		    update_dt = CURRENT_TIMESTAMP
+		    WHERE id = #{id}
+		]]>
+	</update>	
+	
+	<update id="updateBatchMasterReady">
+		<![CDATA[
+		    UPDATE ZTHM_BATCH_MASTER
+		    SET status = 'R',
+		    end_date = CURRENT_TIMESTAMP,
+		    update_dt = CURRENT_TIMESTAMP
+		    WHERE id = #{id}
+		]]>
+	</update>	
+	
+</mapper>

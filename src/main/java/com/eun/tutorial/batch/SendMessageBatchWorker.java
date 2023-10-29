@@ -5,8 +5,6 @@ import java.util.Date;
 import java.util.Locale;
 
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.scheduling.annotation.EnableAsync;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.eun.tutorial.dto.chat.ChatMessage;
@@ -15,25 +13,18 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
-@RequiredArgsConstructor
 @Component
-@EnableAsync
-public class SendMessageScheduler {
-	
+@RequiredArgsConstructor
+public class SendMessageBatchWorker extends BatchWorker {
 	private final SimpMessagingTemplate simpMessagingTemplate;
 	private final ChatService chatService;
 	
     public void sendToTopic(String topic, String message) {
         simpMessagingTemplate.convertAndSend(topic, message);
     }
-    
-    
-    //@Scheduled(fixedRate = 1 * 60 * 1000) // 1분 단위로 예약된 메시지 보내기
-    //@Scheduled(cron = "0 0 * * * ?") // 매시 정각에 수행
-    public void execute() throws JsonProcessingException {
+
+	public void doBatch() {
         SimpleDateFormat sdf = new SimpleDateFormat("a hh:mm", Locale.getDefault());
         String currentTime = sdf.format(new Date());
     	
@@ -46,6 +37,11 @@ public class SendMessageScheduler {
     	chatService.saveChatMessage(chatMessage); // 메시지 DB에 저장
     	
     	ObjectMapper objectMapper = new ObjectMapper();
-        sendToTopic("/topic/chat", objectMapper.writeValueAsString(chatMessage));
-    }
+        try {
+			sendToTopic("/topic/chat", objectMapper.writeValueAsString(chatMessage));
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+	}
+
 }

@@ -506,4 +506,23 @@ CREATE TABLE ZTMA_IDEA (
 	update_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
 	CONSTRAINT pk_ztma_idea PRIMARY KEY (id)
 );
+
+drop table ZTHM_BATCH_MASTER;
+CREATE TABLE ZTHM_BATCH_MASTER (
+    id VARCHAR2(200),
+    batch_name VARCHAR2(255) NOT NULL,
+    description VARCHAR2(1000) NOT NULL,
+    batch_cycle NUMBER NOT NULL,
+    start_date TIMESTAMP(6),
+    end_date TIMESTAMP(6),
+	status VARCHAR2(50),
+	manager VARCHAR2(100),
+	log_yn CHAR(1),
+	del_yn CHAR(1),
+	create_id VARCHAR2(50),
+	create_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
+	update_id VARCHAR2(50),
+	update_dt TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP,
+	CONSTRAINT pk_zthm_batch_master PRIMARY KEY (id)
+);
 **/
