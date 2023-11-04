@@ -156,12 +156,12 @@ public class XSSCustomRequestWrapper extends HttpServletRequestWrapper {
             }
 
             // Filter file system manipulation characters(댓글에 마침표는 들어 갈수 있어서 일단 제외)
-    		/*
-    		 * if (value.contains("..")) {
-    		 * log.warn("##### File system manipulation detected: {}", value); value =
-    		 * value.replace("\\.\\.", ""); idDetected = true; }
-    		 */
-            
+			if (value.contains("..")) {
+				log.warn("##### File system manipulation detected: {}", value);
+				value = value.replace("..", "invalid");
+				idDetected = true;
+			}
+    		
             if(idDetected) {
             	zthhErrorService.save(
             			ZthhErrorDTO.builder().errorMessage("Detecting security-sensitive characters in input values : " + value).build());

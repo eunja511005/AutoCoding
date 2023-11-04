@@ -33,4 +33,83 @@
 		]]>
 	</update>	
 	
+	<select id="selectBatchMasters" parameterType="java.util.HashMap" resultType="com.eun.tutorial.dto.batch.BatchMasterDTO">
+		SELECT
+			ID, BATCH_NAME, DESCRIPTION, BATCH_CYCLE, 
+			TO_CHAR(START_DATE, 'YYYY-MM-DD HH24:MI:SS') AS START_DATE, 
+			TO_CHAR(END_DATE, 'YYYY-MM-DD HH24:MI:SS') AS END_DATE, 
+			STATUS, MANAGER, LOG_YN, 
+			del_yn,
+			create_id,
+			TO_CHAR(create_dt, 'YYYY-MM-DD HH24:MI:SS') AS create_dt,
+			update_id,
+			TO_CHAR(update_dt, 'YYYY-MM-DD HH24:MI:SS') AS update_dt
+		FROM
+			ZTHM_BATCH_MASTER	
+	    WHERE del_yn='N'
+	        <if test="search.batchName != null and search.batchName.value != ''">
+	            AND LOWER(BATCH_NAME) LIKE '%'||LOWER(#{search.batchName.value})||'%'
+	        </if>
+		    <if test="search.startDate != null and search.startDate.value != ''">
+		      	AND TO_CHAR(create_dt, 'YYYY-MM-DD') &gt;= #{search.startDate.value}
+		    </if>
+		    <if test="search.endDate != null and search.endDate.value != ''">
+		      	AND TO_CHAR(create_dt, 'YYYY-MM-DD') &lt;= #{search.endDate.value}
+		    </if>			          
+	    OFFSET #{offset} ROWS FETCH NEXT #{limit} ROWS ONLY
+	</select>	
+	
+    <select id="getTotalCount" parameterType="java.util.HashMap" resultType="int">
+        SELECT
+            COUNT(*)
+		FROM
+			ZTHM_BATCH_MASTER	
+	    WHERE del_yn='N'
+	        <if test="search.batchName != null and search.batchName.value != ''">
+	            AND LOWER(BATCH_NAME) LIKE '%'||LOWER(#{search.batchName.value})||'%'
+	        </if>
+		    <if test="search.startDate != null and search.startDate.value != ''">
+		      	AND TO_CHAR(create_dt, 'YYYY-MM-DD') &gt;= #{search.startDate.value}
+		    </if>
+		    <if test="search.endDate != null and search.endDate.value != ''">
+		      	AND TO_CHAR(create_dt, 'YYYY-MM-DD') &lt;= #{search.endDate.value}
+		    </if>	    	    
+    </select>	
+    
+	<insert id="insertBatchMaster">
+		INSERT INTO ZTHM_BATCH_MASTER (id, batch_name, description, batch_cycle, status, manager, log_yn, del_yn, create_id, create_dt, update_id, update_dt)
+		VALUES (#{id}, #{batchName}, #{description}, #{batchCycle}, #{status}, #{manager}, #{logYn}, 'N', #{createId}, CURRENT_TIMESTAMP, #{updateId}, CURRENT_TIMESTAMP)
+	</insert>
+
+	<update id="updateBatchMaster">
+		UPDATE ZTHM_BATCH_MASTER
+		SET BATCH_NAME = #{batchName}, 
+		DESCRIPTION = #{description}, 
+		BATCH_CYCLE = #{batchCycle}, 
+		MANAGER = #{manager}, 
+		update_id = #{updateId}, 
+		update_dt = CURRENT_TIMESTAMP
+		WHERE id = #{id}
+	</update>
+
+	<delete id="deleteBatchMaster">
+		UPDATE ZTHM_BATCH_MASTER SET del_yn = 'Y', update_dt = CURRENT_TIMESTAMP WHERE id = #{id}
+	</delete>
+
+	<select id="getBatchMasterById" parameterType="string" resultType="com.eun.tutorial.dto.batch.BatchMasterDTO">
+		SELECT 
+			ID, BATCH_NAME, DESCRIPTION, BATCH_CYCLE, 
+			TO_CHAR(START_DATE, 'YYYY-MM-DD HH24:MI:SS') AS START_DATE, 
+			TO_CHAR(END_DATE, 'YYYY-MM-DD HH24:MI:SS') AS END_DATE, 
+			STATUS, MANAGER, LOG_YN, 
+			del_yn,
+			create_id,
+			TO_CHAR(create_dt, 'YYYY-MM-DD HH24:MI:SS') AS create_dt,
+			update_id,
+			TO_CHAR(update_dt, 'YYYY-MM-DD HH24:MI:SS') AS update_dt 
+		FROM ZTHM_BATCH_MASTER
+		WHERE id = #{id}
+		ORDER BY update_dt, create_dt
+	</select>    
+	
 </mapper>
