@@ -77,8 +77,8 @@
     </select>	
     
 	<insert id="insertBatchMaster">
-		INSERT INTO ZTHM_BATCH_MASTER (id, batch_name, description, batch_cycle, status, manager, log_yn, del_yn, create_id, create_dt, update_id, update_dt)
-		VALUES (#{id}, #{batchName}, #{description}, #{batchCycle}, #{status}, #{manager}, #{logYn}, 'N', #{createId}, CURRENT_TIMESTAMP, #{updateId}, CURRENT_TIMESTAMP)
+		INSERT INTO ZTHM_BATCH_MASTER (id, batch_name, description, batch_cycle, START_DATE, status, manager, log_yn, del_yn, create_id, create_dt, update_id, update_dt)
+		VALUES (#{id}, #{batchName}, #{description}, #{batchCycle}, TO_TIMESTAMP(#{startDate}, 'YYYY-MM-DD"T"HH24:MI'), #{status}, #{manager}, #{logYn}, 'N', #{createId}, CURRENT_TIMESTAMP, #{updateId}, CURRENT_TIMESTAMP)
 	</insert>
 
 	<update id="updateBatchMaster">
@@ -86,6 +86,7 @@
 		SET BATCH_NAME = #{batchName}, 
 		DESCRIPTION = #{description}, 
 		BATCH_CYCLE = #{batchCycle}, 
+		START_DATE = TO_TIMESTAMP(#{startDate}, 'YYYY-MM-DD"T"HH24:MI'),
 		MANAGER = #{manager}, 
 		update_id = #{updateId}, 
 		update_dt = CURRENT_TIMESTAMP
