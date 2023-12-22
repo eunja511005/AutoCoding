@@ -15,5 +15,6 @@ public class ApiRequest<T> {
 	private CommonHeader commonHeader;
 	
 	@NotNull(message = "Data is required")
+	@Valid
     private T data;
 }

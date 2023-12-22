@@ -43,9 +43,10 @@ public class ApiClient {
                 if (apiResponse != null) {
                 	if(apiResponse.isSuccess()) {
                 		log.debug("Response Data: " + apiResponse.getData());
+                		log.debug("Response Error: " + response.body());
                 	}else {
-                		log.debug("Error Code: " + apiResponse.getErrorCode());
-                		log.debug("Error Messgae: " + apiResponse.getErrorMessage());
+                		log.debug("Result Code: " + apiResponse.getResultCode());
+                		log.debug("Result Messgae: " + apiResponse.getResultMessage());
                 	}
                 } else {
                 	log.debug("Failed to parse ApiResponse or ApiResponse is null");
@@ -66,17 +67,49 @@ public class ApiClient {
     }
 
     private static String createJsonRequestBody() {
-        return "{\n" +
-                "  \"commonHeader\": {\n" +
-                "    \"clientId\": \"yourClientId\",\n" +
-                "    \"requestId\": \"yourRequestId\",\n" +
-                "    \"language\": \"en\",\n" +
-                "    \"timeZone\": \"GMT+9\",\n" +
-                "    \"timestamp\": \"20231222090912\"\n" +
-                "  },\n" +
-                "  \"data\": {\n" +
-                "  }\n" +
-                "}";
+        return "{\r\n"
+        		+ "  \"commonHeader\": {\r\n"
+        		+ "    \"clientId\": \"yourClientId\",\r\n"
+        		+ "    \"requestId\": \"yourRequestId\",\r\n"
+        		+ "    \"language\": \"en\",\r\n"
+        		+ "    \"timeZone\": \"GMT+9\",\r\n"
+        		+ "    \"timestamp\": \"20231222090912\"\r\n"
+        		+ "  },\r\n"
+        		+ "  \"data\": {\r\n"
+        		+ "    \"stockHeader\": {\r\n"
+        		+ "      \"mode\": \"L\"\r\n"
+        		+ "    },\r\n"
+        		+ "    \"stockItems\": [\r\n"
+        		+ "      {\r\n"
+        		+ "        \"itemCategory\": \"모바일\",\r\n"
+        		+ "        \"itemNumber\": 123,\r\n"
+        		+ "        \"modelCode\": \"MDL-1234\",\r\n"
+        		+ "        \"plant\": \"서울공장\",\r\n"
+        		+ "        \"storageLocation\": \"서울 창고\",\r\n"
+        		+ "        \"valuationType\": \"가치 평가 유형1\",\r\n"
+        		+ "        \"vendorCode\": \"VNDR-001\",\r\n"
+        		+ "        \"requestQuantity\": 10,\r\n"
+        		+ "        \"requestDate\": \"20231222090000\",\r\n"
+        		+ "        \"confirmQuantity\": 8,\r\n"
+        		+ "        \"confirmDate\": \"20231222120000\"\r\n"
+        		+ "      },\r\n"
+        		+ "      {\r\n"
+        		+ "        \"itemCategory\": \"가전\",\r\n"
+        		+ "        \"itemNumber\": 456,\r\n"
+        		+ "        \"modelCode\": \"MDL-5678\",\r\n"
+        		+ "        \"plant\": \"부산공장\",\r\n"
+        		+ "        \"storageLocation\": \"부산 창고\",\r\n"
+        		+ "        \"valuationType\": \"가치 평가 유형2\",\r\n"
+        		+ "        \"vendorCode\": \"VNDR-002\",\r\n"
+        		+ "        \"requestQuantity\": 5,\r\n"
+        		+ "        \"requestDate\": \"20231223090000\",\r\n"
+        		+ "        \"confirmQuantity\": 5,\r\n"
+        		+ "        \"confirmDate\": \"20231223120000\"\r\n"
+        		+ "      }\r\n"
+        		+ "    ]\r\n"
+        		+ "  }\r\n"
+        		+ "}\r\n"
+        		+ "";
     }
 
     private static ApiResponse<Object> parseApiResponse(String json) {

@@ -10,14 +10,14 @@ import lombok.NoArgsConstructor;
 public class ApiResponse<T> {
     private boolean success;
     private T data;
-    private int errorCode;
-    private String errorMessage;
+    private int resultCode;
+    private String resultMessage;
 
-    public ApiResponse(boolean success, T data, int errorCode, String errorMessage) {
+    public ApiResponse(boolean success, T data, int resultCode, String resultMessage) {
         this.success = success;
         this.data = data;
-        this.errorCode = errorCode;
-        this.errorMessage = errorMessage;
+        this.resultCode = resultCode;
+        this.resultMessage = resultMessage;
     }
 
     /**
@@ -34,8 +34,8 @@ public class ApiResponse<T> {
     /**
      * 
      * @param <T>
-     * @param errorCode
-     * @param errorMessage
+     * @param resultCode
+     * @param resultMessage
      * @return
      * 일반적인 실패 리턴을 위한 생성자
      */
