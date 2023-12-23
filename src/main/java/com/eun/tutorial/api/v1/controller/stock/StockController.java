@@ -1,8 +1,5 @@
 package com.eun.tutorial.api.v1.controller.stock;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,19 +9,21 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.eun.tutorial.api.v1.dto.ApiRequest;
 import com.eun.tutorial.api.v1.dto.ApiResponse;
-import com.eun.tutorial.api.v1.dto.stock.StockHeader;
-import com.eun.tutorial.api.v1.dto.stock.StockItem;
 import com.eun.tutorial.api.v1.dto.stock.StockSearchRequest;
 import com.eun.tutorial.api.v1.dto.stock.StockSearchResponse;
 import com.eun.tutorial.api.v1.exception.ApiErrorCode;
 import com.eun.tutorial.api.v1.exception.CustomException;
+import com.eun.tutorial.api.v1.service.StockService;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/stock")
 public class StockController {
+	private final StockService stockService;
 	
 	/**
 	 * 
@@ -38,32 +37,19 @@ public class StockController {
 	 * MethodArgumentNotValidException 발생시 GlobalExceptionHander에서 공통으로 오류 메세지 리턴 함
 	 * 
 	 */
-	
     @PostMapping("/search/v1")
-    public ResponseEntity<ApiResponse<StockSearchResponse>> processData(@Validated @RequestBody ApiRequest<StockSearchRequest> request) {
+    public ResponseEntity<ApiResponse<StockSearchResponse>> searchStock(@Validated @RequestBody ApiRequest<StockSearchRequest> request) {
     	try {
             // ApiRequest 객체를 사용한 비즈니스 로직 처리
             log.info("Received data: " + request);
             
-            StockHeader stockHeader = new StockHeader();
-            stockHeader.setMode("L");
-            
-            StockItem stockItem = new StockItem();
-            stockItem.setModelCode("model");
-            stockItem.setPlant("plant");
-            stockItem.setStorageLocation("sl");
-            stockItem.setConfirmDate("20231222102500");
-            
-            List<StockItem> stockItemList = new ArrayList<>();
-            stockItemList.add(stockItem);
-            
-            StockSearchResponse stockSearchResponse = new StockSearchResponse(stockHeader, stockItemList, null);
+            StockSearchResponse stockSearchResponse = stockService.searchStock(request);
 
             // 처리 결과 반환
             ApiResponse<StockSearchResponse> response = ApiResponse.success(stockSearchResponse);
             return ResponseEntity.ok(response);
         } catch (CustomException e) {
-            ApiResponse<StockSearchResponse> errorResponse = ApiResponse.failure(ApiErrorCode.INTERNAL_SERVER_ERROR);
+            ApiResponse<StockSearchResponse> errorResponse = ApiResponse.failure(e.getErrorCode(), e.getMessage());
             return ResponseEntity.internalServerError().body(errorResponse);
         }
 

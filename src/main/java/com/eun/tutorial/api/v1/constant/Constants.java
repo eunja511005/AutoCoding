@@ -1,6 +1,13 @@
 package com.eun.tutorial.api.v1.constant;
 
 public final class Constants {
+	
+	// Stock
+	public static final String SEARCH_FROM_LOCAL = "L";
+	public static final String SEARCH_FROM_REMOTE = "R";
+	public static final String SEARCH_BY_WAREHOUSE = "W";
+	public static final String SEARCH_BY_MODEL = "M";
+	
 
     // 애플리케이션 설정
     public static final String APPLICATION_NAME = "MyApp";

@@ -10,10 +10,10 @@ import lombok.NoArgsConstructor;
 public class ApiResponse<T> {
     private boolean success;
     private T data;
-    private int resultCode;
+    private String resultCode;
     private String resultMessage;
 
-    public ApiResponse(boolean success, T data, int resultCode, String resultMessage) {
+    public ApiResponse(boolean success, T data, String resultCode, String resultMessage) {
         this.success = success;
         this.data = data;
         this.resultCode = resultCode;
@@ -51,7 +51,7 @@ public class ApiResponse<T> {
      * @return
      * ApiErrorCode로는 개별 상세 오류 내용까지는 보낼 수 없어서 생성자 추가
      */
-    public static <T> ApiResponse<T> failure(int errorCode, String errorMessage) {
+    public static <T> ApiResponse<T> failure(String errorCode, String errorMessage) {
         return new ApiResponse<>(false, null, errorCode, errorMessage);
     }
 }

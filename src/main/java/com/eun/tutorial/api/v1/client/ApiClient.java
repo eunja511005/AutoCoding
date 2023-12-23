@@ -66,6 +66,16 @@ public class ApiClient {
 		} 
     }
 
+    private static ApiResponse<Object> parseApiResponse(String json) {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return mapper.readValue(json, new TypeReference<ApiResponse<Object>>() {});
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
     private static String createJsonRequestBody() {
         return "{\r\n"
         		+ "  \"commonHeader\": {\r\n"
@@ -112,14 +122,5 @@ public class ApiClient {
         		+ "";
     }
 
-    private static ApiResponse<Object> parseApiResponse(String json) {
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            return mapper.readValue(json, new TypeReference<ApiResponse<Object>>() {});
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
 }
 

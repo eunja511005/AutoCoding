@@ -11,9 +11,15 @@ package com.eun.tutorial.api.v1.exception;
  */
 public class CustomException extends RuntimeException {
 
-	private static final long serialVersionUID = 8069631968744024775L;
+    private static final long serialVersionUID = 8069631968744024775L;
+    private final String errorCode;
 
-	public CustomException(String message) {
+    public CustomException(String errorCode, String message) {
         super(message);
+        this.errorCode = errorCode;
+    }
+
+    public String getErrorCode() {
+        return errorCode;
     }
 }
