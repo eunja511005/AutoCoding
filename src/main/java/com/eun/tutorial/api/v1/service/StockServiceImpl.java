@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.eun.tutorial.api.v1.dto.ApiRequest;
-import com.eun.tutorial.api.v1.dto.CommonHeader;
 import com.eun.tutorial.api.v1.dto.stock.StockHeader;
 import com.eun.tutorial.api.v1.dto.stock.StockItem;
 import com.eun.tutorial.api.v1.dto.stock.StockSearchRequest;
@@ -28,7 +27,8 @@ public class StockServiceImpl implements StockService {
 	@Override
 	public StockSearchResponse searchStock(ApiRequest<StockSearchRequest> request) {
 		
-		CommonHeader commonHeader = request.getCommonHeader();
+		// TODO 서비스 호출 시작, 종료시 로그 테이블에 저장 로직 추가 필요(로깅에 실패 하더라도 원래 기능은 동작 하도록 구현 필요)
+		
 		StockSearchRequest stockSearchRequest = request.getData();
 		StockHeader stockHeader = stockSearchRequest.getStockHeader();
 

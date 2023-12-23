@@ -24,6 +24,8 @@ public class RemoteStrategy implements LocationStrategy {
             List<StockItem> stockFromWarehouse = getRemoteStocks(warehouse.getApiEndpoint());
             availableStock.addAll(stockFromWarehouse);
         }
+        
+        // TODO 예약 수량 확인 후 빼줘야 함.
 
         // 수량 기준으로 내림 차순으로 정렬
         availableStock.sort(Comparator.comparingInt(StockItem::getConfirmQuantity).reversed());
@@ -32,6 +34,9 @@ public class RemoteStrategy implements LocationStrategy {
 	}
 	
     private List<Warehouse> getWarehouses(String clientId) {
+    	
+    	// TODO clientId(온라인 스토어의 SystemId)를 이용하여 warehouse 리스트를 DB에서 조회해야 한다.
+    	
         // 샘플 창고 데이터 생성
         List<Warehouse> warehouses = new ArrayList<>();
         warehouses.add(new Warehouse("Warehouse1", "http://api.warehouse1.com"));
@@ -40,6 +45,9 @@ public class RemoteStrategy implements LocationStrategy {
     }
     
     private List<StockItem> getRemoteStocks(String apiEndpoint) {
+    	
+    	// TODO BackEnd 시스템의 apiEndpoint 주소 호출해서 가용 재고를 조회한다.
+    	
         // 샘플 재고 데이터 생성
         List<StockItem> stockItems = new ArrayList<>();
         
