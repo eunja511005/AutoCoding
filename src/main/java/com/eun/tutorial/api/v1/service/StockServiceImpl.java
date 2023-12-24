@@ -39,7 +39,7 @@ public class StockServiceImpl implements StockService {
 	
     private List<StockItem> getAvailableStock(ApiRequest<StockSearchRequest> request) {
         
-        TypeStrategy strategy = strategyFactory.getStrategy(request.getData().getStockHeader().getStockSearchLocation());
+        TypeStrategy strategy = strategyFactory.getStrategy(request.getData().getStockHeader().getStockSearchType());
         return strategy.searchStock(request);
 
 //        availableStock.sort(Comparator
